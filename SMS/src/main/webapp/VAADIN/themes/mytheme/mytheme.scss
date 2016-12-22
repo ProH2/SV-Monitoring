@@ -47,6 +47,11 @@
 
     .v-menubar-menuitem-right{
         float: right;
+        background-color: red;
+    }
+
+    .v-menubar-menuitem-selected{
+        background-color: green;
     }
 
 }

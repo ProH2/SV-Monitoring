@@ -1,4 +1,4 @@
-package at.htlpinkafeld.sms;
+package at.htlpinkafeld.sms.gui;
 
 import javax.servlet.annotation.WebServlet;
 
@@ -28,19 +28,31 @@ public class SMS_Main extends UI {
 
         navigator = new Navigator(UI.getCurrent(), this);
 
-        navigator.addView(LoginView.VIEW_NAME, LoginView.class);
-        navigator.addView(MainView.VIEW_NAME, MainView.class);
+        OverviewView overviewView = new OverviewView();
 
-        navigator.navigateTo(LoginView.VIEW_NAME);
+        navigator.addView(OverviewView.VIEW_NAME, overviewView);
+
+        navigator.addView(LoginView.VIEW_NAME, LoginView.class);
+        navigator.addView(UserManagementView.VIEW_NAME, UserManagementView.class);
+        navigator.addView(TimeManagementView.VIEW_NAME, TimeManagementView.class);
+        
+//        setResizeLazy(true);
 
     }
 
-    public void navigateTo(String navigationState) {
-        navigator.navigateTo(navigationState);
+    /**
+     * Function used for the Navigation between the different Views which are
+     * registered in the init above. The parameter viewName which is passed
+     * should be defined in every View
+     *
+     * @param viewName
+     */
+    public void navigateTo(String viewName) {
+        navigator.navigateTo(viewName);
     }
 
     @WebServlet(urlPatterns = "/*", name = "MyUIServlet", asyncSupported = true)
-    @VaadinServletConfiguration(ui = SMS_Main.class, productionMode = false)
+    @VaadinServletConfiguration(ui = SMS_Main.class, productionMode = false, resourceCacheTime = 10, widgetset = "at.htlpinkafeld.sms.gui.AppWidgetSet")
     public static class MyUIServlet extends VaadinServlet {
     }
 }

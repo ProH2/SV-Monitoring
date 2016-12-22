@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package at.htlpinkafeld.sms;
+package at.htlpinkafeld.sms.gui;
 
 import com.vaadin.data.validator.NullValidator;
 import com.vaadin.navigator.View;
@@ -19,12 +19,13 @@ import com.vaadin.ui.UI;
 import com.vaadin.ui.VerticalLayout;
 
 /**
+ * View for the Login Page
  *
  * @author Martin Six
  */
 public class LoginView extends VerticalLayout implements View {
 
-    public static final String VIEW_NAME = "login";
+    public static final String VIEW_NAME = "";
 
     public LoginView() {
 
@@ -46,8 +47,8 @@ public class LoginView extends VerticalLayout implements View {
         Button loginButton = new Button("Login", new Button.ClickListener() {
             @Override
             public void buttonClick(Button.ClickEvent event) {
-                Notification.show("Login successfull", "Hello " + usernameTextF.getValue(), Notification.Type.HUMANIZED_MESSAGE);
-                ((SMS_Main) UI.getCurrent()).navigateTo(MainView.VIEW_NAME);
+                Notification.show("Login successfull", "Hello " + usernameTextF.getValue(), Notification.Type.TRAY_NOTIFICATION);
+                ((SMS_Main) UI.getCurrent()).navigateTo(OverviewView.VIEW_NAME);
             }
         });
 
