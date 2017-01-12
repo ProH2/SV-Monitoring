@@ -15,14 +15,13 @@ import java.util.List;
  */
 public class Service {
 
-    public static int OK = 1;
-    public static int WARNING = 2;
-    public static int UNKNOWN = 3;
-    public static int CRITICAL = 4;
-    public static int PENDING = 5;
+    public static enum Servicestatus{
+        OK, WARNING, UNKNOWN, CRITICAL, PENDING;
+    }
 
-    public int HARDSTATE = 1;
-    public int SOFTSTATE = 2;
+    public static enum Servicestate{
+        HARDSTATE, SOFTSTATE;
+    }
 
     //Nr von dem Host, auf dem dieser Service läuft;
     private int hostnr;
@@ -31,7 +30,7 @@ public class Service {
 
     private int servicenr;
     private String name;
-    private int status;
+    private Servicestatus status;
     private LocalDateTime lastChecked;
     private Duration duration;
     private int attempt;
@@ -40,7 +39,7 @@ public class Service {
     //in Sekunden; standardmäßig 90
     private int checkIntervall;
 
-    private int state;
+    private Servicestate state;
     private LocalDateTime nextCheck;
     private LocalDateTime lastStateChange;
     private boolean flapping;
@@ -49,10 +48,10 @@ public class Service {
     private List<Comment> comments;
 
     public Service() {
-
+        
     }
 
-    public Service(int hostnr, int servicenr, String name, int status, LocalDateTime lastChecked, Duration duration, int attempt, String information) {
+    public Service(int hostnr, int servicenr, String name, Servicestatus status, LocalDateTime lastChecked, Duration duration, int attempt, String information) {
         this.hostnr = hostnr;
         this.servicenr = servicenr;
         this.name = name;
@@ -79,11 +78,11 @@ public class Service {
         this.name = name;
     }
 
-    public int getStatus() {
+    public Servicestatus getStatus() {
         return status;
     }
 
-    public void setStatus(int status) {
+    public void setStatus(Servicestatus status) {
         this.status = status;
     }
 

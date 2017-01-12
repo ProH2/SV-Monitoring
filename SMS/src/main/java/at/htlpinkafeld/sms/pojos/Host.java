@@ -15,25 +15,24 @@ import java.util.List;
  */
 public class Host {
 
-    public static int UP = 1;
-    public static int DOWN = 2;
-    public static int UNREACHABLE = 3;
-    public static int PENDING = 4;
+    public static enum Hoststatus {
+        UP, DOWN, UNREACHABLE, PENDING;
+    }
 
-    public int HARDSTATE = 1;
-    public int SOFTSTATE = 2;
+    public static enum Hoststate {
+        HARDSTATE, SOFTSTATE;
+    }
 
-    
     //Liste von Integers, welche auf die ServiceGroupNr in ServiceGroup verweist;   kann auch leer sein;
     private List<Integer> hostgroups;
-    
+
     private int hostnr;
     private String hostname;
-    private int status;
+    private Hoststatus status;
     private LocalDateTime lastChecked;
     private Duration duration;
     private String information;
-    
+
     //in Sekunden; standardmäßig 90
     private int checkIntervall;
 
@@ -51,7 +50,7 @@ public class Host {
 
     }
 
-    public Host(int hostnr, String hostname, int status, LocalDateTime lastChecked, Duration duration, String information) {
+    public Host(int hostnr, String hostname, Hoststatus status, LocalDateTime lastChecked, Duration duration, String information) {
         this.hostnr = hostnr;
         this.hostname = hostname;
         this.status = status;
@@ -68,11 +67,11 @@ public class Host {
         this.hostname = hostname;
     }
 
-    public int getStatus() {
+    public Hoststatus getStatus() {
         return status;
     }
 
-    public void setStatus(int status) {
+    public void setStatus(Hoststatus status) {
         this.status = status;
     }
 

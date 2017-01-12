@@ -17,7 +17,7 @@ public class Comment {
     private String comment;
 
     public Comment(){
-        
+  
     }
     
     public Comment(LocalDateTime entryTime, String author, String comment) {
