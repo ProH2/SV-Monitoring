@@ -35,9 +35,8 @@ public class SMS_Main extends UI {
         navigator.addView(LoginView.VIEW_NAME, LoginView.class);
         navigator.addView(UserManagementView.VIEW_NAME, UserManagementView.class);
         navigator.addView(TimeManagementView.VIEW_NAME, TimeManagementView.class);
-        
-//        setResizeLazy(true);
 
+//        setResizeLazy(true);
     }
 
     /**

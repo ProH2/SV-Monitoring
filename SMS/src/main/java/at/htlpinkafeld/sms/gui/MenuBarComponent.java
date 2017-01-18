@@ -25,7 +25,7 @@ public class MenuBarComponent extends CustomComponent {
     private final MenuBar.MenuItem timeManagementMItem;
 
     public MenuBarComponent() {
-        super.setSizeFull();
+        super.setHeight(37, Unit.PIXELS);
 
         menuBar = new MenuBar();
         menuBar.setWidth(100, Unit.PERCENTAGE);
@@ -81,9 +81,8 @@ public class MenuBarComponent extends CustomComponent {
                     break;
                 case '!' + TimeManagementView.VIEW_NAME:
                     timeManagementMItem.setStyleName("selected");
+                    break;
                 default:
-                    String s = UI.getCurrent().getPage().getUriFragment();
-                    System.out.println(s);
             }
         }
 

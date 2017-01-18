@@ -16,14 +16,14 @@ import java.util.List;
 public class Host {
 
     public static enum Hoststatus {
-        UP, DOWN, UNREACHABLE, PENDING;
+        UP, PENDING, DOWN, UNREACHABLE;
     }
 
     public static enum Hoststate {
         HARDSTATE, SOFTSTATE;
     }
 
-    //Liste von Integers, welche auf die ServiceGroupNr in ServiceGroup verweist;   kann auch leer sein;
+    //Liste von Integers, welche auf die HostGroupNr in HostGroup verweist;   kann auch leer sein;
     private List<Integer> hostgroups;
 
     private int hostnr;
