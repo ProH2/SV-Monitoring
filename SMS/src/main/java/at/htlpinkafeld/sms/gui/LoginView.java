@@ -5,6 +5,7 @@
  */
 package at.htlpinkafeld.sms.gui;
 
+import at.htlpinkafeld.sms.service.JSONService;
 import com.vaadin.data.validator.NullValidator;
 import com.vaadin.navigator.View;
 import com.vaadin.navigator.ViewChangeListener;
@@ -17,6 +18,9 @@ import com.vaadin.ui.Notification;
 import com.vaadin.ui.TextField;
 import com.vaadin.ui.UI;
 import com.vaadin.ui.VerticalLayout;
+import java.io.IOException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * View for the Login Page
@@ -51,8 +55,19 @@ public class LoginView extends VerticalLayout implements View {
                 ((SMS_Main) UI.getCurrent()).navigateTo(OverviewView.VIEW_NAME);
             }
         });
-
+        
         formLayout.addComponent(loginButton);
+        
+        //Thread-Testing Button
+        Button refreshButton = new Button("Refresh", new Button.ClickListener() {
+            @Override
+            public void buttonClick(Button.ClickEvent event) {
+                JSONService.refresh();
+            }
+        });
+
+        formLayout.addComponent(refreshButton); 
+        
 
         formLayout.setSizeUndefined();
 

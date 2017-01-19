@@ -24,11 +24,11 @@ public class Service {
     }
 
     //Nr von dem Host, auf dem dieser Service läuft;
-    private int hostnr;
     //Liste von Integers, welche auf die ServiceGroupNr in ServiceGroup verweist;   kann auch leer sein;
     private List<Integer> servicegroups;
 
     private int servicenr;
+    private String hostname;
     private String name;
     private Servicestatus status;
     private LocalDateTime lastChecked;
@@ -51,8 +51,8 @@ public class Service {
         
     }
 
-    public Service(int hostnr, int servicenr, String name, Servicestatus status, LocalDateTime lastChecked, Duration duration, int attempt, String information) {
-        this.hostnr = hostnr;
+    public Service(int servicenr, String hostname, String name, Servicestatus status, LocalDateTime lastChecked, Duration duration, int attempt, String information) {
+        this.hostname = hostname;
         this.servicenr = servicenr;
         this.name = name;
         this.status = status;
@@ -118,12 +118,14 @@ public class Service {
         this.information = information;
     }
 
-    public int getHostnr() {
-        return hostnr;
+    public String getHostname() {
+        return hostname;
     }
 
-    public void setHostnr(int hostnr) {
-        this.hostnr = hostnr;
+    public void setHostname(String hostname) {
+        this.hostname = hostname;
     }
+
+
 
 }

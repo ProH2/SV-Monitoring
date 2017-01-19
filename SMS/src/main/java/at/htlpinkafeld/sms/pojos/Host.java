@@ -5,8 +5,11 @@
  */
 package at.htlpinkafeld.sms.pojos;
 
+import java.sql.Timestamp;
 import java.time.Duration;
 import java.time.LocalDateTime;
+import java.time.ZoneOffset;
+import java.util.HashMap;
 import java.util.List;
 
 /**
@@ -23,10 +26,9 @@ public class Host {
         HARDSTATE, SOFTSTATE;
     }
 
-    //Liste von Integers, welche auf die ServiceGroupNr in ServiceGroup verweist;   kann auch leer sein;
+    //Liste von Integers, welche auf die HostGroupNr in ServiceGroup verweist;   kann auch leer sein;
     private List<Integer> hostgroups;
 
-    private int hostnr;
     private String hostname;
     private Hoststatus status;
     private LocalDateTime lastChecked;
@@ -36,8 +38,8 @@ public class Host {
     //in Sekunden; standardmäßig 90
     private int checkIntervall;
 
-    private int currentAttempt;
-    private int state;
+    private String currentAttempt;
+    private Hoststate state;
     private LocalDateTime nextCheck;
     private LocalDateTime lastStateChange;
     private boolean flapping;
@@ -51,7 +53,6 @@ public class Host {
     }
 
     public Host(int hostnr, String hostname, Hoststatus status, LocalDateTime lastChecked, Duration duration, String information) {
-        this.hostnr = hostnr;
         this.hostname = hostname;
         this.status = status;
         this.lastChecked = lastChecked;
@@ -99,12 +100,37 @@ public class Host {
         this.information = information;
     }
 
-    public int getHostnr() {
-        return hostnr;
+    public static Host createHostFromJson(HashMap<String, Object> map) {
+//        System.out.println(map);
+
+        Host host = new Host();
+        host.setHostname((String) map.get("name"));
+        host.setInformation((String) map.get("plugin_output"));
+//        System.out.println(map.get("last_check"));
+        host.setLastChecked(LocalDateTime.ofEpochSecond((long) map.get("last_check"), 0, ZoneOffset.UTC));
+
+        Timestamp stamp = new Timestamp((long) map.get("last_state_change"));
+        LocalDateTime last_state_change = stamp.toLocalDateTime();
+        //System.out.println(map.get("last_state_change"));
+
+        LocalDateTime now = LocalDateTime.now();
+        host.setDuration(Duration.between(last_state_change, now));
+
+        switch ((Integer) map.get("status")) {
+            case 2:
+                host.setStatus(Hoststatus.UP);
+                break;
+            default:
+                host.setStatus(Hoststatus.DOWN);
+        }
+
+        return host;
     }
 
-    public void setHostnr(int hostnr) {
-        this.hostnr = hostnr;
+    @Override
+    public String toString() {
+
+        return hostname + " " + information + " " + this.lastChecked + " " + duration + " " + status;
     }
 
 }
