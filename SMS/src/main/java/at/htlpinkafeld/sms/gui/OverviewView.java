@@ -20,6 +20,8 @@ import com.vaadin.ui.UI;
 import com.vaadin.ui.VerticalLayout;
 import java.time.Duration;
 import java.time.LocalDateTime;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Random;
 
 /**
@@ -70,10 +72,10 @@ public class OverviewView extends VerticalLayout implements View {
             }
         });
 
-        hostGroupsTab = tabSheet.addTab(new OverviewTabPanel(hostgroupItemContainer, "Host Gruppen"), "Host Groups");
-        serviceGroupsTab = tabSheet.addTab(new OverviewTabPanel(servicegroupItemContainer, "Service Gruppen"), "Service Groups");
-        hosts = tabSheet.addTab(new OverviewTabPanel(hostItemContainer, "Host Gruppen", "Host"), "Hosts");
-        services = tabSheet.addTab(new OverviewTabPanel(serviceItemContainer, "Host Gruppen", "Host", "Service Gruppen", "Service"), "Services");
+        hostGroupsTab = tabSheet.addTab(new OverviewTabPanel(hostgroupItemContainer, getHostGroupsFilterMap()), "Host Groups");
+        serviceGroupsTab = tabSheet.addTab(new OverviewTabPanel(servicegroupItemContainer, getServiceGroupsFilterMap()), "Service Groups");
+        hosts = tabSheet.addTab(new OverviewTabPanel(hostItemContainer, getHostsFilterMap()), "Hosts");
+        services = tabSheet.addTab(new OverviewTabPanel(serviceItemContainer, getServicesFilterMap()), "Services");
 
         super.addComponent(tabSheet);
     }
@@ -81,6 +83,32 @@ public class OverviewView extends VerticalLayout implements View {
     @Override
     public void enter(ViewChangeListener.ViewChangeEvent event) {
 
+    }
+
+    //Functions for creating the searchFilterMappings
+    private Map<String, String> getHostGroupsFilterMap() {
+        Map<String, String> filterMap = new HashMap<>();
+        filterMap.put("Host Gruppe", "name");
+        return filterMap;
+    }
+
+    private Map<String, String> getServiceGroupsFilterMap() {
+        Map<String, String> filterMap = new HashMap<>();
+        filterMap.put("Service Gruppe", "name");
+        return filterMap;
+    }
+
+    private Map<String, String> getHostsFilterMap() {
+        Map<String, String> filterMap = new HashMap<>();
+        filterMap.put("Host", "hostname");
+        return filterMap;
+    }
+
+    private Map<String, String> getServicesFilterMap() {
+        Map<String, String> filterMap = new HashMap<>();
+        filterMap.put("Host", "hostname");
+        filterMap.put("Service", "name");
+        return filterMap;
     }
 
     /**
@@ -99,9 +127,12 @@ public class OverviewView extends VerticalLayout implements View {
 
         for (int i = 1; i <= 100; i++) {
             if (containerClass == Host.class) {
-                container.addBean(new Host(0, "Test" + i, (Host.Hoststatus) getRandomEnum(Host.Hoststatus.values()), LocalDateTime.now(), Duration.ZERO, "Test informationTest informationTest tionTest informationTest informationonTest informationTest information"));
+                Host h = new Host(0, "Test" + i, (Host.Hoststatus) getRandomEnum(Host.Hoststatus.values()), LocalDateTime.now(), Duration.ZERO, "Test informationTest informationTest tionTest informationTest informationonTest informationTest information");
+                container.addBean(h);
             } else if (containerClass == Service.class) {
-                container.addBean(new Service(i % 30, 0, "Test" + i, (Service.Servicestatus) getRandomEnum(Service.Servicestatus.values()), LocalDateTime.now(), Duration.ofMinutes(10), 0, "Test informationTest informationTest tionTest informationTest informationonTest informationTest information"));
+                Service s = new Service(i % 30, 0, "Test" + i, (Service.Servicestatus) getRandomEnum(Service.Servicestatus.values()), LocalDateTime.now(), Duration.ofMinutes(10), 0, "Test informationTest informationTest tionTest informationTest informationonTest informationTest information");
+                s.setHostname(" Host " + i % 30);
+                container.addBean(s);
             }
 
         }
