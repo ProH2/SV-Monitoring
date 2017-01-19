@@ -31,4 +31,9 @@
 
 
     <inherits name="com.vaadin.addon.calendar.gwt.CalendarWidgetset" />
+
+    
+
+    <inherits name="org.vaadin.addons.stackpanel.WidgetSet" />
+    <source path="my_stack_panel/client"/>
 </module>

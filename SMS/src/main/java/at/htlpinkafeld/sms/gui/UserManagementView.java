@@ -5,8 +5,10 @@
  */
 package at.htlpinkafeld.sms.gui;
 
+import at.htlpinkafeld.sms.pojo.User;
 import com.vaadin.data.Container;
 import com.vaadin.data.Item;
+import com.vaadin.data.util.BeanItemContainer;
 import com.vaadin.data.util.GeneratedPropertyContainer;
 import com.vaadin.data.util.IndexedContainer;
 import com.vaadin.data.util.PropertyValueGenerator;
@@ -34,6 +36,10 @@ public class UserManagementView extends VerticalLayout implements View {
 
     public static final String VIEW_NAME = "usermanagementview";
 
+    /**
+     * PropertyId constant for {@link Container}
+     */
+    public static final String USERNR_PROPERTY = "userNr";
     /**
      * PropertyId constant for {@link Container}
      */
@@ -72,6 +78,8 @@ public class UserManagementView extends VerticalLayout implements View {
         head.setStyleName("heading");
 
         Grid grid = new Grid(createIndexedContainer());
+        grid.removeColumn(USERNR_PROPERTY);
+        grid.setColumnOrder(USERNAME_PROPERTY, PASSWORD_PROPERTY, NAME_PROPERTY, EMAIL_PROPERTY, PHONENR_PROPERTY, EDITUSER_COLUMN, DELETEUSER_COLUMN);
 
         grid.setSelectionMode(SelectionMode.MULTI);
         grid.setEditorEnabled(true);
@@ -158,8 +166,14 @@ public class UserManagementView extends VerticalLayout implements View {
      * @return
      */
     private Container.Indexed createIndexedContainer() {
+
+//        BeanItemContainer<User> container = new BeanItemContainer<>(User.class);
+//
+//        container.addBean(new User(1, "Dogist", "1234", "Martin", "noplan@gmc.at", "5421575"));
+//        container.addBean(new User(2, "Irish", "4321", "Sebastian", "noplan@qmail.com", "5788775"));
         IndexedContainer container = new IndexedContainer();
 
+        container.addContainerProperty(USERNR_PROPERTY, Integer.class, "Default UserNr");
         container.addContainerProperty(USERNAME_PROPERTY, String.class, "Default Username");
         container.addContainerProperty(PASSWORD_PROPERTY, String.class, "Default Password");
         container.addContainerProperty(NAME_PROPERTY, String.class, "Default Name");

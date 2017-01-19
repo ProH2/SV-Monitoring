@@ -15,15 +15,16 @@ import java.util.List;
  */
 public class Service {
 
-    public static enum Servicestatus{
-        OK, WARNING, UNKNOWN, CRITICAL, PENDING;
+    public static enum Servicestatus {
+        OK, PENDING, WARNING, UNKNOWN, CRITICAL;
     }
 
-    public static enum Servicestate{
+    public static enum Servicestate {
         HARDSTATE, SOFTSTATE;
     }
 
     //Nr von dem Host, auf dem dieser Service läuft;
+    private Integer hostnr;
     //Liste von Integers, welche auf die ServiceGroupNr in ServiceGroup verweist;   kann auch leer sein;
     private List<Integer> servicegroups;
 
@@ -48,11 +49,14 @@ public class Service {
     private List<Comment> comments;
 
     public Service() {
-        
+
     }
 
-    public Service(int servicenr, String hostname, String name, Servicestatus status, LocalDateTime lastChecked, Duration duration, int attempt, String information) {
-        this.hostname = hostname;
+
+
+    public Service(Integer hostnr, int servicenr, String name, Servicestatus status, LocalDateTime lastChecked, Duration duration, int attempt, String information) {
+        this.hostnr = hostnr;
+
         this.servicenr = servicenr;
         this.name = name;
         this.status = status;
@@ -118,12 +122,22 @@ public class Service {
         this.information = information;
     }
 
+
     public String getHostname() {
         return hostname;
     }
 
     public void setHostname(String hostname) {
         this.hostname = hostname;
+    }
+    
+    public Integer getHostnr(){
+        return this.hostnr;
+    }
+
+    public void setHostnr(Integer hostnr) {
+        this.hostnr = hostnr;
+
     }
 
 

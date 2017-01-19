@@ -34,7 +34,6 @@
 @mixin mytheme {
     @include valo;
 
-
     .v-verticallayout-center{
         align-self: center;
     }
@@ -43,6 +42,30 @@
         font-size: 40px;
         line-height: normal  ;
         color: green;
+    }
+
+    .v-label-subheading{
+        font-weight: bold;
+    }
+
+    .v-label-red{
+        background-color:red;
+        font-weight: bold;
+    }
+
+    .v-label-gray{
+        color:gray;
+        font-weight: bold;
+    }
+
+    .v-label-green{
+        color:greenyellow;
+        font-weight: bold;
+    }
+
+    .v-label-yellow{
+        background-color:yellow;
+        font-weight: bold;
     }
 
     .v-menubar-menuitem-right{
@@ -54,4 +77,7 @@
         background-color: green;
     }
 
+    .v-passclick{
+        pointer-events:none;
+    }
 }

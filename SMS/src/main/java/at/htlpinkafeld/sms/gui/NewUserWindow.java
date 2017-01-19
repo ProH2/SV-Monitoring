@@ -38,7 +38,7 @@ public class NewUserWindow extends Window {
 
         FormLayout formLayout = new FormLayout();
 
-        final TextField usernameTextF = new TextField("Username", " ");
+        final TextField usernameTextF = new TextField("Username");
         usernameTextF.setRequired(true);
         usernameTextF.setRequiredError("Username is required!");
         usernameTextF.addValidator(new StringLengthValidator("The Username is too short!", 5, null, false));
@@ -52,7 +52,7 @@ public class NewUserWindow extends Window {
             }
         });
 
-        final TextField passwordTextF = new TextField("Password", " ");
+        final TextField passwordTextF = new TextField("Password");
         passwordTextF.setRequired(true);
         passwordTextF.setRequiredError("Password is required!");
         passwordTextF.addValidator(new StringLengthValidator("The Password is too short!", 8, null, false));
@@ -66,7 +66,7 @@ public class NewUserWindow extends Window {
             }
         });
 
-        final TextField nameTextF = new TextField("Name", " ");
+        final TextField nameTextF = new TextField("Name");
         nameTextF.setRequired(true);
         nameTextF.setRequiredError("Name is required!");
         nameTextF.addValidator(new StringLengthValidator("The Name is too short!", 2, null, false));
@@ -99,6 +99,7 @@ public class NewUserWindow extends Window {
                     phoneNrTextF.validate();
 
                     Object id = containerDataSource.addItem();
+                    containerDataSource.getContainerProperty(id, UserManagementView.USERNR_PROPERTY).setValue(1);
                     containerDataSource.getContainerProperty(id, UserManagementView.USERNAME_PROPERTY).setValue(usernameTextF.getValue());
                     containerDataSource.getContainerProperty(id, UserManagementView.PASSWORD_PROPERTY).setValue(passwordTextF.getValue());
                     containerDataSource.getContainerProperty(id, UserManagementView.NAME_PROPERTY).setValue(nameTextF.getValue());

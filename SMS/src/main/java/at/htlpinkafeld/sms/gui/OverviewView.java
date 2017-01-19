@@ -5,55 +5,77 @@
  */
 package at.htlpinkafeld.sms.gui;
 
+import at.htlpinkafeld.sms.pojos.Host;
+import at.htlpinkafeld.sms.pojos.Hostgroup;
+import at.htlpinkafeld.sms.pojos.Service;
+import at.htlpinkafeld.sms.pojos.Servicegroup;
+import com.vaadin.data.Container;
+import com.vaadin.data.util.BeanItemContainer;
 import com.vaadin.navigator.View;
 import com.vaadin.navigator.ViewChangeListener;
-import com.vaadin.server.Page;
 import com.vaadin.ui.Component;
-import com.vaadin.ui.GridLayout;
-import com.vaadin.ui.Label;
-import com.vaadin.ui.Panel;
+import com.vaadin.ui.TabSheet;
+import com.vaadin.ui.TabSheet.Tab;
 import com.vaadin.ui.UI;
 import com.vaadin.ui.VerticalLayout;
-import java.util.LinkedList;
-import java.util.List;
+import java.time.Duration;
+import java.time.LocalDateTime;
+import java.util.Random;
 
 /**
  * View for the Overview of the Servicepoint Data
  *
  * @author Martin Six
  */
-public class OverviewView extends VerticalLayout implements View, Page.BrowserWindowResizeListener {
+public class OverviewView extends VerticalLayout implements View {
 
     public static final String VIEW_NAME = "overview";
 
-    GridLayout gridLayout;
-
-    /**
-     * Constant for the width of the CustomComponent which contains the Data
-     * from the Servicepoints. It is used to calculate the amount of columns on
-     * the page
-     *
-     */
-    public static final int COMPONENT_WIDTH = 300;
+    private Tab hostGroupsTab;
+    private Tab serviceGroupsTab;
+    private Tab hosts;
+    private Tab services;
 
     public OverviewView() {
         super.addComponent(new MenuBarComponent());
 
-        gridLayout = new GridLayout();
-        gridLayout.setColumns(UI.getCurrent().getPage().getBrowserWindowWidth() / COMPONENT_WIDTH);
+        TabSheet tabSheet = new TabSheet();
 
-        gridLayout.setMargin(true);
-        gridLayout.setSpacing(true);
+        BeanItemContainer hostItemContainer = createIndexedContainer(Host.class);
+        BeanItemContainer serviceItemContainer = createIndexedContainer(Service.class);
+        BeanItemContainer hostgroupItemContainer = createIndexedContainer(Hostgroup.class);
+        BeanItemContainer servicegroupItemContainer = createIndexedContainer(Servicegroup.class);
 
-        for (int i = 0; i < 30; i++) {
-            Label l = new Label("Test Component " + i);
-            l.setWidth(COMPONENT_WIDTH, Unit.PIXELS);
-            gridLayout.addComponent(new Panel(l));
-        }
+        tabSheet.addSelectedTabChangeListener(new TabSheet.SelectedTabChangeListener() {
+            @Override
+            public void selectedTabChange(TabSheet.SelectedTabChangeEvent event) {
+                // Find the tabsheet
+                TabSheet tabsheet = event.getTabSheet();
 
-        UI.getCurrent().getPage().addBrowserWindowResizeListener(this);
+                // Find the tab and cast it
+                OverviewTabPanel tab = (OverviewTabPanel) tabsheet.getSelectedTab();
 
-        super.addComponent(gridLayout);
+                for (Component c : tabsheet) {
+                    if (c.equals(tab)) {
+                        AutoResizingGridLayout argl = tab.getGridLayout();
+                        if (argl != null) {
+                            UI.getCurrent().getPage().addBrowserWindowResizeListener(argl);
+                        }
+                        tab.refreshLayout();
+
+                    } else if (c instanceof OverviewTabPanel) {
+                        UI.getCurrent().getPage().removeBrowserWindowResizeListener(((OverviewTabPanel) c).getGridLayout());
+                    }
+                }
+            }
+        });
+
+        hostGroupsTab = tabSheet.addTab(new OverviewTabPanel(hostgroupItemContainer, "Host Gruppen"), "Host Groups");
+        serviceGroupsTab = tabSheet.addTab(new OverviewTabPanel(servicegroupItemContainer, "Service Gruppen"), "Service Groups");
+        hosts = tabSheet.addTab(new OverviewTabPanel(hostItemContainer, "Host Gruppen", "Host"), "Hosts");
+        services = tabSheet.addTab(new OverviewTabPanel(serviceItemContainer, "Host Gruppen", "Host", "Service Gruppen", "Service"), "Services");
+
+        super.addComponent(tabSheet);
     }
 
     @Override
@@ -62,30 +84,34 @@ public class OverviewView extends VerticalLayout implements View, Page.BrowserWi
     }
 
     /**
-     * BrowserWindowResized Listener which is registered in the Constructor. It
-     * reconstructs the GridLayout with a different column count after a
-     * {@link  Page.BrowserWindowResizeEvent}, based on the Page-Width
+     * Convenience Method to create a {@link Container} for testing purpose.
      *
-     * @param event
+     * @return
      */
-    @Override
-    public synchronized void browserWindowResized(Page.BrowserWindowResizeEvent event) {
-        int newColCount = event.getWidth() / COMPONENT_WIDTH;
-        if (newColCount != gridLayout.getColumns()) {
+    private BeanItemContainer createIndexedContainer(Class containerClass) {
+        BeanItemContainer container;
 
-            List<Component> componentList = new LinkedList<>();
-            for (Component c : gridLayout) {
-                componentList.add(c);
-            }
-            GridLayout newGridLayout = new GridLayout(newColCount, 1, componentList.toArray(new Component[0]));
-
-            newGridLayout.setMargin(true);
-            newGridLayout.setSpacing(true);
-
-            super.replaceComponent(gridLayout, newGridLayout);
-            gridLayout = newGridLayout;
+        if (containerClass == Service.class) {
+            container = new BeanItemContainer(containerClass);
+        } else {
+            container = new BeanItemContainer<>(containerClass);
         }
 
+        for (int i = 1; i <= 100; i++) {
+            if (containerClass == Host.class) {
+                container.addBean(new Host(0, "Test" + i, (Host.Hoststatus) getRandomEnum(Host.Hoststatus.values()), LocalDateTime.now(), Duration.ZERO, "Test informationTest informationTest tionTest informationTest informationonTest informationTest information"));
+            } else if (containerClass == Service.class) {
+                container.addBean(new Service(i % 30, 0, "Test" + i, (Service.Servicestatus) getRandomEnum(Service.Servicestatus.values()), LocalDateTime.now(), Duration.ofMinutes(10), 0, "Test informationTest informationTest tionTest informationTest informationonTest informationTest information"));
+            }
+
+        }
+        return container;
+    }
+
+    // Testing Function
+    private Enum getRandomEnum(Enum... e) {
+        Random r = new Random();
+        return e[r.nextInt(e.length)];
     }
 
 }
