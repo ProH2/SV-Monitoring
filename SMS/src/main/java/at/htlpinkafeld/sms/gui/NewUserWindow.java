@@ -5,9 +5,12 @@
  */
 package at.htlpinkafeld.sms.gui;
 
+import at.htlpinkafeld.sms.pojo.User;
 import com.vaadin.data.Container;
 import com.vaadin.data.Container.Indexed;
 import com.vaadin.data.Validator;
+import com.vaadin.data.util.BeanItemContainer;
+import com.vaadin.data.validator.EmailValidator;
 import com.vaadin.data.validator.StringLengthValidator;
 import com.vaadin.event.FieldEvents;
 import com.vaadin.ui.AbstractTextField;
@@ -31,7 +34,7 @@ public class NewUserWindow extends Window {
      *
      * @param containerDataSource
      */
-    public NewUserWindow(Container.Indexed containerDataSource) {
+    public NewUserWindow(BeanItemContainer containerDataSource) {
         super("Create New User");
         super.center();
         super.setModal(true);
@@ -82,6 +85,7 @@ public class NewUserWindow extends Window {
 
         final TextField emailTextF = new TextField("Email");
         emailTextF.setImmediate(true);
+        emailTextF.addValidator(new EmailValidator("The Email is invalid"));
 
         final TextField phoneNrTextF = new TextField("Phone Number");
         phoneNrTextF.setImmediate(true);
@@ -98,13 +102,7 @@ public class NewUserWindow extends Window {
                     emailTextF.validate();
                     phoneNrTextF.validate();
 
-                    Object id = containerDataSource.addItem();
-                    containerDataSource.getContainerProperty(id, UserManagementView.USERNR_PROPERTY).setValue(1);
-                    containerDataSource.getContainerProperty(id, UserManagementView.USERNAME_PROPERTY).setValue(usernameTextF.getValue());
-                    containerDataSource.getContainerProperty(id, UserManagementView.PASSWORD_PROPERTY).setValue(passwordTextF.getValue());
-                    containerDataSource.getContainerProperty(id, UserManagementView.NAME_PROPERTY).setValue(nameTextF.getValue());
-                    containerDataSource.getContainerProperty(id, UserManagementView.EMAIL_PROPERTY).setValue(emailTextF.getValue());
-                    containerDataSource.getContainerProperty(id, UserManagementView.PHONENR_PROPERTY).setValue(phoneNrTextF.getValue());
+                    containerDataSource.addBean(new User(usernameTextF.getValue(), passwordTextF.getValue(), nameTextF.getValue(), emailTextF.getValue(), phoneNrTextF.getValue()));
 
                     close();
                 } catch (Validator.InvalidValueException e) {

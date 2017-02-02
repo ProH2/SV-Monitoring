@@ -10,7 +10,6 @@ import com.vaadin.data.Container;
 import com.vaadin.data.Item;
 import com.vaadin.data.util.BeanItemContainer;
 import com.vaadin.data.util.GeneratedPropertyContainer;
-import com.vaadin.data.util.IndexedContainer;
 import com.vaadin.data.util.PropertyValueGenerator;
 import com.vaadin.event.SelectionEvent;
 import com.vaadin.navigator.View;
@@ -69,6 +68,8 @@ public class UserManagementView extends VerticalLayout implements View {
      */
     public static final String DELETEUSER_COLUMN = "deleteUser";
 
+    private BeanItemContainer<User> baseUserContainer;
+
     public UserManagementView() {
         super.addComponent(new MenuBarComponent());
 
@@ -103,7 +104,7 @@ public class UserManagementView extends VerticalLayout implements View {
         Button newUserButton = new Button("New User", new Button.ClickListener() {
             @Override
             public void buttonClick(Button.ClickEvent event) {
-                UI.getCurrent().addWindow(new NewUserWindow(grid.getContainerDataSource()));
+                UI.getCurrent().addWindow(new NewUserWindow(baseUserContainer));
             }
         });
         newUserButton.setSizeFull();
@@ -167,23 +168,23 @@ public class UserManagementView extends VerticalLayout implements View {
      */
     private Container.Indexed createIndexedContainer() {
 
-//        BeanItemContainer<User> container = new BeanItemContainer<>(User.class);
+        baseUserContainer = new BeanItemContainer<>(User.class);
+
+        baseUserContainer.addBean(new User(1, "Dogist", "1234", "Martin", "noplan@gmc.at", "5421575"));
+        baseUserContainer.addBean(new User(2, "Irish", "4321", "Sebastian", "noplan@qmail.com", "5788775"));
+//        IndexedContainer container = new IndexedContainer();
 //
-//        container.addBean(new User(1, "Dogist", "1234", "Martin", "noplan@gmc.at", "5421575"));
-//        container.addBean(new User(2, "Irish", "4321", "Sebastian", "noplan@qmail.com", "5788775"));
-        IndexedContainer container = new IndexedContainer();
+//        container.addContainerProperty(USERNR_PROPERTY, Integer.class, "Default UserNr");
+//        container.addContainerProperty(USERNAME_PROPERTY, String.class, "Default Username");
+//        container.addContainerProperty(PASSWORD_PROPERTY, String.class, "Default Password");
+//        container.addContainerProperty(NAME_PROPERTY, String.class, "Default Name");
+//        container.addContainerProperty(EMAIL_PROPERTY, String.class, "Default Email");
+//        container.addContainerProperty(PHONENR_PROPERTY, String.class, "Default PhoneNr");
+//
+//        container.addItem();
+//        container.addItem();
 
-        container.addContainerProperty(USERNR_PROPERTY, Integer.class, "Default UserNr");
-        container.addContainerProperty(USERNAME_PROPERTY, String.class, "Default Username");
-        container.addContainerProperty(PASSWORD_PROPERTY, String.class, "Default Password");
-        container.addContainerProperty(NAME_PROPERTY, String.class, "Default Name");
-        container.addContainerProperty(EMAIL_PROPERTY, String.class, "Default Email");
-        container.addContainerProperty(PHONENR_PROPERTY, String.class, "Default PhoneNr");
-
-        container.addItem();
-        container.addItem();
-
-        GeneratedPropertyContainer gpc = new GeneratedPropertyContainer(container);
+        GeneratedPropertyContainer gpc = new GeneratedPropertyContainer(baseUserContainer);
 
         gpc.addGeneratedProperty(EDITUSER_COLUMN, new PropertyValueGenerator<String>() {
             @Override

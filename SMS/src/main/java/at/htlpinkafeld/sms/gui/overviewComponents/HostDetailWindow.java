@@ -67,6 +67,7 @@ public class HostDetailWindow extends Window {
 
         HorizontalSplitPanel parentSplitPanel = new HorizontalSplitPanel(dataLayout, commentGrid);
         parentSplitPanel.setSizeUndefined();
+        parentSplitPanel.setWidth(860, Unit.PIXELS);
 
         super.setContent(parentSplitPanel);
     }

@@ -21,6 +21,7 @@ public class MenuBarComponent extends CustomComponent {
     private final MenuBar menuBar;
 
     private final MenuBar.MenuItem overviewMItem;
+    private final MenuBar.MenuItem host_service_ManagementMItem;
     private final MenuBar.MenuItem userManagementMItem;
     private final MenuBar.MenuItem timeManagementMItem;
 
@@ -36,6 +37,16 @@ public class MenuBarComponent extends CustomComponent {
                 UI ui = UI.getCurrent();
                 if (ui instanceof SMS_Main) {
                     ((SMS_Main) ui).navigateTo(OverviewView.VIEW_NAME);
+                }
+            }
+        });
+
+        host_service_ManagementMItem = menuBar.addItem("Host-Service Management", new MenuBar.Command() {
+            @Override
+            public void menuSelected(MenuBar.MenuItem selectedItem) {
+                UI ui = UI.getCurrent();
+                if (ui instanceof SMS_Main) {
+                    ((SMS_Main) ui).navigateTo(Host_Service_ManagementView.VIEW_NAME);
                 }
             }
         });
@@ -75,6 +86,9 @@ public class MenuBarComponent extends CustomComponent {
             switch (uriFragment) {
                 case '!' + OverviewView.VIEW_NAME:
                     overviewMItem.setStyleName("selected");
+                    break;
+                case '!' + Host_Service_ManagementView.VIEW_NAME:
+                    host_service_ManagementMItem.setStyleName("selected");
                     break;
                 case '!' + UserManagementView.VIEW_NAME:
                     userManagementMItem.setStyleName("selected");
