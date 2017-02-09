@@ -75,8 +75,8 @@ public class UserManagementView extends VerticalLayout implements View {
 
         VerticalLayout innerLayout = new VerticalLayout();
 
-        Label head = new Label("Benutzerverwaltung ", ContentMode.TEXT);
-        head.setStyleName("heading");
+//        Label head = new Label("Benutzerverwaltung ", ContentMode.TEXT);
+//        head.setStyleName("heading");
 
         Grid grid = new Grid(createIndexedContainer());
         grid.removeColumn(USERNR_PROPERTY);
@@ -135,7 +135,7 @@ public class UserManagementView extends VerticalLayout implements View {
             }
         });
 
-        head.setSizeUndefined();
+//        head.setSizeUndefined();
 
         newUserButton.setSizeFull();
         delSelectedButton.setSizeFull();
@@ -146,7 +146,7 @@ public class UserManagementView extends VerticalLayout implements View {
 
         grid.setSizeFull();
 
-        innerLayout.addComponent(head);
+//        innerLayout.addComponent(head);
         innerLayout.addComponent(grid);
 
         innerLayout.setSizeFull();

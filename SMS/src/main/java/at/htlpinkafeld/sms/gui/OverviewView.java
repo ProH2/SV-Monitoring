@@ -9,6 +9,7 @@ import at.htlpinkafeld.sms.pojos.Host;
 import at.htlpinkafeld.sms.pojos.Hostgroup;
 import at.htlpinkafeld.sms.pojos.Service;
 import at.htlpinkafeld.sms.pojos.Servicegroup;
+import at.htlpinkafeld.sms.service.JSONService;
 import com.vaadin.data.Container;
 import com.vaadin.data.util.BeanItemContainer;
 import com.vaadin.navigator.View;
@@ -21,6 +22,7 @@ import com.vaadin.ui.VerticalLayout;
 import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Random;
 
@@ -33,10 +35,10 @@ public class OverviewView extends VerticalLayout implements View {
 
     public static final String VIEW_NAME = "overview";
 
-    private Tab hostGroupsTab;
-    private Tab serviceGroupsTab;
-    private Tab hosts;
-    private Tab services;
+    private final Tab hostGroupsTab;
+    private final Tab serviceGroupsTab;
+    private final Tab hostsTab;
+    private final Tab servicesTab;
 
     public OverviewView() {
         super.addComponent(new MenuBarComponent());
@@ -74,8 +76,8 @@ public class OverviewView extends VerticalLayout implements View {
 
         hostGroupsTab = tabSheet.addTab(new OverviewTabPanel(hostgroupItemContainer, getHostGroupsFilterMap()), "Host Groups");
         serviceGroupsTab = tabSheet.addTab(new OverviewTabPanel(servicegroupItemContainer, getServiceGroupsFilterMap()), "Service Groups");
-        hosts = tabSheet.addTab(new OverviewTabPanel(hostItemContainer, getHostsFilterMap()), "Hosts");
-        services = tabSheet.addTab(new OverviewTabPanel(serviceItemContainer, getServicesFilterMap()), "Services");
+        hostsTab = tabSheet.addTab(new OverviewTabPanel(hostItemContainer, getHostsFilterMap()), "Hosts");
+        servicesTab = tabSheet.addTab(new OverviewTabPanel(serviceItemContainer, getServicesFilterMap()), "Services");
 
         super.addComponent(tabSheet);
     }
@@ -114,9 +116,12 @@ public class OverviewView extends VerticalLayout implements View {
     /**
      * Convenience Method to create a {@link Container} for testing purpose.
      *
+     *
+     * @param containerClass should be {@link Service.class} or
+     * {@link Host.class}
      * @return
      */
-    private BeanItemContainer createIndexedContainer(Class containerClass) {
+    static protected BeanItemContainer createIndexedContainer(Class containerClass) {
         BeanItemContainer container;
 
         if (containerClass == Service.class) {
@@ -125,22 +130,28 @@ public class OverviewView extends VerticalLayout implements View {
             container = new BeanItemContainer<>(containerClass);
         }
 
-        for (int i = 1; i <= 100; i++) {
+        List<Host> hosts = JSONService.getHosts();
+        if (containerClass == Host.class && hosts != null) {
+            container.addAll(hosts);
+        } else {
             if (containerClass == Host.class) {
-                Host h = new Host(0, "Test" + i, (Host.Hoststatus) getRandomEnum(Host.Hoststatus.values()), LocalDateTime.now(), Duration.ZERO, "Test informationTest informationTest tionTest informationTest informationonTest informationTest information");
-                container.addBean(h);
+                for (int i = 1; i <= 30; i++) {
+                    Host h = new Host(0, "Host " + i, (Host.Hoststatus) getRandomEnum(Host.Hoststatus.values()), LocalDateTime.now(), Duration.ZERO, "Test informationTest informationTest tionTest informationTest informationonTest informationTest information");
+                    container.addBean(h);
+                }
             } else if (containerClass == Service.class) {
-                Service s = new Service(i % 30, 0, "Test" + i, (Service.Servicestatus) getRandomEnum(Service.Servicestatus.values()), LocalDateTime.now(), Duration.ofMinutes(10), 0, "Test informationTest informationTest tionTest informationTest informationonTest informationTest information");
-                s.setHostname(" Host " + i % 30);
-                container.addBean(s);
+                for (int i = 1; i <= 100; i++) {
+                    Service s = new Service(i % 30, 0, "Service " + i, (Service.Servicestatus) getRandomEnum(Service.Servicestatus.values()), LocalDateTime.now(), Duration.ofMinutes(10), 0, "Test informationTest informationTest tionTest informationTest informationonTest informationTest information");
+                    s.setHostname("Host " + i % 30);
+                    container.addBean(s);
+                }
             }
-
         }
         return container;
     }
 
     // Testing Function
-    private Enum getRandomEnum(Enum... e) {
+    static private Enum getRandomEnum(Enum... e) {
         Random r = new Random();
         return e[r.nextInt(e.length)];
     }

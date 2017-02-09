@@ -51,7 +51,7 @@ public class TimeManagementView extends VerticalLayout implements View {
     public TimeManagementView() {
         super.addComponent(new MenuBarComponent());
 
-        super.addComponent(new Label("Dienstkalendar"));
+//        super.addComponent(new Label("Dienstkalendar"));
 
         Container.Indexed indexed = createIndexedContainer();
         table = new Table("Available Users");

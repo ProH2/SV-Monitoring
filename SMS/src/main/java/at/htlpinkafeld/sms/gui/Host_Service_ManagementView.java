@@ -5,14 +5,21 @@
  */
 package at.htlpinkafeld.sms.gui;
 
+import at.htlpinkafeld.sms.gui.util.HostServiceHierarchical_Container;
+import at.htlpinkafeld.sms.pojos.Host;
+import at.htlpinkafeld.sms.pojos.Service;
 import com.vaadin.data.Property;
+import com.vaadin.data.util.BeanItem;
 import com.vaadin.navigator.View;
 import com.vaadin.navigator.ViewChangeListener;
 import com.vaadin.ui.Alignment;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.FormLayout;
 import com.vaadin.ui.NativeSelect;
+import com.vaadin.ui.Table;
 import com.vaadin.ui.TextField;
+import com.vaadin.ui.TreeTable;
+import com.vaadin.ui.UI;
 import com.vaadin.ui.VerticalLayout;
 import java.util.Arrays;
 
@@ -27,48 +34,94 @@ public class Host_Service_ManagementView extends VerticalLayout implements View 
     public Host_Service_ManagementView() {
         super.addComponent(new MenuBarComponent());
 
-        FormLayout parentLayout = new FormLayout();
+        TreeTable treeTable = new TreeTable();
 
-        NativeSelect typSelect = new NativeSelect("Typ", Arrays.asList("Host", "Service"));
-        typSelect.setRequired(true);
-        typSelect.select(typSelect.getItemIds().toArray()[0]);
-        typSelect.setNullSelectionAllowed(false);
+        HostServiceHierarchical_Container hostServiceHierarchical_Container = new HostServiceHierarchical_Container(OverviewView.createIndexedContainer(Host.class).getItemIds(), OverviewView.createIndexedContainer(Service.class).getItemIds());
 
-        parentLayout.addComponent(typSelect);
+        treeTable.setContainerDataSource(hostServiceHierarchical_Container);
+        treeTable.setSizeFull();
 
-        TextField destinationTextField = new TextField("IP");
-        destinationTextField.setRequired(true);
-
-        parentLayout.addComponent(destinationTextField);
-
-        TextField nameTextField = new TextField(typSelect.getValue().toString() + "name");
-        nameTextField.setRequired(true);
-
-        parentLayout.addComponent(nameTextField);
-
-        Button addButton = new Button("Add " + typSelect.getValue());
-        parentLayout.addComponent(addButton);
-
-        typSelect.addValueChangeListener(new Property.ValueChangeListener() {
+        treeTable.addGeneratedColumn("new Service", new Table.ColumnGenerator() {
             @Override
-            public void valueChange(Property.ValueChangeEvent event) {
-                nameTextField.setCaption(event.getProperty().getValue() + "name");
-                addButton.setCaption("Add " + event.getProperty().getValue());
-                if (event.getProperty().getValue().equals("Host")) {
-                    destinationTextField.setCaption("IP");
-                } else if (event.getProperty().getValue().equals("Service")) {
-                    destinationTextField.setCaption("Hostname");
+            public Object generateCell(Table source, Object itemId, Object columnId) {
+                if (!String.valueOf(itemId).isEmpty()) {
+                    BeanItem beanItem = (BeanItem) source.getItem(itemId);
+                    if (beanItem != null) {
+                        Object bean = beanItem.getBean();
+                        if (bean instanceof Host) {
+                            return new Button("Create Service", new Button.ClickListener() {
+                                @Override
+                                public void buttonClick(Button.ClickEvent event) {
+                                    UI.getCurrent().addWindow(new NewHostServiceWindow((Host) bean));
+                                }
+                            });
+                        }
+                    }
                 }
+                return "";
             }
         });
 
-        parentLayout.setSizeUndefined();
-        parentLayout.setMargin(true);
-        parentLayout.setSpacing(true);
+        treeTable.addGeneratedColumn("remove", new Table.ColumnGenerator() {
+            @Override
+            public Object generateCell(Table source, Object itemId, Object columnId) {
+                if (!String.valueOf(itemId).isEmpty()) {
+                    BeanItem beanItem = (BeanItem) source.getItem(itemId);
+                    if (beanItem != null) {
+                        Object bean = beanItem.getBean();
+                        if (bean instanceof Host) {
+                            return new Button("Remove Host", new Button.ClickListener() {
+                                @Override
+                                public void buttonClick(Button.ClickEvent event) {
+                                    source.removeItem(itemId);
+                                    source.refreshRowCache();
+                                }
+                            });
+                        } else if (bean instanceof Service) {
+                            return new Button("Remove Service", new Button.ClickListener() {
+                                @Override
+                                public void buttonClick(Button.ClickEvent event) {
+                                    source.removeItem(itemId);
+                                    source.refreshRowCache();
+                                }
+                            });
+                        }
+                    }
+                }
+                return "";
+            }
+        });
 
-        super.addComponent(parentLayout);
+        
+        //TODO Hide first row
+//        treeTable.setCellStyleGenerator(new Table.CellStyleGenerator() {
+//            @Override
+//            public String getStyle(Table source, Object itemId, Object propertyId) {
+//                if (propertyId == null) {
+//                    if (String.valueOf(itemId).isEmpty()) {
+//                        return "hiderow";
+//                    } else {
+//                        return null;
+//                    }
+//                } else {
+//                    return null;
+//                }
+//            }
+//        });
 
-        super.setComponentAlignment(parentLayout, Alignment.MIDDLE_CENTER);
+        treeTable.setCollapsed("", false);
+
+        super.addComponent(treeTable);
+
+        Button createHostButton = new Button("Create Host", new Button.ClickListener() {
+            @Override
+            public void buttonClick(Button.ClickEvent event) {
+                UI.getCurrent().addWindow(new NewHostServiceWindow(null));
+            }
+        });
+
+        super.addComponent(createHostButton);
+
     }
 
     @Override

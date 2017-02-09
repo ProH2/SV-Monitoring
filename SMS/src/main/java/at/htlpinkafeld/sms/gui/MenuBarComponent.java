@@ -85,16 +85,16 @@ public class MenuBarComponent extends CustomComponent {
         if (uriFragment != null) {
             switch (uriFragment) {
                 case '!' + OverviewView.VIEW_NAME:
-                    overviewMItem.setStyleName("selected");
+                    overviewMItem.setStyleName("current");
                     break;
                 case '!' + Host_Service_ManagementView.VIEW_NAME:
-                    host_service_ManagementMItem.setStyleName("selected");
+                    host_service_ManagementMItem.setStyleName("current");
                     break;
                 case '!' + UserManagementView.VIEW_NAME:
-                    userManagementMItem.setStyleName("selected");
+                    userManagementMItem.setStyleName("current");
                     break;
                 case '!' + TimeManagementView.VIEW_NAME:
-                    timeManagementMItem.setStyleName("selected");
+                    timeManagementMItem.setStyleName("current");
                     break;
                 default:
             }

@@ -31,7 +31,8 @@ public class ServicePanel extends Panel {
         //add Layout Components
         Label servicenameLabel = new Label(service.getName());
         servicenameLabel.addStyleName("subheading");
-        parentLayout.addComponent(servicenameLabel, "top:5%; left:5%; right:70%;");
+        servicenameLabel.setSizeUndefined();
+        parentLayout.addComponent(servicenameLabel, "top:5%; left:5%; right:60%;");
 
         Label statusLabel = new Label(service.getStatus().name());
         switch (service.getStatus()) {
