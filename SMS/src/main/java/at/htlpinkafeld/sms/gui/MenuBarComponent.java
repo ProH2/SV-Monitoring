@@ -5,7 +5,7 @@
  */
 package at.htlpinkafeld.sms.gui;
 
-import com.vaadin.event.ContextClickEvent;
+import com.vaadin.server.VaadinSession;
 import com.vaadin.ui.CustomComponent;
 import com.vaadin.ui.MenuBar;
 import com.vaadin.ui.UI;
@@ -16,7 +16,7 @@ import com.vaadin.ui.UI;
  *
  * @author Martin Six
  */
-public class MenuBarComponent extends CustomComponent {
+public final class MenuBarComponent extends CustomComponent {
 
     private final MenuBar menuBar;
 
@@ -25,6 +25,9 @@ public class MenuBarComponent extends CustomComponent {
     private final MenuBar.MenuItem userManagementMItem;
     private final MenuBar.MenuItem timeManagementMItem;
 
+    /**
+     * Constructor for MenuBarComponent
+     */
     public MenuBarComponent() {
         super.setHeight(37, Unit.PIXELS);
 
@@ -32,6 +35,7 @@ public class MenuBarComponent extends CustomComponent {
         menuBar.setWidth(100, Unit.PERCENTAGE);
 
         overviewMItem = menuBar.addItem("Overview", new MenuBar.Command() {
+
             @Override
             public void menuSelected(MenuBar.MenuItem selectedItem) {
                 UI ui = UI.getCurrent();
@@ -39,6 +43,7 @@ public class MenuBarComponent extends CustomComponent {
                     ((SMS_Main) ui).navigateTo(OverviewView.VIEW_NAME);
                 }
             }
+
         });
 
         host_service_ManagementMItem = menuBar.addItem("Host-Service Management", new MenuBar.Command() {
@@ -74,12 +79,34 @@ public class MenuBarComponent extends CustomComponent {
         MenuBar.MenuItem logoutMItem = menuBar.addItem("Logout", new MenuBar.Command() {
             @Override
             public void menuSelected(MenuBar.MenuItem selectedItem) {
-                UI ui = UI.getCurrent();
-                if (ui instanceof SMS_Main) {
-                    ((SMS_Main) ui).navigateTo(LoginView.VIEW_NAME);
+                for (UI ui : VaadinSession.getCurrent().getUIs()) {
+                    ui.access(() -> {
+                        // Redirect from the page
+                        ui.getPage().setLocation("/SMS/");
+                    });
                 }
+
+                getSession().close();
             }
         });
+
+        logoutMItem.setStyleName("right");
+
+        switchStyle();
+
+        super.setCompositionRoot(menuBar);
+    }
+
+    /**
+     * Sets the style of the {@link MenuBar.MenuItem} for the current page as
+     * current according to the url
+     */
+    public void switchStyle() {
+
+        overviewMItem.setStyleName(null);
+        host_service_ManagementMItem.setStyleName(null);
+        userManagementMItem.setStyleName(null);
+        timeManagementMItem.setStyleName(null);
 
         String uriFragment = UI.getCurrent().getPage().getUriFragment();
         if (uriFragment != null) {
@@ -97,12 +124,9 @@ public class MenuBarComponent extends CustomComponent {
                     timeManagementMItem.setStyleName("current");
                     break;
                 default:
+                    overviewMItem.setStyleName("current");
             }
         }
-
-        logoutMItem.setStyleName("right");
-
-        super.setCompositionRoot(menuBar);
     }
 
 }

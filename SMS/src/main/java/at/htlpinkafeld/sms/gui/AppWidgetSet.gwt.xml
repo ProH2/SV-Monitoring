@@ -36,4 +36,6 @@
 
     <inherits name="org.vaadin.addons.stackpanel.WidgetSet" />
     <source path="my_stack_panel/client"/>
+
+    
 </module>

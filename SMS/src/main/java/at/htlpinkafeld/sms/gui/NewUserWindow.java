@@ -32,7 +32,7 @@ public class NewUserWindow extends Window {
      * Constructor for a View which creates a new User and adds it to the given
      * {@link Container.Indexed}.
      *
-     * @param containerDataSource
+     * @param containerDataSource Container where the new User will be added
      */
     public NewUserWindow(BeanItemContainer containerDataSource) {
         super("Create New User");

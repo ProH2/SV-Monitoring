@@ -5,6 +5,7 @@
  */
 package at.htlpinkafeld.sms.gui;
 
+import at.htlpinkafeld.sms.gui.container.ContainerFactory;
 import at.htlpinkafeld.sms.pojo.User;
 import com.vaadin.data.Container;
 import com.vaadin.data.Item;
@@ -14,13 +15,11 @@ import com.vaadin.data.util.PropertyValueGenerator;
 import com.vaadin.event.SelectionEvent;
 import com.vaadin.navigator.View;
 import com.vaadin.navigator.ViewChangeListener;
-import com.vaadin.shared.ui.label.ContentMode;
 import com.vaadin.ui.Alignment;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Grid;
 import com.vaadin.ui.Grid.MultiSelectionModel;
 import com.vaadin.ui.Grid.SelectionMode;
-import com.vaadin.ui.Label;
 import com.vaadin.ui.UI;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.renderers.ButtonRenderer;
@@ -70,15 +69,19 @@ public class UserManagementView extends VerticalLayout implements View {
 
     private BeanItemContainer<User> baseUserContainer;
 
+    /**
+     * Constructor for UserManagementView
+     */
     public UserManagementView() {
-        super.addComponent(new MenuBarComponent());
+        super.addComponent(((SMS_Main) UI.getCurrent()).getMenuBarComponent());
 
         VerticalLayout innerLayout = new VerticalLayout();
 
 //        Label head = new Label("Benutzerverwaltung ", ContentMode.TEXT);
 //        head.setStyleName("heading");
-
-        Grid grid = new Grid(createIndexedContainer());
+        baseUserContainer = ContainerFactory.createIndexedUserContainer();
+        Grid grid = new Grid(addGeneratedProperties(baseUserContainer));
+        //Restructure auto-generated columns
         grid.removeColumn(USERNR_PROPERTY);
         grid.setColumnOrder(USERNAME_PROPERTY, PASSWORD_PROPERTY, NAME_PROPERTY, EMAIL_PROPERTY, PHONENR_PROPERTY, EDITUSER_COLUMN, DELETEUSER_COLUMN);
 
@@ -136,7 +139,6 @@ public class UserManagementView extends VerticalLayout implements View {
         });
 
 //        head.setSizeUndefined();
-
         newUserButton.setSizeFull();
         delSelectedButton.setSizeFull();
 
@@ -158,31 +160,16 @@ public class UserManagementView extends VerticalLayout implements View {
 
     @Override
     public void enter(ViewChangeListener.ViewChangeEvent event) {
-
+        ((SMS_Main) UI.getCurrent()).getMenuBarComponent().switchStyle();
     }
 
     /**
-     * Convenience Method to create a {@link Container} for testing purpose.
+     * Wrapps the baseContainer for {@link User Users} in a
+     * {@link GeneratedPropertyContainer} to add the Buttons in the Grid.
      *
-     * @return
+     * @return Container with the Button-Properties
      */
-    private Container.Indexed createIndexedContainer() {
-
-        baseUserContainer = new BeanItemContainer<>(User.class);
-
-        baseUserContainer.addBean(new User(1, "Dogist", "1234", "Martin", "noplan@gmc.at", "5421575"));
-        baseUserContainer.addBean(new User(2, "Irish", "4321", "Sebastian", "noplan@qmail.com", "5788775"));
-//        IndexedContainer container = new IndexedContainer();
-//
-//        container.addContainerProperty(USERNR_PROPERTY, Integer.class, "Default UserNr");
-//        container.addContainerProperty(USERNAME_PROPERTY, String.class, "Default Username");
-//        container.addContainerProperty(PASSWORD_PROPERTY, String.class, "Default Password");
-//        container.addContainerProperty(NAME_PROPERTY, String.class, "Default Name");
-//        container.addContainerProperty(EMAIL_PROPERTY, String.class, "Default Email");
-//        container.addContainerProperty(PHONENR_PROPERTY, String.class, "Default PhoneNr");
-//
-//        container.addItem();
-//        container.addItem();
+    private Container.Indexed addGeneratedProperties(Container.Indexed baseUserContainer) {
 
         GeneratedPropertyContainer gpc = new GeneratedPropertyContainer(baseUserContainer);
 

@@ -49,7 +49,7 @@
     }
 
     .v-label-red{
-        background-color:red;
+        background-color:crimson;
         font-weight: bold;
     }
 
@@ -70,11 +70,17 @@
 
     .v-menubar-menuitem-right{
         float: right;
-        background-color: red;
+        background-color: #ff6666!important;
     }
 
-    .v-menubar-menuitem-selected{
-        background-color: green;
+    .v-menubar-menuitem-current{
+        background-color: lightgrey!important;
+    }
+
+    .v-table-cell-content-hiderow,
+    .v-table-cell-content-hiderow .v-table-cell-wrapper{
+        height: 0px!important;
+        min-height: 0px!important;
     }
 
     .v-textfield-passclick{

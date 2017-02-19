@@ -6,6 +6,7 @@
 package at.htlpinkafeld.sms.gui;
 
 import static at.htlpinkafeld.sms.gui.UserManagementView.USERNAME_PROPERTY;
+import at.htlpinkafeld.sms.gui.container.ContainerFactory;
 import at.htlpinkafeld.sms.gui.util.TimeManagementCalendarEvent;
 import at.htlpinkafeld.sms.pojo.User;
 import com.vaadin.addon.calendar.gwt.client.ui.VCalendar;
@@ -14,14 +15,12 @@ import com.vaadin.navigator.ViewChangeListener;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.Calendar;
 import com.vaadin.data.Container;
-import com.vaadin.data.util.BeanItemContainer;
 import com.vaadin.event.Action;
 import com.vaadin.event.dd.DragAndDropEvent;
 import com.vaadin.event.dd.DropHandler;
 import com.vaadin.event.dd.acceptcriteria.AcceptAll;
 import com.vaadin.event.dd.acceptcriteria.AcceptCriterion;
 import com.vaadin.ui.HorizontalSplitPanel;
-import com.vaadin.ui.Label;
 import com.vaadin.ui.Notification;
 import com.vaadin.ui.Table;
 import com.vaadin.ui.Table.TableTransferable;
@@ -48,12 +47,13 @@ public class TimeManagementView extends VerticalLayout implements View {
 
     Table table;
 
+    /**
+     * Constructor for TimeManagementView
+     */
     public TimeManagementView() {
-        super.addComponent(new MenuBarComponent());
+        super.addComponent(((SMS_Main) UI.getCurrent()).getMenuBarComponent());
 
-//        super.addComponent(new Label("Dienstkalendar"));
-
-        Container.Indexed indexed = createIndexedContainer();
+        Container.Indexed indexed = ContainerFactory.createIndexedUserContainer();
         table = new Table("Available Users");
         table.setWidth(100, Unit.PERCENTAGE);
         table.setHeight(800, Unit.PIXELS);
@@ -148,20 +148,7 @@ public class TimeManagementView extends VerticalLayout implements View {
 
     @Override
     public void enter(ViewChangeListener.ViewChangeEvent event) {
-    }
-
-    /**
-     * Convenience Method to create a {@link Container} for testing purpose.
-     *
-     * @return
-     */
-    private BeanItemContainer createIndexedContainer() {
-        BeanItemContainer<User> container = new BeanItemContainer<>(User.class);
-
-        container.addBean(new User(1, "Dogist", "1234", "Martin", "noplan@gmc.at", "5421575"));
-        container.addBean(new User(2, "Irish", "4321", "Sebastian", "noplan@qmail.com", "5788775"));
-
-        return container;
+        ((SMS_Main) UI.getCurrent()).getMenuBarComponent().switchStyle();
     }
 
     private Action.Handler createCalendarActionHandler() {

@@ -23,36 +23,53 @@ public class SMS_Main extends UI {
 
     private Navigator navigator;
 
+    private MenuBarComponent mbc;
+
     @Override
     protected void init(VaadinRequest vaadinRequest) {
+
+        mbc = new MenuBarComponent();
 
         navigator = new Navigator(UI.getCurrent(), this);
 
         OverviewView overviewView = new OverviewView();
-
+//
         navigator.addView(OverviewView.VIEW_NAME, overviewView);
+//        navigator.addView(OverviewView.VIEW_NAME, OverviewView.class);
 
         navigator.addView(LoginView.VIEW_NAME, LoginView.class);
         navigator.addView(UserManagementView.VIEW_NAME, UserManagementView.class);
         navigator.addView(TimeManagementView.VIEW_NAME, TimeManagementView.class);
         navigator.addView(Host_Service_ManagementView.VIEW_NAME, Host_Service_ManagementView.class);
 
-//        setResizeLazy(true);
+//        setPollInterval(5000);//Poll every 5 seconds
+        setResizeLazy(true);
     }
 
     /**
      * Function used for the Navigation between the different Views which are
-     * registered in the init above. The parameter viewName which is passed
+     * registered in the init above. The constant VIEW_NAME which is passed
      * should be defined in every View
      *
-     * @param viewName
+     * @param viewName the name of the View to which should be navigated
      */
     public void navigateTo(String viewName) {
         navigator.navigateTo(viewName);
+//        mbc.switchStyle();
+    }
+
+    /**
+     * Getter for the {@link MenuBarComponent}
+     *
+     * @return The {@link MenuBarComponent} which is used in the current UI.
+     */
+    public MenuBarComponent getMenuBarComponent() {
+        return mbc;
     }
 
     @WebServlet(urlPatterns = "/*", name = "MyUIServlet", asyncSupported = true)
     @VaadinServletConfiguration(ui = SMS_Main.class, productionMode = false, resourceCacheTime = 10, widgetset = "at.htlpinkafeld.sms.gui.AppWidgetSet")
     public static class MyUIServlet extends VaadinServlet {
+
     }
 }

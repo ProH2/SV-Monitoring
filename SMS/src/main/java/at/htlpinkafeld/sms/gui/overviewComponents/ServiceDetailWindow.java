@@ -5,6 +5,7 @@
  */
 package at.htlpinkafeld.sms.gui.overviewComponents;
 
+import at.htlpinkafeld.sms.pojos.Comment;
 import at.htlpinkafeld.sms.pojos.Service;
 import com.vaadin.data.util.IndexedContainer;
 import com.vaadin.ui.FormLayout;
@@ -16,13 +17,20 @@ import com.vaadin.ui.Window;
 import java.time.format.DateTimeFormatter;
 
 /**
+ * {@link Window} which displays the data of a single {@link Service} and its
+ * {@link Comment Comments} in detail.
  *
  * @author Martin Six
  */
 public class ServiceDetailWindow extends Window {
 
-    private Service service;
+    private final Service service;
 
+    /**
+     * Constructor for the ServiceDetailWindow
+     *
+     * @param service contains the data which will be shown
+     */
     public ServiceDetailWindow(Service service) {
         super(service.getName());
         super.center();

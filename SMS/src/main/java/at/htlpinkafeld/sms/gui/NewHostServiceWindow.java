@@ -6,23 +6,30 @@
 package at.htlpinkafeld.sms.gui;
 
 import at.htlpinkafeld.sms.pojos.Host;
-import com.vaadin.data.Property;
-import com.vaadin.ui.Alignment;
+import at.htlpinkafeld.sms.pojos.Service;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.FormLayout;
-import com.vaadin.ui.NativeSelect;
 import com.vaadin.ui.TextField;
 import com.vaadin.ui.Window;
-import java.util.Arrays;
 
 /**
+ * Window for adding new {@link Host Hosts} and {@link Service Services}. used
+ * in {@link Host_Service_ManagementView}
  *
  * @author Martin Six
  */
 public class NewHostServiceWindow extends Window {
 
+    /**
+     * Constructor for NewHostServiceWindow
+     *
+     * @param host the Host to which the Service is added.
+     * <p>
+     * If Host is null the window will be used to add a new Host. If the Host is
+     * not null the window will be used to add a Service under the Host.</p>
+     */
     public NewHostServiceWindow(Host host) {
-        super(host == null ? "Create new host" : "Create new Service for " + host.getHostname());
+        super(host == null ? "Create new Host" : "Create new Service for " + host.getHostname());
         super.center();
         super.setModal(true);
 

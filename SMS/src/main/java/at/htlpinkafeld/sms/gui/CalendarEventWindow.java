@@ -19,17 +19,26 @@ import com.vaadin.ui.NativeSelect;
 import com.vaadin.ui.Notification;
 import com.vaadin.ui.PopupDateField;
 import com.vaadin.ui.Window;
-import com.vaadin.ui.components.calendar.event.BasicEvent;
 import java.util.Date;
 
 /**
  * Window used for editing the Events of the calendar in
- * {@link TimeManagementView}. Receives the to be edited {@link BasicEvent}.
+ * {@link TimeManagementView}. Receives the to be edited
+ * {@link TimeManagementCalendarEvent}.
  *
  * @author Martin Six
  */
 public class CalendarEventWindow extends Window {
 
+    /**
+     * Constructor for CalendarEventWindow
+     *
+     * @param calendarEvent calendarEvent which will be edited
+     * @param userDataSource container which contains the available
+     * {@link User Users}
+     * @param calendar instance of the calender from which this window was
+     * opened
+     */
     public CalendarEventWindow(TimeManagementCalendarEvent calendarEvent, Container userDataSource, Calendar calendar) {
         super("Edit Time Distribution");
         super.center();
@@ -69,6 +78,7 @@ public class CalendarEventWindow extends Window {
         formLayout.addComponent(startDateField);
         formLayout.addComponent(endDateField);
 
+        //create the Buttons
         Button createButton = new Button("Save", new Button.ClickListener() {
             @Override
             public void buttonClick(Button.ClickEvent event) {
@@ -110,6 +120,9 @@ public class CalendarEventWindow extends Window {
 
     }
 
+    /**
+     * Convenience Factory-Method to create {@link DateField}
+     */
     private DateField createDateTimeField(String caption, Date value, String errorMsg) {
         final PopupDateField dateField = new PopupDateField(caption, value);
         dateField.setRequired(true);

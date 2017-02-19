@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package at.htlpinkafeld.sms.gui.util;
+package at.htlpinkafeld.sms.gui.container;
 
 import at.htlpinkafeld.sms.pojos.Host;
 import at.htlpinkafeld.sms.pojos.Service;
@@ -22,14 +22,37 @@ import java.util.List;
 import java.util.Map;
 
 /**
+ * Container which implements {@link Container.Hierarchical} and represents a
+ * Hierarchy with {@link Host} and {@link Service}.
+ *
+ * <p>
+ * Hierarchy is like this: null-root - Host - Service.</p>
+ *
+ * <p>
+ * Hosts have their {@code hostname} as itemId and Services have
+ * {@code hostname+"/"+servicename} as their itemId. The null-root item is null
+ * and it's itemId is ""</p>
  *
  * @author Martin Six
  */
 public class HostServiceHierarchical_Container extends AbstractContainer implements Container.Hierarchical {
 
-    private Map<String, BeanItem> hostServiceMap;
+    private final Map<String, BeanItem> hostServiceMap;
+
+    /**
+     * Collection which contains the containerPropertyIds
+     */
     private static final Collection containerPropertyIds = Arrays.asList(new String[]{"Name", "Host-IP", "Status"});
 
+    /**
+     * Constructor for the {@link HostServiceHierarchical_Container}, which uses
+     * two Collections
+     *
+     * @param hosts Collection of {@link Host Hosts} which should be used to
+     * build the Hierarchy
+     * @param services Collection of {@link Service Services} which should be
+     * used to build the Hierarchy
+     */
     public HostServiceHierarchical_Container(Collection<Host> hosts, Collection<Service> services) {
         hostServiceMap = new HashMap<>();
 

@@ -28,6 +28,9 @@ public class LoginView extends VerticalLayout implements View {
 
     public static final String VIEW_NAME = "";
 
+    /**
+     * Constructor for LoginView
+     */
     public LoginView() {
 
         VerticalLayout innerLayout = new VerticalLayout();
@@ -82,4 +85,5 @@ public class LoginView extends VerticalLayout implements View {
     public void enter(ViewChangeListener.ViewChangeEvent event) {
 
     }
+
 }

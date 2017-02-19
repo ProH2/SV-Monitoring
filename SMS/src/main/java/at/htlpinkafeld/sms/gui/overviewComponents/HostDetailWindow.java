@@ -5,6 +5,7 @@
  */
 package at.htlpinkafeld.sms.gui.overviewComponents;
 
+import at.htlpinkafeld.sms.pojos.Comment;
 import at.htlpinkafeld.sms.pojos.Host;
 import com.vaadin.data.util.IndexedContainer;
 import com.vaadin.ui.FormLayout;
@@ -16,13 +17,21 @@ import com.vaadin.ui.Window;
 import java.time.format.DateTimeFormatter;
 
 /**
+ * {@link Window} which displays the data of a single {@link Host} and its
+ * {@link Comment Comments} in detail.
  *
  * @author Martin Six
  */
+//TODO Synchronisation über Map.Entry wie bei HostPanel?
 public class HostDetailWindow extends Window {
 
-    private Host host;
+    private final Host host;
 
+    /**
+     * Constructor for the {@link HostDetailWindow}
+     *
+     * @param host contains the data which will be shown
+     */
     public HostDetailWindow(Host host) {
         super(host.getHostname());
         super.center();

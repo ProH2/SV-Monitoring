@@ -6,6 +6,7 @@
 package at.htlpinkafeld.sms.gui;
 
 import com.vaadin.server.Page;
+import com.vaadin.ui.Alignment;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.GridLayout;
 import com.vaadin.ui.UI;
@@ -14,7 +15,9 @@ import java.util.List;
 
 /**
  * {@link GridLayout} which uses a BrowserWindowResizeListener to automatically
- * change the column-count if the BrowserWindow is resized
+ * change the column-count if the BrowserWindow is resized.<p>
+ * The BrowserWindowResizeListener is automatically registered in
+ * {@link #attach()} and removed in {@link #detach() }</p>
  *
  * @author Martin Six
  */
@@ -33,27 +36,30 @@ public class AutoResizingGridLayout extends GridLayout implements Page.BrowserWi
      * Constructor which uses the componentWidth Parameter to calculate the
      * column count
      *
-     * @param componentWidth
+     * @param componentWidth the width of the components
      */
     public AutoResizingGridLayout(int componentWidth) {
         COMPONENT_WIDTH = componentWidth;
         //TODO Margin und Spacing in die Berechnung einbringen
-        super.setColumns(UI.getCurrent().getPage().getBrowserWindowWidth() / (COMPONENT_WIDTH + 15));
+        super.setColumns((UI.getCurrent().getPage().getBrowserWindowWidth() - 37 - 10) / (COMPONENT_WIDTH + 12));
         super.setMargin(true);
         super.setSpacing(true);
+        super.setDefaultComponentAlignment(Alignment.MIDDLE_CENTER);
 
     }
 
     /**
-     * BrowserWindowResized Listener which is registered in the Constructor. It
-     * reconstructs the GridLayout with a different column count after a
-     * {@link  Page.BrowserWindowResizeEvent}, based on the Page-Width
+     * {@inheritDoc }
+     * <p>
+     * automatically reconstructs the {@link GridLayout} with a different column
+     * count, calculated with the window-width and the component-size
+     * </p>
      *
-     * @param event
+     * @see Page.BrowserWindowResizeListener
      */
     @Override
     public void browserWindowResized(Page.BrowserWindowResizeEvent event) {
-        int newColCount = event.getWidth() / COMPONENT_WIDTH;
+        int newColCount = (event.getWidth() - 37 - 10) / (COMPONENT_WIDTH + 12);
         if (newColCount != super.getColumns()) {
 
             List<Component> componentList = new LinkedList<>();
@@ -64,12 +70,33 @@ public class AutoResizingGridLayout extends GridLayout implements Page.BrowserWi
             super.removeAllComponents();
 
             super.setColumns(newColCount);
+
             super.addComponents(componentList.toArray(new Component[0]));
         }
     }
 
-    public int getCOMPONENT_WIDTH() {
-        return COMPONENT_WIDTH;
+    /**
+     * {@inheritDoc }
+     * <p>
+     * additionaly removes itself as an {@link Page.BrowserWindowResizeListener}
+     * from the current UI</p>
+     */
+    @Override
+    public void detach() {
+        UI.getCurrent().getPage().removeBrowserWindowResizeListener(this);
+        super.detach();
+    }
+
+    /**
+     * {@inheritDoc }
+     * <p>
+     * additionaly adds itself as an {@link Page.BrowserWindowResizeListener} to
+     * the current UI</p>
+     */
+    @Override
+    public void attach() {
+        super.attach();
+        UI.getCurrent().getPage().addBrowserWindowResizeListener(this);
     }
 
 }
