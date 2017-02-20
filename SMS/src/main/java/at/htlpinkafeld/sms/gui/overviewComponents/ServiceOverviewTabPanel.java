@@ -194,9 +194,11 @@ public class ServiceOverviewTabPanel extends Panel implements OverviewTabPanel, 
 
     @Override
     public void detach(DetachEvent event) {
-        GridLayout gridLayout = (GridLayout) event.getSource();
-        for (Component c : gridLayout) {
-            container.removeMapChangeListener((ServicePanel) c);
+        if (event.getSource().equals(this)) {
+            GridLayout gridLayout = (GridLayout) event.getSource();
+            for (Component c : gridLayout) {
+                container.removeMapChangeListener((ServicePanel) c);
+            }
         }
 
     }

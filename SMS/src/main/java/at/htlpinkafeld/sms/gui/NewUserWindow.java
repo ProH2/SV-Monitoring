@@ -18,6 +18,7 @@ import com.vaadin.ui.Button;
 import com.vaadin.ui.FormLayout;
 import com.vaadin.ui.Notification;
 import com.vaadin.ui.TextField;
+import com.vaadin.ui.TwinColSelect;
 import com.vaadin.ui.Window;
 
 /**
@@ -38,7 +39,7 @@ public class NewUserWindow extends Window {
         super("Create New User");
         super.center();
         super.setModal(true);
-
+        
         FormLayout formLayout = new FormLayout();
 
         final TextField usernameTextF = new TextField("Username");

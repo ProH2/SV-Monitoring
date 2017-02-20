@@ -20,7 +20,7 @@ import java.util.List;
  */
 public class HashMapWithListeners<K, V> extends LinkedHashMap<K, V> {
 
-    private List<MapChangeListener> mapListeners = new LinkedList<>();
+    private final List<MapChangeListener> mapListeners = new LinkedList<>();
 
     /**
      * The Listener for {@link MapChangeListener}. Listener will be notified
