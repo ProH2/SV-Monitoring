@@ -13,6 +13,7 @@ import com.vaadin.data.util.BeanItem;
 import com.vaadin.navigator.View;
 import com.vaadin.navigator.ViewChangeListener;
 import com.vaadin.ui.Button;
+import com.vaadin.ui.Panel;
 import com.vaadin.ui.Table;
 import com.vaadin.ui.TreeTable;
 import com.vaadin.ui.UI;
@@ -33,14 +34,30 @@ public class Host_Service_ManagementView extends VerticalLayout implements View 
     public Host_Service_ManagementView() {
         super.addComponent(((SMS_Main) UI.getCurrent()).getMenuBarComponent());
 
-        TreeTable treeTable = new TreeTable();
+        super.addComponent(createHostServiceManagementPanel());
+    }
+
+    @Override
+    public void enter(ViewChangeListener.ViewChangeEvent event) {
+        ((SMS_Main) UI.getCurrent()).getMenuBarComponent().switchStyle();
+    }
+
+    /**
+     * Factory Method to create the Panel for the Host/Service-Management Tab
+     *
+     * @return The Panel for the Host/Service-Management Tab
+     */
+    private Panel createHostServiceManagementPanel() {
+        VerticalLayout mainLayout = new VerticalLayout();
+
+        TreeTable hostService_treeTable = new TreeTable();
 
         HostServiceHierarchical_Container hostServiceHierarchical_Container = ContainerFactory.createHostServiceHierarchical_Container();
 
-        treeTable.setContainerDataSource(hostServiceHierarchical_Container);
-        treeTable.setSizeFull();
+        hostService_treeTable.setContainerDataSource(hostServiceHierarchical_Container);
+        hostService_treeTable.setSizeFull();
 
-        treeTable.addGeneratedColumn("new Service", new Table.ColumnGenerator() {
+        hostService_treeTable.addGeneratedColumn("new Service", new Table.ColumnGenerator() {
             @Override
             public Object generateCell(Table source, Object itemId, Object columnId) {
                 if (!String.valueOf(itemId).isEmpty()) {
@@ -61,7 +78,7 @@ public class Host_Service_ManagementView extends VerticalLayout implements View 
             }
         });
 
-        treeTable.addGeneratedColumn("remove", new Table.ColumnGenerator() {
+        hostService_treeTable.addGeneratedColumn("remove", new Table.ColumnGenerator() {
             @Override
             public Object generateCell(Table source, Object itemId, Object columnId) {
                 if (!String.valueOf(itemId).isEmpty()) {
@@ -91,7 +108,7 @@ public class Host_Service_ManagementView extends VerticalLayout implements View 
             }
         });
 
-        treeTable.setCellStyleGenerator(new Table.CellStyleGenerator() {
+        hostService_treeTable.setCellStyleGenerator(new Table.CellStyleGenerator() {
             @Override
             public String getStyle(Table source, Object itemId, Object propertyId) {
                 if (String.valueOf(itemId).isEmpty()) {
@@ -101,9 +118,9 @@ public class Host_Service_ManagementView extends VerticalLayout implements View 
                 }
             }
         });
-        treeTable.setCollapsed("", false);
+        hostService_treeTable.setCollapsed("", false);
 
-        super.addComponent(treeTable);
+        mainLayout.addComponent(hostService_treeTable);
 
         Button createHostButton = new Button("Create Host", new Button.ClickListener() {
             @Override
@@ -112,13 +129,9 @@ public class Host_Service_ManagementView extends VerticalLayout implements View 
             }
         });
 
-        super.addComponent(createHostButton);
+        mainLayout.addComponent(createHostButton);
 
-    }
-
-    @Override
-    public void enter(ViewChangeListener.ViewChangeEvent event) {
-        ((SMS_Main) UI.getCurrent()).getMenuBarComponent().switchStyle();
+        return new Panel(mainLayout);
     }
 
 }

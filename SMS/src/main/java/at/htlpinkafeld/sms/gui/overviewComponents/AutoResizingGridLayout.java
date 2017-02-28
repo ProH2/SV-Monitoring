@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package at.htlpinkafeld.sms.gui;
+package at.htlpinkafeld.sms.gui.overviewComponents;
 
 import com.vaadin.server.Page;
 import com.vaadin.ui.Alignment;

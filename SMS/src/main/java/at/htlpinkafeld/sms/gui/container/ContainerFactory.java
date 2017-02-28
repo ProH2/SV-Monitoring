@@ -5,20 +5,25 @@
  */
 package at.htlpinkafeld.sms.gui.container;
 
+import at.htlpinkafeld.dao.DutyDaoImpl;
 import at.htlpinkafeld.sms.gui.Host_Service_ManagementView;
 import at.htlpinkafeld.sms.gui.OverviewView;
+import at.htlpinkafeld.sms.gui.TimeManagementView;
 import at.htlpinkafeld.sms.gui.UserManagementView;
 import at.htlpinkafeld.sms.gui.overviewComponents.HostOverviewTabPanel;
 import at.htlpinkafeld.sms.gui.overviewComponents.HostPanel;
 import at.htlpinkafeld.sms.gui.overviewComponents.ServiceOverviewTabPanel;
 import at.htlpinkafeld.sms.gui.overviewComponents.ServicePanel;
 import at.htlpinkafeld.sms.pojo.User;
+import at.htlpinkafeld.sms.pojos.Comment;
 import at.htlpinkafeld.sms.pojos.Host;
 import at.htlpinkafeld.sms.pojos.Service;
 import com.vaadin.data.Container;
 import com.vaadin.data.util.BeanItemContainer;
+import com.vaadin.ui.Calendar;
 import com.vaadin.ui.Grid;
 import com.vaadin.ui.Table;
+import com.vaadin.ui.components.calendar.event.CalendarEditableEventProvider;
 import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.AbstractMap;
@@ -41,6 +46,8 @@ public class ContainerFactory {
     private static HashMapWithListeners<String, Service> serviceMap = null;
 
     private static BeanItemContainer<User> userContainer = null;
+
+    private static CalendarEditableEventProvider dutyEventProvider = null;
 
     /**
      * Initializes hostMap
@@ -66,20 +73,6 @@ public class ContainerFactory {
             }
         })).forEachOrdered(entry -> hostMap.put(entry.getKey(), entry.getValue()));
 
-//        hostPanels = new LinkedList<>();
-//
-//        for (Map.Entry<String, Host> entry : hostMap.entrySet()) {
-//            HostPanel hostPanel = new HostPanel(entry);
-//            hostPanel.addClickListener(new MouseEvents.ClickListener() {
-//                @Override
-//                public void click(MouseEvents.ClickEvent event) {
-//                    UI.getCurrent().addWindow(new HostDetailWindow(hostPanel.getValue()));
-//                }
-//            });
-//
-//            hostPanels.add(hostPanel);
-//        }
-//        hostMap.addAllListeners(hostPanels);
     }
 
     /**
@@ -110,6 +103,17 @@ public class ContainerFactory {
         users.add(new User(1, "Dogist", "1234", "Martin", "noplan@gmc.at", "5421575"));
         users.add(new User(2, "Irish", "4321", "Sebastian", "noplan@qmail.com", "5788775"));
         userContainer = new BeanItemContainer<>(User.class, users);
+
+//        UserDao userDao = new UserDaoImpl();
+//        userContainer = new BeanItemContainer<>(User.class, userDao.findAll());
+    }
+
+    /**
+     * Initializes DutyEventProvider
+     */
+    private static void initDutyEventProvider() {
+        dutyEventProvider = new DutyEventProvider(new DutyDaoImpl());
+
     }
 
     /**
@@ -160,17 +164,62 @@ public class ContainerFactory {
     }
 
     /**
-     * Static Method to create the Container for the {@link Grid} in
+     * Static Method to create the Container for the User-{@link Grid} in
      * {@link UserManagementView}
      *
      * @return {@link Container} which contains the Users
      */
-    public static BeanItemContainer createIndexedUserContainer() {
+    public static BeanItemContainer<User> createIndexedUserContainer() {
         if (userContainer == null) {
             initUserContainer();
         }
 
         return userContainer;
+    }
+
+    /**
+     * Static Method to create the EventProvider for the Duty-{@link Calendar}
+     * in {@link TimeManagementView}
+     *
+     * @return {@link CalendarEditableEventProvider} which contains the Duties
+     */
+    public static CalendarEditableEventProvider createDutyEventProvider() {
+        if (dutyEventProvider == null) {
+            initDutyEventProvider();
+        }
+
+        return dutyEventProvider;
+    }
+
+    /**
+     * Static Method to create the Container for the Comment-{@link Grid} in
+     * {@link HostPanel}
+     *
+     * @param hostname The name of the Host which Comments should be returned
+     * @return Container with the corresponding Comments
+     */
+    public static BeanItemContainer<Comment> createHostCommentContainer(String hostname) {
+        BeanItemContainer<Comment> itemContainer = new BeanItemContainer<>(Comment.class);
+        for (int i = 0; i < 5; i++) {
+            itemContainer.addBean(new Comment(LocalDateTime.now(), hostname, "Test Comment " + i + " at " + hostname));
+        }
+        return itemContainer;
+    }
+
+    /**
+     * Static Method to create the Container for the Comment-{@link Grid} in
+     * {@link ServicePanel}
+     *
+     * @param serviceUId The unique identifier for the Service, which Comments
+     * should be returned. The unique identifier is hostname/servicename
+     * @return Container with the corresponding Comments
+     */
+    public static BeanItemContainer<Comment> createServiceCommentContainer(String serviceUId) {
+        BeanItemContainer<Comment> itemContainer = new BeanItemContainer<>(Comment.class);
+        for (int i = 0; i < 5; i++) {
+            itemContainer.addBean(new Comment(LocalDateTime.now(), serviceUId, "Test Comment " + i + " at " + serviceUId));
+        }
+        return itemContainer;
     }
 
 }

@@ -77,8 +77,6 @@ public class UserManagementView extends VerticalLayout implements View {
 
         VerticalLayout innerLayout = new VerticalLayout();
 
-//        Label head = new Label("Benutzerverwaltung ", ContentMode.TEXT);
-//        head.setStyleName("heading");
         baseUserContainer = ContainerFactory.createIndexedUserContainer();
         Grid grid = new Grid(addGeneratedProperties(baseUserContainer));
         //Restructure auto-generated columns

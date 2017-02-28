@@ -28,7 +28,7 @@ import com.vaadin.ui.UI;
 import com.vaadin.ui.components.calendar.CalendarComponentEvents;
 import com.vaadin.ui.components.calendar.CalendarDateRange;
 import com.vaadin.ui.components.calendar.CalendarTargetDetails;
-import com.vaadin.ui.components.calendar.event.BasicEventProvider;
+import com.vaadin.ui.components.calendar.event.CalendarEditableEventProvider;
 import com.vaadin.ui.components.calendar.event.CalendarEvent;
 import com.vaadin.ui.components.calendar.handler.BasicDateClickHandler;
 import java.util.Collections;
@@ -45,7 +45,11 @@ public class TimeManagementView extends VerticalLayout implements View {
 
     public static final String VIEW_NAME = "timemanagementview";
 
-    Table table;
+    private final Table table;
+
+    private final Container.Indexed userContainer;
+
+    private final CalendarEditableEventProvider dutyProvider;
 
     /**
      * Constructor for TimeManagementView
@@ -53,16 +57,18 @@ public class TimeManagementView extends VerticalLayout implements View {
     public TimeManagementView() {
         super.addComponent(((SMS_Main) UI.getCurrent()).getMenuBarComponent());
 
-        Container.Indexed indexed = ContainerFactory.createIndexedUserContainer();
+        userContainer = ContainerFactory.createIndexedUserContainer();
         table = new Table("Available Users");
         table.setWidth(100, Unit.PERCENTAGE);
         table.setHeight(800, Unit.PIXELS);
 
-        table.setContainerDataSource(indexed, Collections.singletonList(USERNAME_PROPERTY));
+        table.setContainerDataSource(userContainer, Collections.singletonList(USERNAME_PROPERTY));
         table.setDragMode(Table.TableDragMode.ROW);
         table.setSelectable(true);
 
-        Calendar calendar = new Calendar(new BasicEventProvider());
+        dutyProvider = ContainerFactory.createDutyEventProvider();
+
+        Calendar calendar = new Calendar(dutyProvider);
         calendar.setWidth((float) 99.5, Unit.PERCENTAGE);
         calendar.setHeight(800, Unit.PIXELS);
 
@@ -90,11 +96,8 @@ public class TimeManagementView extends VerticalLayout implements View {
             }
         });
 
-        calendar.setHandler(new CalendarComponentEvents.EventClickHandler() {
-            @Override
-            public void eventClick(CalendarComponentEvents.EventClick event) {
-                UI.getCurrent().addWindow(new CalendarEventWindow((TimeManagementCalendarEvent) event.getCalendarEvent(), table.getContainerDataSource(), calendar));
-            }
+        calendar.setHandler((CalendarComponentEvents.EventClick event) -> {
+            UI.getCurrent().addWindow(new CalendarEventWindow((TimeManagementCalendarEvent) event.getCalendarEvent(), table.getContainerDataSource(), calendar));
         });
 
         //DropHandler for Dropping Users from List to Calendar to create Events

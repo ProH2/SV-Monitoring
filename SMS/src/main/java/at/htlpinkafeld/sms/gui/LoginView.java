@@ -5,7 +5,10 @@
  */
 package at.htlpinkafeld.sms.gui;
 
+import at.htlpinkafeld.sms.gui.container.ContainerFactory;
 import at.htlpinkafeld.sms.service.JSONService;
+import com.vaadin.data.Container;
+import com.vaadin.data.util.filter.SimpleStringFilter;
 import com.vaadin.data.validator.NullValidator;
 import com.vaadin.navigator.View;
 import com.vaadin.navigator.ViewChangeListener;
@@ -18,6 +21,7 @@ import com.vaadin.ui.Notification;
 import com.vaadin.ui.TextField;
 import com.vaadin.ui.UI;
 import com.vaadin.ui.VerticalLayout;
+import java.util.Objects;
 
 /**
  * View for the Login Page
@@ -28,10 +32,14 @@ public class LoginView extends VerticalLayout implements View {
 
     public static final String VIEW_NAME = "";
 
+    private Container.Filterable userContainer = null;
+
     /**
      * Constructor for LoginView
      */
     public LoginView() {
+
+        userContainer = ContainerFactory.createIndexedUserContainer();
 
         VerticalLayout innerLayout = new VerticalLayout();
 
@@ -51,8 +59,21 @@ public class LoginView extends VerticalLayout implements View {
         Button loginButton = new Button("Login", new Button.ClickListener() {
             @Override
             public void buttonClick(Button.ClickEvent event) {
-                Notification.show("Login successfull", "Hello " + usernameTextF.getValue(), Notification.Type.TRAY_NOTIFICATION);
-                ((SMS_Main) UI.getCurrent()).navigateTo(OverviewView.VIEW_NAME);
+                boolean loginFailed = true;
+
+                userContainer.addContainerFilter(new SimpleStringFilter("username", usernameTextF.getValue(), false, false));
+                for (Object o : userContainer.getItemIds()) {
+                    if (Objects.equals(userContainer.getContainerProperty(o, "password").getValue(), passwordTextF.getValue())) {
+                        loginFailed = false;
+
+                        Notification.show("Login successfull", "Hello " + usernameTextF.getValue(), Notification.Type.TRAY_NOTIFICATION);
+                        ((SMS_Main) UI.getCurrent()).navigateTo(OverviewView.VIEW_NAME);
+                    }
+                }
+                if (loginFailed) {
+                    Notification.show("Login unsuccessfull", "Incorrect login data", Notification.Type.WARNING_MESSAGE);
+                }
+                userContainer.removeAllContainerFilters();
             }
         });
 
@@ -82,6 +103,7 @@ public class LoginView extends VerticalLayout implements View {
     }
 
     @Override
+
     public void enter(ViewChangeListener.ViewChangeEvent event) {
 
     }

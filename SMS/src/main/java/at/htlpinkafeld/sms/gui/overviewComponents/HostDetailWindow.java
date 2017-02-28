@@ -5,9 +5,10 @@
  */
 package at.htlpinkafeld.sms.gui.overviewComponents;
 
+import at.htlpinkafeld.sms.gui.container.ContainerFactory;
 import at.htlpinkafeld.sms.pojos.Comment;
 import at.htlpinkafeld.sms.pojos.Host;
-import com.vaadin.data.util.IndexedContainer;
+import com.vaadin.data.util.BeanItemContainer;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.FormLayout;
 import com.vaadin.ui.Grid;
@@ -18,6 +19,7 @@ import com.vaadin.ui.TextArea;
 import com.vaadin.ui.TextField;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.Window;
+import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
 /**
@@ -68,17 +70,12 @@ public class HostDetailWindow extends Window {
         leftDataLayout.setSizeFull();
         leftDataLayout.setMargin(true);
 
-        //add Comment List
-        IndexedContainer testComments = new IndexedContainer();
-        testComments.addContainerProperty("comment", String.class, "");
-        for (int i = 1; i < 5; i++) {
-            testComments.addItem("test " + i).getItemProperty("comment").setValue("test " + i);
-        }
-
         VerticalLayout rightCommentLayout = new VerticalLayout();
 
-        Grid commentGrid = new Grid(testComments);
+        Grid commentGrid = new Grid(ContainerFactory.createHostCommentContainer(host.getHostname()));
         commentGrid.setEditorEnabled(true);
+        commentGrid.getColumn("author").setEditable(false);
+        commentGrid.getColumn("entryTime").setEditable(false);
         commentGrid.setSizeFull();
 
         rightCommentLayout.addComponent(commentGrid);
@@ -86,7 +83,9 @@ public class HostDetailWindow extends Window {
         Button addCommentButton = new Button("add Comment", new Button.ClickListener() {
             @Override
             public void buttonClick(Button.ClickEvent event) {
-                commentGrid.editItem(testComments.addItem());
+                Comment newComment = new Comment(LocalDateTime.now(), "Current User", "");
+                ((BeanItemContainer<Comment>) commentGrid.getContainerDataSource()).addBean(newComment);
+                commentGrid.editItem(newComment);
                 commentGrid.focus();
             }
         });

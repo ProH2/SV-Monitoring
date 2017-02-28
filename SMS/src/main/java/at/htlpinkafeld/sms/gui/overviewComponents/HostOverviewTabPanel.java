@@ -5,7 +5,6 @@
  */
 package at.htlpinkafeld.sms.gui.overviewComponents;
 
-import at.htlpinkafeld.sms.gui.AutoResizingGridLayout;
 import at.htlpinkafeld.sms.gui.OverviewView;
 import at.htlpinkafeld.sms.gui.container.MapReferenceContainer;
 import at.htlpinkafeld.sms.pojos.Host;

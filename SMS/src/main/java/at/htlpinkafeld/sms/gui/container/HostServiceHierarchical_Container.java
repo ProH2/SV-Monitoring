@@ -145,6 +145,7 @@ public class HostServiceHierarchical_Container extends AbstractContainer impleme
 
     @Override
     public boolean removeItem(Object itemId) {
+        //TODO Connection-Point to JSON-Service
         boolean returnV = this.hostServiceMap.remove(String.valueOf(itemId)) != null;
         if (returnV) {
             fireItemSetChange();
