@@ -16,14 +16,14 @@ public class Hostgroup {
     private int hostGroupNr;
     private String name;
 
-    //Liste von Integer, welche auf die servicenr in Service verweist;
-    private List<Integer> hostlist;
+    // List with the hostnames
+    private List<String> hostlist;
 
     public Hostgroup() {
 
     }
 
-    public Hostgroup(int hostGroupNr, String name, List<Integer> hostlist) {
+    public Hostgroup(int hostGroupNr, String name, List<String> hostlist) {
         this.hostGroupNr = hostGroupNr;
         this.name = name;
         this.hostlist = hostlist;
@@ -45,11 +45,11 @@ public class Hostgroup {
         this.name = name;
     }
 
-    public List<Integer> getHostlist() {
+    public List<String> getHostlist() {
         return hostlist;
     }
 
-    public void setHostlist(List<Integer> hostlist) {
+    public void setHostlist(List<String> hostlist) {
         this.hostlist = hostlist;
     }
 

@@ -10,6 +10,7 @@ import at.htlpinkafeld.sms.gui.Host_Service_ManagementView;
 import at.htlpinkafeld.sms.gui.OverviewView;
 import at.htlpinkafeld.sms.gui.TimeManagementView;
 import at.htlpinkafeld.sms.gui.UserManagementView;
+import at.htlpinkafeld.sms.gui.overviewComponents.HostGroupOverviewTabPanel;
 import at.htlpinkafeld.sms.gui.overviewComponents.HostOverviewTabPanel;
 import at.htlpinkafeld.sms.gui.overviewComponents.HostPanel;
 import at.htlpinkafeld.sms.gui.overviewComponents.ServiceOverviewTabPanel;
@@ -17,6 +18,7 @@ import at.htlpinkafeld.sms.gui.overviewComponents.ServicePanel;
 import at.htlpinkafeld.sms.pojo.User;
 import at.htlpinkafeld.sms.pojos.Comment;
 import at.htlpinkafeld.sms.pojos.Host;
+import at.htlpinkafeld.sms.pojos.Hostgroup;
 import at.htlpinkafeld.sms.pojos.Service;
 import com.vaadin.data.Container;
 import com.vaadin.data.util.BeanItemContainer;
@@ -28,7 +30,9 @@ import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.AbstractMap;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Comparator;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -44,6 +48,8 @@ public class ContainerFactory {
     private static HashMapWithListeners<String, Host> hostMap = null;
 
     private static HashMapWithListeners<String, Service> serviceMap = null;
+
+    private static List<Hostgroup> hostgroups = null;
 
     private static BeanItemContainer<User> userContainer = null;
 
@@ -95,10 +101,20 @@ public class ContainerFactory {
         })).forEachOrdered(entry -> serviceMap.put(entry.getKey(), entry.getValue()));
     }
 
+    private static void initHostgroupList() {
+        hostgroups = new LinkedList<>();
+
+        hostgroups.add(new Hostgroup(1, "Oberwart", Arrays.asList("Host 1", "Host 2", "Host 3", "Host 4", "Host 5", "Host 6", "Host 7")));
+        hostgroups.add(new Hostgroup(2, "Pinkafeld", Arrays.asList()));
+        hostgroups.add(new Hostgroup(3, "Wien", Arrays.asList("Host 1", "Host 3", "Host 4", "Host 8", "Host 7", "Host 9")));
+
+    }
+
     /**
      * Initializes UserContainer
      */
     private static void initUserContainer() {
+        //TODO create Container which also delegates to DAO
         List<User> users = new ArrayList<>();
         users.add(new User(1, "Dogist", "1234", "Martin", "noplan@gmc.at", "5421575"));
         users.add(new User(2, "Irish", "4321", "Sebastian", "noplan@qmail.com", "5788775"));
@@ -161,6 +177,19 @@ public class ContainerFactory {
      */
     public static HostServiceHierarchical_Container createHostServiceHierarchical_Container() {
         return new HostServiceHierarchical_Container(hostMap.values(), serviceMap.values());
+    }
+
+    /**
+     * Static Method to create the Container for the Hostgroups in
+     * {@link HostGroupOverviewTabPanel}
+     *
+     * @return {@link Container} which contains the Hostgroups
+     */
+    public static BeanItemContainer<Hostgroup> createHostgroupContainer() {
+        if (hostgroups == null) {
+            initHostgroupList();
+        }
+        return new BeanItemContainer(Hostgroup.class, hostgroups);
     }
 
     /**

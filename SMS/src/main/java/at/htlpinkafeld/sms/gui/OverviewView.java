@@ -58,7 +58,7 @@ public class OverviewView extends VerticalLayout implements View {
         MapReferenceContainer<Service> serviceItemContainer = null;
         serviceItemContainer = ContainerFactory.createServiceContainer();
 
-        BeanItemContainer hostgroupItemContainer = createIndexedContainer(Hostgroup.class);
+        BeanItemContainer<Hostgroup> hostgroupItemContainer = ContainerFactory.createHostgroupContainer();
 
         tabSheet.addSelectedTabChangeListener(new TabSheet.SelectedTabChangeListener() {
             @Override
@@ -78,7 +78,7 @@ public class OverviewView extends VerticalLayout implements View {
             }
         });
 
-        hostGroupsTab = tabSheet.addTab(new HostGroupOverviewTabPanel(hostgroupItemContainer), "Host Groups");
+        hostGroupsTab = tabSheet.addTab(new HostGroupOverviewTabPanel(hostgroupItemContainer, hostItemContainer), "Host Groups");
 
         HostOverviewTabPanel hostOverviewTabPanel = new HostOverviewTabPanel(hostItemContainer);
         UI.getCurrent().addDetachListener(hostOverviewTabPanel);
