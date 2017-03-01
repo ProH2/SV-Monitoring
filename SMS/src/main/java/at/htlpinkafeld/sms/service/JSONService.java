@@ -35,7 +35,8 @@ public class JSONService {
     public static String NAGIOS = "http://192.168.23.131";
     private static List<Host> hosts = null;
 
-    private static HashMapWithListeners<String, Object> HostsAndServices = null;
+    private static HashMapWithListeners<String, Object> HOSTS = null;
+    private static HashMapWithListeners<String, Object> SERVICES = null;
 
     public static void refresh() {
         Timer timer = new Timer();
@@ -44,8 +45,11 @@ public class JSONService {
 
     public static List<Host> getHostsFromNagios() throws IOException {
 
-        if (HostsAndServices == null) { 
-            HostsAndServices = new HashMapWithListeners<>();
+        if (HOSTS == null) { 
+            HOSTS = new HashMapWithListeners<>();
+        }
+        if(SERVICES == null){
+            SERVICES = new HashMapWithListeners<>();
         }
 
         hosts = new ArrayList<>();
@@ -95,7 +99,7 @@ public class JSONService {
             //System.out.println(result);
             Host h = Host.createHostFromJson(result);
             hosts.add(h);
-            HostsAndServices.put(h.getHostname(), h);
+            HOSTS.put(h.getHostname(), h);
         }
 
         for (String s : hostlist) {
@@ -144,15 +148,15 @@ public class JSONService {
             for (String o : olist) {
 //                System.out.println("serviceputs: " + host + " " + o);
                 Service s = getServiceDetails(host, o);
-                HostsAndServices.put(host + "/" + s.getHostname(), s);
+                SERVICES.put(host + "/" + s.getHostname(), s);
             }
         }
 
-        HostsAndServices.fireMapChanged();
+        SERVICES.fireMapChanged();
 
-        System.out.println("HostsAndServices OUTPUT: size=" + HostsAndServices.keySet().size());
-        for (String s : HostsAndServices.keySet()) {
-            System.out.println(s + "\t" + HostsAndServices.get(s));
+        System.out.println("SERVICES OUTPUT: size=" + SERVICES.keySet().size());
+        for (String s : SERVICES.keySet()) {
+            System.out.println(s + "\t" + SERVICES.get(s));
         }
 
         return hosts;
@@ -204,16 +208,28 @@ public class JSONService {
         return hostmap;
     }
 
-    public static HashMapWithListeners<String, Object> getHostsAndServices() {
-        if (HostsAndServices == null) {
-            HostsAndServices = new HashMapWithListeners();
+    public static HashMapWithListeners<String, Object> getHOSTS() {
+        if (HOSTS == null) {
+            HOSTS = new HashMapWithListeners();
         }
 
-        return HostsAndServices;
+        return HOSTS;
     }
 
-    public static void setHostsAndServices(HashMapWithListeners<String, Object> HostsAndServices) {
-        JSONService.HostsAndServices = HostsAndServices; 
+    public static void setHOSTS(HashMapWithListeners<String, Object> HOSTS) {
+        JSONService.HOSTS = HOSTS; 
+    }
+    
+    public static HashMapWithListeners<String, Object> getSERVICES() {
+        if (SERVICES == null) {
+            SERVICES = new HashMapWithListeners();
+        }
+
+        return SERVICES;
+    }
+
+    public static void setSERVICES(HashMapWithListeners<String, Object> SERVICES) {
+        JSONService.SERVICES = SERVICES; 
     }
 
 }
