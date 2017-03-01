@@ -16,6 +16,7 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Objects;
 
 /**
  *
@@ -42,7 +43,9 @@ public class HostgroupHierarchical_Container extends AbstractContainer implement
         }
 
         if (!String.valueOf(itemId).contains("/")) {
-            return new BeanItem(String.valueOf(itemId));
+            return new BeanItem(hostgroups.stream().filter((t) -> {
+                return Objects.equals(itemId, t.getName());
+            }).findFirst().orElse(null));
         } else {
             return new BeanItem(String.valueOf(itemId).split("/")[1]);
         }
@@ -117,14 +120,40 @@ public class HostgroupHierarchical_Container extends AbstractContainer implement
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
+    public void addHostgroup(Hostgroup hostgroup) {
+        this.hostgroups.add(hostgroup);
+        fireItemSetChange();
+    }
+
     @Override
     public Object addItem() throws UnsupportedOperationException {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
     @Override
-    public boolean removeItem(Object itemId) throws UnsupportedOperationException {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public boolean removeItem(Object itemId) {
+        if (String.valueOf(itemId).contains("/")) {
+            for (Hostgroup hostgroup : hostgroups) {
+                if (String.valueOf(itemId).split("/")[0].equals(hostgroup.getName())) {
+                    return hostgroup.getHostlist().remove(String.valueOf(itemId).split("/")[1]);
+                }
+            }
+        } else {
+//            Iterator<Hostgroup> hostGIterator = hostgroups.iterator();
+//            while (hostGIterator.hasNext()) {
+//                if (String.valueOf(itemId).equals(hostGIterator.next().getName())) {
+//                    hostGIterator.remove();
+//                }
+//            }
+            Hostgroup deleteHostgroup = null;
+            for (Hostgroup hostgroup : hostgroups) {
+                if (hostgroup.getName().equals(itemId)) {
+                    deleteHostgroup = hostgroup;
+                }
+            }
+            hostgroups.remove(deleteHostgroup);
+        }
+        return true;
     }
 
     @Override
@@ -152,7 +181,9 @@ public class HostgroupHierarchical_Container extends AbstractContainer implement
         } else if (!String.valueOf(itemId).contains("/")) {
             for (Hostgroup hostgroup : hostgroups) {
                 if (String.valueOf(itemId).equals(hostgroup.getName())) {
-                    childIds.addAll(hostgroup.getHostlist());
+                    for (String hostN : hostgroup.getHostlist()) {
+                        childIds.add(hostgroup.getName() + "/" + hostN);
+                    }
                 }
             }
 
@@ -213,6 +244,11 @@ public class HostgroupHierarchical_Container extends AbstractContainer implement
             }
         }
         return false;
+    }
+
+    @Override
+    public void fireItemSetChange() {
+        super.fireItemSetChange();
     }
 
 }

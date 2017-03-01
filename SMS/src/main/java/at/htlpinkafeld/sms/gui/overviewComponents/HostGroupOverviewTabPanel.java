@@ -6,6 +6,7 @@
 package at.htlpinkafeld.sms.gui.overviewComponents;
 
 import at.htlpinkafeld.sms.gui.OverviewView;
+import at.htlpinkafeld.sms.gui.container.ContainerFactory;
 import at.htlpinkafeld.sms.gui.container.MapReferenceContainer;
 import at.htlpinkafeld.sms.pojos.Host;
 import at.htlpinkafeld.sms.pojos.Hostgroup;
@@ -40,7 +41,7 @@ import org.vaadin.addons.stackpanel.StackPanel;
 public class HostGroupOverviewTabPanel extends Panel implements OverviewTabPanel, DetachListener {
 
     private VerticalLayout hostGroupVerticalLayout = null;
-    private final BeanItemContainer<Hostgroup> hostgroupContainer;
+    private BeanItemContainer<Hostgroup> hostgroupContainer;
     private final MapReferenceContainer<Host> hostReferenceContainer;
 
     /**
@@ -84,6 +85,12 @@ public class HostGroupOverviewTabPanel extends Panel implements OverviewTabPanel
 
         super.setContent(parentVerticalLayout);
 
+    }
+
+    @Override
+    public void attach() {
+        super.attach();
+        hostgroupContainer = ContainerFactory.createHostgroupContainer();
     }
 
     @Override
@@ -146,6 +153,11 @@ public class HostGroupOverviewTabPanel extends Panel implements OverviewTabPanel
                         }
                     }
                 });
+
+                if (hostgroup.getHostlist().isEmpty()) {
+                    sp.close();
+                    absoluteLayout.setHeight(37, Unit.PIXELS);
+                }
 
                 absoluteLayout.addComponent(hostsWrapperPanel);
 

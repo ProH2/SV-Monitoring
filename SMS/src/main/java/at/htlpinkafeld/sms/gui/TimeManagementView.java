@@ -31,6 +31,7 @@ import com.vaadin.ui.components.calendar.CalendarTargetDetails;
 import com.vaadin.ui.components.calendar.event.CalendarEditableEventProvider;
 import com.vaadin.ui.components.calendar.event.CalendarEvent;
 import com.vaadin.ui.components.calendar.handler.BasicDateClickHandler;
+import com.vaadin.ui.components.calendar.handler.BasicEventMoveHandler;
 import java.util.Collections;
 import java.util.Date;
 import java.util.GregorianCalendar;
@@ -133,6 +134,14 @@ public class TimeManagementView extends VerticalLayout implements View {
             public AcceptCriterion getAcceptCriterion() {
 //                return new SourceIs(table);
                 return AcceptAll.get();
+            }
+        });
+
+        calendar.setHandler(new BasicEventMoveHandler() {
+            @Override
+            public void eventMove(CalendarComponentEvents.MoveEvent event) {
+                super.eventMove(event);
+                calendar.markAsDirty();
             }
         });
 

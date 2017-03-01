@@ -35,8 +35,8 @@ public class JSONService {
     public static String NAGIOS = "http://192.168.23.131";
     private static List<Host> hosts = null;
 
-    private static HashMapWithListeners<String, Object> HOSTS = null;
-    private static HashMapWithListeners<String, Object> SERVICES = null;
+    private static HashMapWithListeners<String, Host> HOSTS = null;
+    private static HashMapWithListeners<String, Service> SERVICES = null;
 
     public static void refresh() {
         Timer timer = new Timer();
@@ -208,27 +208,19 @@ public class JSONService {
         return hostmap;
     }
 
-    public static HashMapWithListeners<String, Object> getHOSTS() {
-        if (HOSTS == null) {
-            HOSTS = new HashMapWithListeners();
-        }
-
+    public static HashMapWithListeners<String, Host> getHOSTS() {
         return HOSTS;
     }
 
-    public static void setHOSTS(HashMapWithListeners<String, Object> HOSTS) {
+    public static void setHOSTS(HashMapWithListeners<String, Host> HOSTS) {
         JSONService.HOSTS = HOSTS; 
     }
     
-    public static HashMapWithListeners<String, Object> getSERVICES() {
-        if (SERVICES == null) {
-            SERVICES = new HashMapWithListeners();
-        }
-
+    public static HashMapWithListeners<String, Service> getSERVICES() {
         return SERVICES;
     }
 
-    public static void setSERVICES(HashMapWithListeners<String, Object> SERVICES) {
+    public static void setSERVICES(HashMapWithListeners<String, Service> SERVICES) {
         JSONService.SERVICES = SERVICES; 
     }
 

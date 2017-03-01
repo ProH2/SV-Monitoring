@@ -90,6 +90,7 @@ public class CalendarEventWindow extends Window {
                     calendarEvent.setStart(startDateField.getValue());
                     calendarEvent.setEnd(endDateField.getValue());
                     calendarEvent.setUser((User) userNativeSelect.getValue());
+                    calendar.markAsDirty();
                     close();
                 } catch (Validator.InvalidValueException e) {
                     Notification.show("Validation Errorl", e.getLocalizedMessage(), Notification.Type.WARNING_MESSAGE);

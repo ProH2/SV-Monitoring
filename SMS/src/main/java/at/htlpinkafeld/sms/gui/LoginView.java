@@ -18,6 +18,7 @@ import com.vaadin.ui.Button;
 import com.vaadin.ui.FormLayout;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.Notification;
+import com.vaadin.ui.PasswordField;
 import com.vaadin.ui.TextField;
 import com.vaadin.ui.UI;
 import com.vaadin.ui.VerticalLayout;
@@ -50,7 +51,7 @@ public class LoginView extends VerticalLayout implements View {
 
         final TextField usernameTextF = new TextField("Username");
         usernameTextF.addValidator(new NullValidator("Must be given!", false));
-        final TextField passwordTextF = new TextField("Password");
+        final PasswordField passwordTextF = new PasswordField("Password");
         passwordTextF.addValidator(new NullValidator("Must be given!", false));
 
         formLayout.addComponent(usernameTextF);

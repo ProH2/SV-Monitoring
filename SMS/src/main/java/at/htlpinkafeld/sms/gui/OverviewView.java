@@ -96,6 +96,7 @@ public class OverviewView extends VerticalLayout implements View {
         ((SMS_Main) UI.getCurrent()).getMenuBarComponent().switchStyle();
         super.addComponentAsFirst(((SMS_Main) UI.getCurrent()).getMenuBarComponent());
         tabSheet.setSelectedTab(0);
+        ((OverviewTabPanel) tabSheet.getSelectedTab()).refreshLayout();
     }
 
     /**

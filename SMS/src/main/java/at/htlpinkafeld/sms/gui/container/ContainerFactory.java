@@ -20,6 +20,7 @@ import at.htlpinkafeld.sms.pojos.Comment;
 import at.htlpinkafeld.sms.pojos.Host;
 import at.htlpinkafeld.sms.pojos.Hostgroup;
 import at.htlpinkafeld.sms.pojos.Service;
+import at.htlpinkafeld.sms.service.JSONService;
 import com.vaadin.data.Container;
 import com.vaadin.data.util.BeanItemContainer;
 import com.vaadin.ui.Calendar;
@@ -60,53 +61,58 @@ public class ContainerFactory {
      */
     private static void initHostMap() {
 
-        //TODO use real hosts
-        List<Map.Entry<String, Host>> entries = null;
+        hostMap = JSONService.getHOSTS();
+        if (hostMap == null) {
+            //TODO use real hosts
+            List<Map.Entry<String, Host>> entries = null;
 //        entries = JSONService.getHosts();
-        if (entries == null) {
-            entries = new ArrayList<>();
-        }
-        for (int i = 1; i <= 10; i++) {
-            Host h = new Host(0, "Host " + i, (Host.Hoststatus) OverviewView.getRandomEnum(Host.Hoststatus.values()), LocalDateTime.now(), Duration.ZERO, "Test informationTest informationTest tionTest informationTest informationonTest informationTest information");
-            entries.add(new AbstractMap.SimpleEntry<>(h.getHostname(), h));
-        }
-
-        hostMap = new HashMapWithListeners<>();
-        entries.stream().sorted(Map.Entry.comparingByValue(new Comparator<Host>() {
-            @Override
-            public int compare(Host o1, Host o2) {
-                return Objects.compare(o1.getStatus(), o2.getStatus(), Comparator.nullsFirst(Comparator.reverseOrder()));
+            if (entries == null) {
+                entries = new ArrayList<>();
             }
-        })).forEachOrdered(entry -> hostMap.put(entry.getKey(), entry.getValue()));
+            for (int i = 1; i <= 10; i++) {
+                Host h = new Host(0, "Host " + i, (Host.Hoststatus) OverviewView.getRandomEnum(Host.Hoststatus.values()), LocalDateTime.now(), Duration.ZERO, "Test informationTest informationTest tionTest informationTest informationonTest informationTest information");
+                entries.add(new AbstractMap.SimpleEntry<>(h.getHostname(), h));
+            }
 
+            hostMap = new HashMapWithListeners<>();
+            entries.stream().sorted(Map.Entry.comparingByValue(new Comparator<Host>() {
+                @Override
+                public int compare(Host o1, Host o2) {
+                    return Objects.compare(o1.getStatus(), o2.getStatus(), Comparator.nullsFirst(Comparator.reverseOrder()));
+                }
+            })).forEachOrdered(entry -> hostMap.put(entry.getKey(), entry.getValue()));
+        }
     }
 
     /**
      * Initializes serviceMap
      */
     private static void initServiceMap() {
-        List<Map.Entry<String, Service>> entries = new ArrayList<>();
-        for (int i = 1; i <= 100; i++) {
-            Service s = new Service(i % 10, 0, "Service " + i, (Service.Servicestatus) OverviewView.getRandomEnum(Service.Servicestatus.values()), LocalDateTime.now(), Duration.ofMinutes(10), 0, "Test informationTest informationTest tionTest informationTest informationonTest informationTest information");
-            s.setHostname("Host " + i % 10);
-            entries.add(new AbstractMap.SimpleEntry<>(s.getHostname() + "/" + s.getName(), s));
-        }
-
-        serviceMap = new HashMapWithListeners<>();
-        entries.stream().sorted(Map.Entry.comparingByValue(new Comparator<Service>() {
-            @Override
-            public int compare(Service o1, Service o2) {
-                return Objects.compare(o1.getStatus(), o2.getStatus(), Comparator.nullsFirst(Comparator.reverseOrder()));
+        serviceMap = JSONService.getSERVICES();
+        if (serviceMap == null) {
+            List<Map.Entry<String, Service>> entries = new ArrayList<>();
+            for (int i = 1; i <= 100; i++) {
+                Service s = new Service(i % 10, 0, "Service " + i, (Service.Servicestatus) OverviewView.getRandomEnum(Service.Servicestatus.values()), LocalDateTime.now(), Duration.ofMinutes(10), 0, "Test informationTest informationTest tionTest informationTest informationonTest informationTest information");
+                s.setHostname("Host " + i % 10);
+                entries.add(new AbstractMap.SimpleEntry<>(s.getHostname() + "/" + s.getName(), s));
             }
-        })).forEachOrdered(entry -> serviceMap.put(entry.getKey(), entry.getValue()));
+
+            serviceMap = new HashMapWithListeners<>();
+            entries.stream().sorted(Map.Entry.comparingByValue(new Comparator<Service>() {
+                @Override
+                public int compare(Service o1, Service o2) {
+                    return Objects.compare(o1.getStatus(), o2.getStatus(), Comparator.nullsFirst(Comparator.reverseOrder()));
+                }
+            })).forEachOrdered(entry -> serviceMap.put(entry.getKey(), entry.getValue()));
+        }
     }
 
     private static void initHostgroupList() {
         hostgroups = new LinkedList<>();
 
-        hostgroups.add(new Hostgroup(1, "Oberwart", Arrays.asList("Host 1", "Host 2", "Host 3", "Host 4", "Host 5", "Host 6", "Host 7")));
-        hostgroups.add(new Hostgroup(2, "Pinkafeld", Arrays.asList()));
-        hostgroups.add(new Hostgroup(3, "Wien", Arrays.asList("Host 1", "Host 3", "Host 4", "Host 8", "Host 7", "Host 9")));
+        hostgroups.add(new Hostgroup(1, "Oberwart", new LinkedList(Arrays.asList("Host 1", "Host 2", "Host 3", "Host 4", "Host 5", "Host 6", "Host 7"))));
+        hostgroups.add(new Hostgroup(2, "Pinkafeld", new LinkedList(Arrays.asList())));
+        hostgroups.add(new Hostgroup(3, "Wien", new LinkedList(Arrays.asList("Host 1", "Host 3", "Host 4", "Host 8", "Host 7", "Host 9"))));
 
     }
 
@@ -177,6 +183,20 @@ public class ContainerFactory {
      */
     public static HostServiceHierarchical_Container createHostServiceHierarchical_Container() {
         return new HostServiceHierarchical_Container(hostMap.values(), serviceMap.values());
+    }
+
+    /**
+     * Static Method to create the {@link HostgroupHierarchical_Container} for
+     * the {@link Table} in {@link Host_Service_ManagementView}
+     *
+     * @return {@link HostgroupHierarchical_Container} which contains the
+     * Hostgroups in a Hierarchical order
+     */
+    public static HostgroupHierarchical_Container createHostgroupHierarchical_Container() {
+        if (hostgroups == null) {
+            initHostgroupList();
+        }
+        return new HostgroupHierarchical_Container(hostgroups);
     }
 
     /**
