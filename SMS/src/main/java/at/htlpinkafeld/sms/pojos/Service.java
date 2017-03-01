@@ -5,8 +5,11 @@
  */
 package at.htlpinkafeld.sms.pojos;
 
+import java.sql.Timestamp;
 import java.time.Duration;
 import java.time.LocalDateTime;
+import java.time.ZoneOffset;
+import java.util.HashMap;
 import java.util.List;
 
 /**
@@ -130,8 +133,8 @@ public class Service {
     public void setHostname(String hostname) {
         this.hostname = hostname;
     }
-    
-    public Integer getHostnr(){
+
+    public Integer getHostnr() {
         return this.hostnr;
     }
 
@@ -139,7 +142,38 @@ public class Service {
         this.hostnr = hostnr;
 
     }
+    
 
+    public static Service createServiceFromJson(HashMap<String, Object> map) {
+//        System.out.println(map);
 
+        Service service = new Service();
+        service.setHostname((String) map.get("description"));
+        service.setInformation((String) map.get("plugin_output")); 
+//        System.out.println(map.get("last_check"));
+        service.setLastChecked(LocalDateTime.ofEpochSecond((long) map.get("last_check"), 0, ZoneOffset.UTC));
+
+        Timestamp stamp = new Timestamp((long) map.get("last_state_change"));
+        LocalDateTime last_state_change = stamp.toLocalDateTime();
+        //System.out.println(map.get("last_state_change"));
+
+        LocalDateTime now = LocalDateTime.now();
+        service.setDuration(Duration.between(last_state_change, now));
+
+        switch ((Integer) map.get("status")) {
+            case 2:
+                service.setStatus(Service.Servicestatus.OK);
+                break;
+            default:
+                service.setStatus(Service.Servicestatus.UNKNOWN);
+        }
+
+        return service;
+    }
+    
+    @Override
+    public String toString() {
+        return hostname + " " + information + " " + this.lastChecked + " " + duration + " " + status;
+    } 
 
 }

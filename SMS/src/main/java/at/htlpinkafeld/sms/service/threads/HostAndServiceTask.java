@@ -28,7 +28,7 @@ public class HostAndServiceTask implements Runnable{
         try {
             ex.exchange(JSONService.getHostsFromNagios());
              
-            System.out.println(JSONService.getStatusFromAllHosts());
+            //System.out.println(JSONService.getStatusFromAllHosts());
         } catch (InterruptedException ex) {
             Logger.getLogger(HostAndServiceTask.class.getName()).log(Level.SEVERE, null, ex);
         } catch (IOException ex) {

@@ -132,5 +132,9 @@ public class Host {
 
         return hostname + " " + information + " " + this.lastChecked + " " + duration + " " + status;
     }
+    
+    public boolean statusChanged(Host h){
+        return !this.status.equals(h.status); 
+    }
 
 }
