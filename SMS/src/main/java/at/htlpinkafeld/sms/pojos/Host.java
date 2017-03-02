@@ -107,6 +107,7 @@ public class Host {
         host.setHostname((String) map.get("name"));
         host.setInformation((String) map.get("plugin_output"));
 //        System.out.println(map.get("last_check"));
+        //TODO long-Integer catch
         host.setLastChecked(LocalDateTime.ofEpochSecond((long) map.get("last_check"), 0, ZoneOffset.UTC));
 
         Timestamp stamp = new Timestamp((long) map.get("last_state_change"));

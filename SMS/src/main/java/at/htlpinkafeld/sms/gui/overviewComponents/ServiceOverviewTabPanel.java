@@ -117,7 +117,7 @@ public class ServiceOverviewTabPanel extends Panel implements OverviewTabPanel, 
                     Map.Entry<String, Service> entry = ((BeanItem<Map.Entry<String, Service>>) container.getItem(o)).getBean();
                     if ((entry).getValue().getHostname().equals(hostname)) {
 
-                        ServicePanel servicePanel = new ServicePanel(entry);
+                        ServicePanel servicePanel = new ServicePanel(entry, container);
 
                         this.container.addMapChangeListener(servicePanel);
 

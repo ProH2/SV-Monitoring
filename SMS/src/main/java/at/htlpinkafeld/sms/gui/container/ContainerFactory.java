@@ -10,6 +10,7 @@ import at.htlpinkafeld.sms.gui.Host_Service_ManagementView;
 import at.htlpinkafeld.sms.gui.OverviewView;
 import at.htlpinkafeld.sms.gui.TimeManagementView;
 import at.htlpinkafeld.sms.gui.UserManagementView;
+import at.htlpinkafeld.sms.gui.container.HashMapWithListeners.MapChangeListener;
 import at.htlpinkafeld.sms.gui.overviewComponents.HostGroupOverviewTabPanel;
 import at.htlpinkafeld.sms.gui.overviewComponents.HostOverviewTabPanel;
 import at.htlpinkafeld.sms.gui.overviewComponents.HostPanel;
@@ -91,7 +92,7 @@ public class ContainerFactory {
         serviceMap = JSONService.getSERVICES();
         if (serviceMap == null) {
             List<Map.Entry<String, Service>> entries = new ArrayList<>();
-            for (int i = 1; i <= 100; i++) {
+            for (int i = 1; i <= 100; i++) { 
                 Service s = new Service(i % 10, 0, "Service " + i, (Service.Servicestatus) OverviewView.getRandomEnum(Service.Servicestatus.values()), LocalDateTime.now(), Duration.ofMinutes(10), 0, "Test informationTest informationTest tionTest informationTest informationonTest informationTest information");
                 s.setHostname("Host " + i % 10);
                 entries.add(new AbstractMap.SimpleEntry<>(s.getHostname() + "/" + s.getName(), s));
@@ -146,13 +147,16 @@ public class ContainerFactory {
      * return null if there is an error during initialisation
      */
     public static MapReferenceContainer<Host> createHostContainer() {
-        if (hostMap == null) {
-            initHostMap();
+        
+        HashMapWithListeners<String, Host> changeListener = JSONService.getHOSTS();
+        
+        if (hostMap == null || changeListener != null) {
+            initHostMap(); 
         }
         try {
             return new MapReferenceContainer<>(hostMap, Host.class);
         } catch (IllegalAccessException | InstantiationException ex) {
-            return null;
+            return null; 
         }
     }
 
@@ -164,7 +168,9 @@ public class ContainerFactory {
      * return null if there is an error during initialisation
      */
     public static MapReferenceContainer<Service> createServiceContainer() {
-        if (serviceMap == null) {
+        HashMapWithListeners<String, Service> changeListener = JSONService.getSERVICES();
+        
+        if (serviceMap == null || changeListener != null) {
             initServiceMap();
         }
         try {

@@ -42,7 +42,7 @@ public class SMS_Main extends UI {
         navigator.addView(TimeManagementView.VIEW_NAME, TimeManagementView.class);
         navigator.addView(Host_Service_ManagementView.VIEW_NAME, Host_Service_ManagementView.class);
 
-//        setPollInterval(5000);//Poll every 5 seconds
+        setPollInterval(5000);//Poll every 5 seconds
         setResizeLazy(true);
     }
 

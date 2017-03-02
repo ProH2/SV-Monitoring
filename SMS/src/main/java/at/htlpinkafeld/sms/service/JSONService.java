@@ -24,6 +24,7 @@ import org.apache.commons.io.IOUtils;
 
 import at.htlpinkafeld.sms.gui.container.HashMapWithListeners;
 import at.htlpinkafeld.sms.pojos.Service;
+import java.net.URLEncoder;
 
 //import org.apache.commons.io.IOUtils;
 /**
@@ -84,10 +85,12 @@ public class JSONService {
 //            System.out.println("Key = " + key + ", Value = " + value);
 
             //System.out.println("url + key= " + key);
-            key.replace("     ", " ");
-            if (key.contains("host-test")) {
-                key = "host-test+++++2017%2F02%2F10+13-28-04";
-            }
+            
+//            key.replace("     ", " ");
+//            if (key.contains("host-test")) {
+//                key = "host-test+++++2017%2F02%2F10+13-28-04";
+//            }
+            key = URLEncoder.encode(key, "UTF-8");
             //System.out.println("key2= " + key);
             url = "http://192.168.23.131/nagios/cgi-bin/statusjson.cgi?query=host&hostname=" + key;
             in = new URL(url).openStream();
@@ -105,9 +108,11 @@ public class JSONService {
         for (String s : hostlist) {
             //System.out.println(s);
             String temp = s;
-            if (s.contains("host-test")) {
-                s = "host-test+++++2017%2F02%2F10+13-28-04";
-            }
+            //            key.replace("     ", " ");
+//            if (key.contains("host-test")) {
+//                key = "host-test+++++2017%2F02%2F10+13-28-04";
+//            }
+            s = URLEncoder.encode(s, "UTF-8");
             url = NAGIOS + "/nagios/cgi-bin/statusjson.cgi?query=servicelist&hostname=" + s;
             in = new URL(url).openStream();
             source = IOUtils.toString(in);
@@ -132,7 +137,7 @@ public class JSONService {
                 //Integer value = (Integer) entry.getValue();
 //                System.out.println("Key = " + key + ", Value = " + value);
 //                System.out.println("key: " + key);
-                JSONService.getServiceDetails(s, key);
+                //JSONService.getServiceDetails(s, key);
             }
             List<String> list = new ArrayList<>();
             list.addAll(result.keySet());
@@ -141,6 +146,7 @@ public class JSONService {
         }
 
 //        System.out.println("map: " + map);
+    int i = 0;
         for (String host : map.keySet()) {
             List<String> olist = (List<String>) map.get(host);
 //            System.out.println("olist: " + olist);
@@ -148,13 +154,14 @@ public class JSONService {
             for (String o : olist) {
 //                System.out.println("serviceputs: " + host + " " + o);
                 Service s = getServiceDetails(host, o);
-                SERVICES.put(host + "/" + s.getHostname(), s);
+//                System.out.println(i++ + " " + s + " " + s.getName());
+                SERVICES.put(host + "/" + s.getName(), s); 
             }
         }
 
         SERVICES.fireMapChanged();
 
-        System.out.println("SERVICES OUTPUT: size=" + SERVICES.keySet().size());
+//        System.out.println("SERVICES OUTPUT: size=" + SERVICES.keySet().size());
         for (String s : SERVICES.keySet()) {
             System.out.println(s + "\t" + SERVICES.get(s));
         }
@@ -177,7 +184,7 @@ public class JSONService {
 
         
 
-        Service s =Service.createServiceFromJson(servicedetails);
+        Service s =Service.createServiceFromJson(servicedetails, host); 
 
 //        System.out.println("Service: " + s);
         

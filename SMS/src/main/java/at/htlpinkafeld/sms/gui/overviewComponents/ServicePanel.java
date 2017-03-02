@@ -6,7 +6,9 @@
 package at.htlpinkafeld.sms.gui.overviewComponents;
 
 import at.htlpinkafeld.sms.gui.container.HashMapWithListeners;
+import at.htlpinkafeld.sms.gui.container.MapReferenceContainer;
 import at.htlpinkafeld.sms.pojos.Service;
+import com.vaadin.data.util.BeanItem;
 import com.vaadin.server.Sizeable;
 import com.vaadin.ui.AbsoluteLayout;
 import com.vaadin.ui.Label;
@@ -24,6 +26,8 @@ public class ServicePanel extends Panel implements HashMapWithListeners.MapChang
 
     private Map.Entry<String, Service> serviceEntry;
 
+    private MapReferenceContainer<Service> container;
+
     private final Label servicenameLabel;
     private final Label statusLabel;
     private final Label serviceInformationLabel;
@@ -34,10 +38,12 @@ public class ServicePanel extends Panel implements HashMapWithListeners.MapChang
      * Constructor for the ServicePanel
      *
      * @param serviceEntry Service-Entry which is wrapped with the panel
+     * @param container
      */
-    public ServicePanel(Map.Entry<String, Service> serviceEntry) {
+    public ServicePanel(Map.Entry<String, Service> serviceEntry, MapReferenceContainer<Service> container) {
         this.serviceEntry = serviceEntry;
         Service service = serviceEntry.getValue();
+        this.container = container;
 
         AbsoluteLayout parentLayout = new AbsoluteLayout();
 
@@ -115,7 +121,8 @@ public class ServicePanel extends Panel implements HashMapWithListeners.MapChang
      */
     @Override
     public void mapChanged() {
-        updateLabels();
+        this.serviceEntry = ((BeanItem<Map.Entry<String, Service>>) container.getItem(this.serviceEntry.getKey())).getBean();
+        updateLabels(); 
         super.markAsDirtyRecursive();
     }
 
