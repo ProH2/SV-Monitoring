@@ -71,7 +71,7 @@ public class ServicePanel extends Panel implements HashMapWithListeners.MapChang
         parentLayout.addComponent(serviceInformationLabel = new Label(service.getInformation()), "top:20%; left:6%; bottom:20%; right:5%;");
 
         parentLayout.addComponent(lastCheckedLabel = new Label(service.getLastChecked().format(DateTimeFormatter.ofPattern("dd.MM.yyyy HH:mm"))), "bottom:5%; left:6%; right:40%;");
-        parentLayout.addComponent(durationLabel = new Label(service.getDuration().toString()), " bottom: 5%; right:5%; left:70%;");
+        parentLayout.addComponent(durationLabel = new Label(HostPanel.getDurationString(service.getDuration())), " bottom: 5%; right:5%; left:70%;");
         parentLayout.setSizeFull();
 
         super.setHeight(180, Sizeable.Unit.PIXELS);
@@ -107,7 +107,7 @@ public class ServicePanel extends Panel implements HashMapWithListeners.MapChang
 
         serviceInformationLabel.setValue(service.getInformation());
         lastCheckedLabel.setValue(service.getLastChecked().format(DateTimeFormatter.ofPattern("dd.MM.yyyy HH:mm")));
-        durationLabel.setValue(service.getDuration().toString());
+        durationLabel.setValue(HostPanel.getDurationString(service.getDuration()));
     }
 
     /**

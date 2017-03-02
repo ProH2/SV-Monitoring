@@ -19,6 +19,16 @@ import java.util.List;
 import java.util.Objects;
 
 /**
+ * Container which implements {@link Container.Hierarchical} and represents a
+ * Hierarchy with {@link Hostgroup} and its assigned hosts.
+ *
+ * <p>
+ * Hierarchy is like this: null-root - Hostgroup - Hostname.</p>
+ *
+ * <p>
+ * Hostgroups have their {@code name} as itemId and Hosts have
+ * {@code hostgroupName+"/"+hostname} as their itemId. The null-root item is
+ * null and it's itemId is ""</p>
  *
  * @author Martin Six
  */
@@ -31,6 +41,12 @@ public class HostgroupHierarchical_Container extends AbstractContainer implement
      */
     private static final Collection containerPropertyIds = Arrays.asList(new String[]{"Name"});
 
+    /**
+     * Constructor for HostgroupHierarchical_Container which uses a {@link List}
+     * of {@link Hostgroup Hostgroups}
+     *
+     * @param hostgroups the hostgroups which are used to create the hierarchy
+     */
     public HostgroupHierarchical_Container(List<Hostgroup> hostgroups) {
         this.hostgroups = hostgroups;
     }
@@ -120,6 +136,11 @@ public class HostgroupHierarchical_Container extends AbstractContainer implement
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
+    /**
+     * Adds a new Hostgroup to the container
+     *
+     * @param hostgroup the Hostgroup which will be added
+     */
     public void addHostgroup(Hostgroup hostgroup) {
         this.hostgroups.add(hostgroup);
         fireItemSetChange();

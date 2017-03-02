@@ -9,7 +9,10 @@ import at.htlpinkafeld.sms.gui.container.ContainerFactory;
 import at.htlpinkafeld.sms.gui.container.HostgroupHierarchical_Container;
 import at.htlpinkafeld.sms.pojos.Hostgroup;
 import com.vaadin.data.Container;
+import com.vaadin.data.util.BeanContainer;
 import com.vaadin.data.util.BeanItem;
+import com.vaadin.data.util.IndexedContainer;
+import com.vaadin.data.util.filter.SimpleStringFilter;
 import com.vaadin.data.validator.StringLengthValidator;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.FormLayout;
@@ -18,7 +21,6 @@ import com.vaadin.ui.TwinColSelect;
 import com.vaadin.ui.Window;
 import java.util.Collection;
 import java.util.LinkedList;
-import java.util.List;
 
 /**
  *
@@ -28,6 +30,7 @@ public class EditHostgroupWindow extends Window {
 
     private Container hostGroupContainer;
     private final String hostgroupName;
+    private IndexedContainer hostContainer;
 
     public EditHostgroupWindow(HostgroupHierarchical_Container hostGroupContainer, String hostgroupName) {
         super(hostgroupName == null ? "add Hostgroup" : "edit Hostgroup");
@@ -38,6 +41,12 @@ public class EditHostgroupWindow extends Window {
         this.hostGroupContainer = hostGroupContainer;
         this.hostgroupName = hostgroupName;
 
+        this.hostContainer = new IndexedContainer();
+        hostContainer.addContainerProperty("name", String.class, "");
+        ContainerFactory.createHostContainer().getItemIds().stream().forEach((t) -> {
+            hostContainer.addItem(t).getItemProperty("name").setValue(t);
+        });
+
         FormLayout mainLayout = new FormLayout();
 
         TextField hostgroupNameTextField = new TextField("Hostgroup name", hostgroupName == null ? "" : hostgroupName);
@@ -45,7 +54,24 @@ public class EditHostgroupWindow extends Window {
 
         mainLayout.addComponent(hostgroupNameTextField);
 
-        TwinColSelect hostassignmentColSelect = new TwinColSelect(null, ContainerFactory.createHostContainer().getItemIds());
+        TextField searchHostField = new TextField("search host");
+
+        searchHostField.addValueChangeListener((event) -> {
+            hostContainer.removeAllContainerFilters();
+
+            String searchTerm = searchHostField.getValue();
+            if (!searchTerm.isEmpty()) {
+                Container.Filter f = null;
+                f = new SimpleStringFilter("name", searchTerm, true, true);
+
+                hostContainer.addContainerFilter(f);
+
+            }
+        });
+
+        mainLayout.addComponent(searchHostField);
+
+        TwinColSelect hostassignmentColSelect = new TwinColSelect(null, hostContainer);
 
         if (hostgroupName != null) {
             BeanItem<Hostgroup> hostGroupItem = (BeanItem<Hostgroup>) hostGroupContainer.getItem(hostgroupName);

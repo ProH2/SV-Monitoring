@@ -10,6 +10,7 @@ import at.htlpinkafeld.sms.pojos.Host;
 import com.vaadin.ui.AbsoluteLayout;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.Panel;
+import java.time.Duration;
 import java.time.format.DateTimeFormatter;
 import java.util.Map;
 
@@ -67,7 +68,7 @@ public class HostPanel extends Panel implements HashMapWithListeners.MapChangeLi
         parentLayout.addComponent(hostInformationLabel, "top:20%; left:6%; bottom:20%; right:5%;");
 
         parentLayout.addComponent(lastCheckedLabel = new Label(host.getLastChecked().format(DateTimeFormatter.ofPattern("dd.MM.yyyy HH:mm"))), "bottom:5%; left:6%; right:40%;");
-        parentLayout.addComponent(durationLabel = new Label(host.getDuration().toString()), " bottom: 5%; right:5%; left:70%;");
+        parentLayout.addComponent(durationLabel = new Label(getDurationString(host.getDuration())), " bottom: 5%; right:5%; left:70%;");
         parentLayout.setSizeFull();
 
         super.setHeight(180, Unit.PIXELS);
@@ -100,7 +101,7 @@ public class HostPanel extends Panel implements HashMapWithListeners.MapChangeLi
 
         hostInformationLabel.setValue(host.getInformation());
         lastCheckedLabel.setValue(host.getLastChecked().format(DateTimeFormatter.ofPattern("dd.MM.yyyy HH:mm")));
-        durationLabel.setValue(host.getDuration().toString());
+        durationLabel.setValue(getDurationString(host.getDuration()));
     }
 
     /**
@@ -110,6 +111,19 @@ public class HostPanel extends Panel implements HashMapWithListeners.MapChangeLi
     public void mapChanged() {
         updateLabels();
         super.markAsDirtyRecursive();
+    }
+
+    public static String getDurationString(Duration duration) {
+        if (duration.toDays() == 0) {
+            if (duration.toHours() == 0) {
+                return "m: " + duration.toMinutes() + "  s: " + duration.toMillis() / 1000;
+            } else {
+                return "h: " + duration.toHours() + "m: " + duration.toMinutes();
+            }
+        } else {
+            return "d: " + duration.toDays() + "  h: " + duration.toHours();
+        }
+
     }
 
 }
