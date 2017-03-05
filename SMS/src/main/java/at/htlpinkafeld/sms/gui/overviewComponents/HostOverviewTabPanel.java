@@ -82,7 +82,7 @@ public class HostOverviewTabPanel extends Panel implements OverviewTabPanel, Det
 
             for (String s : itemList) {
                 Map.Entry<String, Host> mapEntry = ((BeanItem<Map.Entry<String, Host>>) container.getItem(s)).getBean();
-                HostPanel hostPanel = new HostPanel(mapEntry);
+                HostPanel hostPanel = new HostPanel(mapEntry, container);
 
                 this.container.addMapChangeListener(hostPanel);
 

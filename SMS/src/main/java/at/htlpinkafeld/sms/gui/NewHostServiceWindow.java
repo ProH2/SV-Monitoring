@@ -35,12 +35,6 @@ public class NewHostServiceWindow extends Window {
 
         FormLayout newHostServiceFormLayout = new FormLayout();
 
-//        NativeSelect typSelect = new NativeSelect("Typ", Arrays.asList("Host", "Service"));
-//        typSelect.setRequired(true);
-//        typSelect.select(typSelect.getItemIds().toArray()[0]);
-//        typSelect.setNullSelectionAllowed(false);
-//
-//        newHostServiceFormLayout.addComponent(typSelect);
         if (host == null) {
             TextField destinationTextField = new TextField("IP");
             destinationTextField.setRequired(true);
@@ -56,25 +50,12 @@ public class NewHostServiceWindow extends Window {
         Button addButton = new Button(host == null ? "Add host" : "Add service");
         newHostServiceFormLayout.addComponent(addButton);
 
-//        typSelect.addValueChangeListener(new Property.ValueChangeListener() {
-//            @Override
-//            public void valueChange(Property.ValueChangeEvent event) {
-//                nameTextField.setCaption(event.getProperty().getValue() + "name");
-//                addButton.setCaption("Add " + event.getProperty().getValue());
-//                if (event.getProperty().getValue().equals("Host")) {
-//                    destinationTextField.setCaption("IP");
-//                } else if (event.getProperty().getValue().equals("Service")) {
-//                    destinationTextField.setCaption("Hostname");
-//                }
-//            }
-//        });
         newHostServiceFormLayout.setSizeUndefined();
         newHostServiceFormLayout.setMargin(true);
         newHostServiceFormLayout.setSpacing(true);
 
         super.setContent(newHostServiceFormLayout);
 
-//        super.setComponentAlignment(newHostServiceFormLayout, Alignment.MIDDLE_CENTER);
     }
 
 }

@@ -6,7 +6,9 @@
 package at.htlpinkafeld.sms.gui.overviewComponents;
 
 import at.htlpinkafeld.sms.gui.container.HashMapWithListeners;
+import at.htlpinkafeld.sms.gui.container.MapReferenceContainer;
 import at.htlpinkafeld.sms.pojos.Host;
+import com.vaadin.data.util.BeanItem;
 import com.vaadin.ui.AbsoluteLayout;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.Panel;
@@ -22,7 +24,9 @@ import java.util.Map;
  */
 public class HostPanel extends Panel implements HashMapWithListeners.MapChangeListener {
 
-    private final Map.Entry<String, Host> hostEntry;
+    private Map.Entry<String, Host> hostEntry;
+
+    private final MapReferenceContainer<Host> container;
 
     private final Label hostnameLabel;
     private final Label statusLabel;
@@ -35,8 +39,10 @@ public class HostPanel extends Panel implements HashMapWithListeners.MapChangeLi
      *
      * @param hostEntry Host-Entry which is wrapped with the panel
      */
-    public HostPanel(Map.Entry<String, Host> hostEntry) {
+    public HostPanel(Map.Entry<String, Host> hostEntry, MapReferenceContainer<Host> container) {
         this.hostEntry = hostEntry;
+        this.container = container;
+
         Host host = hostEntry.getValue();
 
         AbsoluteLayout parentLayout = new AbsoluteLayout();
@@ -109,21 +115,17 @@ public class HostPanel extends Panel implements HashMapWithListeners.MapChangeLi
      */
     @Override
     public void mapChanged() {
+        this.hostEntry = ((BeanItem<Map.Entry<String, Host>>) container.getItem(this.hostEntry.getKey())).getBean();
         updateLabels();
         super.markAsDirtyRecursive();
     }
 
     public static String getDurationString(Duration duration) {
-        if (duration.toDays() == 0) {
-            if (duration.toHours() == 0) {
-                return "m: " + duration.toMinutes() + "  s: " + duration.toMillis() / 1000;
-            } else {
-                return "h: " + duration.toHours() + "m: " + duration.toMinutes();
-            }
+        if (duration.toHours() == 0) {
+            return "m: " + duration.toMinutes() + "  s: " + (duration.toMillis() / 1000) % 60;
         } else {
-            return "d: " + duration.toDays() + "  h: " + duration.toHours();
+            return "h: " + duration.toHours() + "m: " + duration.toMinutes() % 60;
         }
-
     }
 
 }

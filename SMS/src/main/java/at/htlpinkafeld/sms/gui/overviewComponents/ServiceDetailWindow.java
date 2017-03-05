@@ -66,7 +66,7 @@ public class ServiceDetailWindow extends Window {
         lastCheckedText.setReadOnly(true);
         leftDataLayout.addComponent(lastCheckedText);
 
-        TextField durationText = new TextField("Duration", service.getDuration().toString());
+        TextField durationText = new TextField("Duration", HostPanel.getDurationString(service.getDuration()));
         durationText.setReadOnly(true);
         leftDataLayout.addComponent(durationText);
 

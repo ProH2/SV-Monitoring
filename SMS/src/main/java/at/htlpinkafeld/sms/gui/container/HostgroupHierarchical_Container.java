@@ -156,6 +156,7 @@ public class HostgroupHierarchical_Container extends AbstractContainer implement
         if (String.valueOf(itemId).contains("/")) {
             for (Hostgroup hostgroup : hostgroups) {
                 if (String.valueOf(itemId).split("/")[0].equals(hostgroup.getName())) {
+                    fireItemSetChange();
                     return hostgroup.getHostlist().remove(String.valueOf(itemId).split("/")[1]);
                 }
             }
@@ -172,7 +173,9 @@ public class HostgroupHierarchical_Container extends AbstractContainer implement
                     deleteHostgroup = hostgroup;
                 }
             }
-            hostgroups.remove(deleteHostgroup);
+            if (hostgroups.remove(deleteHostgroup)) {
+                fireItemSetChange();
+            }
         }
         return true;
     }

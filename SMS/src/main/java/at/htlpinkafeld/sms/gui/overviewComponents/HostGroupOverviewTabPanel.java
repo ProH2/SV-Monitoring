@@ -117,7 +117,7 @@ public class HostGroupOverviewTabPanel extends Panel implements OverviewTabPanel
                     BeanItem<Map.Entry<String, Host>> hostMapBeanItem = (BeanItem<Map.Entry<String, Host>>) hostReferenceContainer.getItem(hostname);
                     if (hostMapBeanItem != null) {
                         Map.Entry<String, Host> hostMapEntry = hostMapBeanItem.getBean();
-                        HostPanel hostPanel = new HostPanel(hostMapEntry);
+                        HostPanel hostPanel = new HostPanel(hostMapEntry, hostReferenceContainer);
 
                         this.hostReferenceContainer.addMapChangeListener(hostPanel);
 

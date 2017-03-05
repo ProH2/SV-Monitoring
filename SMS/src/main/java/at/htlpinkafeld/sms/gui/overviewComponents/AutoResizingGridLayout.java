@@ -40,7 +40,6 @@ public class AutoResizingGridLayout extends GridLayout implements Page.BrowserWi
      */
     public AutoResizingGridLayout(int componentWidth) {
         COMPONENT_WIDTH = componentWidth;
-        //TODO Margin und Spacing in die Berechnung einbringen
         super.setColumns((UI.getCurrent().getPage().getBrowserWindowWidth() - 37 - 10) / (COMPONENT_WIDTH + 12));
         super.setMargin(true);
         super.setSpacing(true);

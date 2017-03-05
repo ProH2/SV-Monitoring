@@ -46,6 +46,7 @@ public class HostDetailWindow extends Window {
 
         FormLayout leftDataLayout = new FormLayout();
 
+        //TODO Close Window by clicking outside(Clicklistener in Parent)
         //add Layout Components
         TextField hostnameText = new TextField("Hostname", host.getHostname());
         hostnameText.setReadOnly(true);
@@ -63,7 +64,7 @@ public class HostDetailWindow extends Window {
         lastCheckedText.setReadOnly(true);
         leftDataLayout.addComponent(lastCheckedText);
 
-        TextField durationText = new TextField("Duration", host.getDuration().toString());
+        TextField durationText = new TextField("Duration", HostPanel.getDurationString(host.getDuration()));
         durationText.setReadOnly(true);
         leftDataLayout.addComponent(durationText);
 

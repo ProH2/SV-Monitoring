@@ -108,7 +108,7 @@ public class HostServiceHierarchical_Container extends AbstractContainer impleme
                     case "Name":
                         return new ObjectProperty(((Service) item).getName());
                     case "Host-IP":
-                        return null;
+                        return new ObjectProperty(((Service) item).getInformation());
                     case "Status":
                         return new ObjectProperty(((Service) item).getStatus().name());
                     default:
@@ -148,7 +148,9 @@ public class HostServiceHierarchical_Container extends AbstractContainer impleme
         //TODO Connection-Point to JSON-Service
         boolean returnV = this.hostServiceMap.remove(String.valueOf(itemId)) != null;
         if (returnV) {
-            fireItemSetChange();
+            fireItemSetChange(() -> {
+                return this;
+            });
         }
         return returnV;
     }
