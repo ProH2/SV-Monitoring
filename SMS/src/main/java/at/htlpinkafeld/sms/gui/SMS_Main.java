@@ -44,6 +44,7 @@ public class SMS_Main extends UI {
 
         setPollInterval(5000);//Poll every 5 seconds
         setResizeLazy(true);
+
     }
 
     /**
@@ -55,7 +56,6 @@ public class SMS_Main extends UI {
      */
     public void navigateTo(String viewName) {
         navigator.navigateTo(viewName);
-//        mbc.switchStyle();
     }
 
     /**

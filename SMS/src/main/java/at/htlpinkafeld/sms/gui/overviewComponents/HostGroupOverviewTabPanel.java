@@ -124,7 +124,9 @@ public class HostGroupOverviewTabPanel extends Panel implements OverviewTabPanel
                         hostPanel.addClickListener(new MouseEvents.ClickListener() {
                             @Override
                             public void click(MouseEvents.ClickEvent event) {
-                                UI.getCurrent().addWindow(new HostDetailWindow(hostMapEntry.getValue()));
+                                HostDetailWindow hostDetailWindow = new HostDetailWindow(hostMapEntry, hostReferenceContainer);
+                                hostReferenceContainer.addMapChangeListener(hostDetailWindow);
+                                UI.getCurrent().addWindow(hostDetailWindow);
                             }
                         });
                         statusCountMap.put(hostMapEntry.getValue().getStatus(), statusCountMap.get(hostMapEntry.getValue().getStatus()) + 1);

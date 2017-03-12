@@ -72,6 +72,8 @@ public class EditHostgroupWindow extends Window {
         mainLayout.addComponent(searchHostField);
 
         TwinColSelect hostassignmentColSelect = new TwinColSelect(null, hostContainer);
+        hostassignmentColSelect.setLeftColumnCaption("available Hosts");
+        hostassignmentColSelect.setRightColumnCaption("assigned Hosts");
 
         if (hostgroupName != null) {
             BeanItem<Hostgroup> hostGroupItem = (BeanItem<Hostgroup>) hostGroupContainer.getItem(hostgroupName);

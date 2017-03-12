@@ -5,10 +5,15 @@
  */
 package at.htlpinkafeld.sms.gui;
 
+import at.htlpinkafeld.sms.service.NoUserLoggedInException;
+import at.htlpinkafeld.sms.service.PermissionService;
 import com.vaadin.server.VaadinSession;
 import com.vaadin.ui.CustomComponent;
 import com.vaadin.ui.MenuBar;
 import com.vaadin.ui.UI;
+import java.security.Permission;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * A CustomComponent for the Dashboard-type-Menubar on the top of the screen
@@ -102,6 +107,15 @@ public final class MenuBarComponent extends CustomComponent {
      * current according to the url
      */
     public void switchStyle() {
+
+        try {
+            if (!PermissionService.isAdmin()) {
+                menuBar.removeItem(host_service_ManagementMItem);
+                menuBar.removeItem(userManagementMItem);
+            }
+        } catch (NoUserLoggedInException ex) {
+
+        }
 
         overviewMItem.setStyleName(null);
         host_service_ManagementMItem.setStyleName(null);

@@ -14,6 +14,8 @@ import at.htlpinkafeld.sms.pojos.Host;
 import at.htlpinkafeld.sms.pojos.Hostgroup;
 import at.htlpinkafeld.sms.pojos.Service;
 import at.htlpinkafeld.sms.gui.container.ContainerFactory;
+import at.htlpinkafeld.sms.service.NoUserLoggedInException;
+import at.htlpinkafeld.sms.service.PermissionService;
 import com.vaadin.data.Container;
 import com.vaadin.data.util.BeanItemContainer;
 import com.vaadin.navigator.View;
@@ -93,6 +95,14 @@ public class OverviewView extends VerticalLayout implements View {
 
     @Override
     public void enter(ViewChangeListener.ViewChangeEvent event) {
+
+        try {
+            PermissionService.isAdmin();
+        } catch (NoUserLoggedInException ex) {
+            //redirect not logged in Users to the Login-Page
+            ((SMS_Main) UI.getCurrent()).navigateTo(LoginView.VIEW_NAME);
+        }
+
         ((SMS_Main) UI.getCurrent()).getMenuBarComponent().switchStyle();
         super.addComponentAsFirst(((SMS_Main) UI.getCurrent()).getMenuBarComponent());
         tabSheet.setSelectedTab(0);

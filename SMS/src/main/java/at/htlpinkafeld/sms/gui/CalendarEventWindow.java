@@ -7,6 +7,8 @@ package at.htlpinkafeld.sms.gui;
 
 import at.htlpinkafeld.sms.gui.util.TimeManagementCalendarEvent;
 import at.htlpinkafeld.sms.pojo.User;
+import at.htlpinkafeld.sms.service.NoUserLoggedInException;
+import at.htlpinkafeld.sms.service.PermissionService;
 import com.vaadin.data.Container;
 import com.vaadin.data.Validator;
 import com.vaadin.data.Validator.InvalidValueException;
@@ -18,6 +20,7 @@ import com.vaadin.ui.FormLayout;
 import com.vaadin.ui.NativeSelect;
 import com.vaadin.ui.Notification;
 import com.vaadin.ui.PopupDateField;
+import com.vaadin.ui.UI;
 import com.vaadin.ui.Window;
 import java.util.Date;
 
@@ -113,7 +116,18 @@ public class CalendarEventWindow extends Window {
             }
         });
 
-        formLayout.addComponents(createButton, cancelButton, deleteButton);
+        try {
+            if (PermissionService.isAdmin()) {
+                formLayout.addComponents(createButton, cancelButton, deleteButton);
+            } else {
+                userNativeSelect.setEnabled(false);
+                startDateField.setEnabled(false);
+                endDateField.setEnabled(false);
+            }
+        } catch (NoUserLoggedInException ex) {
+            super.close();
+            ((SMS_Main) UI.getCurrent()).navigateTo(LoginView.VIEW_NAME);
+        }
 
         formLayout.setSizeUndefined();
         formLayout.setMargin(true);

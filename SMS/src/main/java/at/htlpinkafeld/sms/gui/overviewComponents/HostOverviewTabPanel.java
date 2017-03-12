@@ -31,7 +31,7 @@ import java.util.Map;
 public class HostOverviewTabPanel extends Panel implements OverviewTabPanel, DetachListener {
 
     private AutoResizingGridLayout gridLayout = null;
-    private final MapReferenceContainer<Host> container;
+    private final MapReferenceContainer<Host> hostReferenceContainer;
 
     /**
      * Constant for the width of the CustomComponent which contains the Data
@@ -47,10 +47,10 @@ public class HostOverviewTabPanel extends Panel implements OverviewTabPanel, Det
      * @param container which contains the {@link Host Hosts}
      */
     public HostOverviewTabPanel(MapReferenceContainer<Host> container) {
-        this.container = container;
+        this.hostReferenceContainer = container;
 //        this.container.sort(new String[]{"status"}, new boolean[]{false});
 
-        this.container.addItemSetChangeListener(new Container.ItemSetChangeListener() {
+        this.hostReferenceContainer.addItemSetChangeListener(new Container.ItemSetChangeListener() {
             @Override
             public void containerItemSetChange(Container.ItemSetChangeEvent event) {
                 refreshLayout();
@@ -76,22 +76,20 @@ public class HostOverviewTabPanel extends Panel implements OverviewTabPanel, Det
 
     @Override
     final public void refreshLayout() {
-        Collection<String> itemList = container.getItemIds();
+        Collection<String> itemList = hostReferenceContainer.getItemIds();
         if (gridLayout != null) {
             gridLayout.removeAllComponents();
 
             for (String s : itemList) {
-                Map.Entry<String, Host> mapEntry = ((BeanItem<Map.Entry<String, Host>>) container.getItem(s)).getBean();
-                HostPanel hostPanel = new HostPanel(mapEntry, container);
+                Map.Entry<String, Host> hostMapEntry = ((BeanItem<Map.Entry<String, Host>>) hostReferenceContainer.getItem(s)).getBean();
+                HostPanel hostPanel = new HostPanel(hostMapEntry, hostReferenceContainer);
 
-                this.container.addMapChangeListener(hostPanel);
+                this.hostReferenceContainer.addMapChangeListener(hostPanel);
 
-//                HostPanel hostPanel = ((BeanItem<HostPanel>) container.getItem(o)).getBean();
-                hostPanel.addClickListener(new MouseEvents.ClickListener() {
-                    @Override
-                    public void click(MouseEvents.ClickEvent event) {
-                        UI.getCurrent().addWindow(new HostDetailWindow(((BeanItem<Map.Entry<String, Host>>) container.getItem(s)).getBean().getValue()));
-                    }
+                hostPanel.addClickListener((MouseEvents.ClickEvent event) -> {
+                    HostDetailWindow hostDetailWindow = new HostDetailWindow(hostMapEntry, hostReferenceContainer);
+                    hostReferenceContainer.addMapChangeListener(hostDetailWindow);
+                    UI.getCurrent().addWindow(hostDetailWindow);
                 });
 
                 hostPanel.setWidth(COMPONENT_WIDTH, Unit.PIXELS);
@@ -105,7 +103,7 @@ public class HostOverviewTabPanel extends Panel implements OverviewTabPanel, Det
     @Override
     public void detach(DetachEvent event) {
         for (Component c : gridLayout) {
-            container.removeMapChangeListener((HostPanel) c);
+            hostReferenceContainer.removeMapChangeListener((HostPanel) c);
         }
     }
 

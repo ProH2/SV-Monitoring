@@ -9,6 +9,8 @@ import at.htlpinkafeld.sms.gui.container.ContainerFactory;
 import at.htlpinkafeld.sms.gui.container.HostgroupHierarchical_Container;
 import at.htlpinkafeld.sms.pojos.Host;
 import at.htlpinkafeld.sms.pojos.Service;
+import at.htlpinkafeld.sms.service.NoUserLoggedInException;
+import at.htlpinkafeld.sms.service.PermissionService;
 import com.vaadin.data.Container;
 import com.vaadin.data.util.BeanItem;
 import com.vaadin.navigator.View;
@@ -46,6 +48,17 @@ public class Host_Service_ManagementView extends VerticalLayout implements View 
 
     @Override
     public void enter(ViewChangeListener.ViewChangeEvent event) {
+        try {
+            if (PermissionService.isAdmin()) {
+
+            } else {
+                ((SMS_Main) UI.getCurrent()).navigateTo(OverviewView.VIEW_NAME);
+            }
+        } catch (NoUserLoggedInException ex) {
+            //redirect not logged in Users to the Login-Page
+            ((SMS_Main) UI.getCurrent()).navigateTo(LoginView.VIEW_NAME);
+        }
+
         ((SMS_Main) UI.getCurrent()).getMenuBarComponent().switchStyle();
     }
 
@@ -155,6 +168,7 @@ public class Host_Service_ManagementView extends VerticalLayout implements View 
 
         hostgroup_treeTable.setContainerDataSource(hostgroupHierarchical_Container);
         hostgroup_treeTable.setSizeFull();
+        hostgroup_treeTable.setBuffered(false);
 
         hostgroup_treeTable.addGeneratedColumn("edit Hostgroup", new Table.ColumnGenerator() {
             @Override

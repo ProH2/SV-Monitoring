@@ -7,6 +7,8 @@ package at.htlpinkafeld.sms.gui;
 
 import at.htlpinkafeld.sms.gui.container.ContainerFactory;
 import at.htlpinkafeld.sms.pojo.User;
+import at.htlpinkafeld.sms.service.NoUserLoggedInException;
+import at.htlpinkafeld.sms.service.PermissionService;
 import com.vaadin.data.Container;
 import com.vaadin.data.Item;
 import com.vaadin.data.util.BeanItemContainer;
@@ -158,6 +160,17 @@ public class UserManagementView extends VerticalLayout implements View {
 
     @Override
     public void enter(ViewChangeListener.ViewChangeEvent event) {
+        try {
+            if (PermissionService.isAdmin()) {
+
+            } else {
+                ((SMS_Main) UI.getCurrent()).navigateTo(OverviewView.VIEW_NAME);
+            }
+        } catch (NoUserLoggedInException ex) {
+            //redirect not logged in Users to the Login-Page
+            ((SMS_Main) UI.getCurrent()).navigateTo(LoginView.VIEW_NAME);
+        }
+
         ((SMS_Main) UI.getCurrent()).getMenuBarComponent().switchStyle();
     }
 

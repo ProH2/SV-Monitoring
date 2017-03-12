@@ -38,7 +38,8 @@ public class ServicePanel extends Panel implements HashMapWithListeners.MapChang
      * Constructor for the ServicePanel
      *
      * @param serviceEntry Service-Entry which is wrapped with the panel
-     * @param container
+     * @param container container of the Service-Entry which is used for
+     * Synchronisation
      */
     public ServicePanel(Map.Entry<String, Service> serviceEntry, MapReferenceContainer<Service> container) {
         this.serviceEntry = serviceEntry;
@@ -123,7 +124,7 @@ public class ServicePanel extends Panel implements HashMapWithListeners.MapChang
     public void mapChanged() {
         this.serviceEntry = ((BeanItem<Map.Entry<String, Service>>) container.getItem(this.serviceEntry.getKey())).getBean();
         updateLabels(); 
-        super.markAsDirtyRecursive();
+        super.markAsDirty();
     }
 
 }

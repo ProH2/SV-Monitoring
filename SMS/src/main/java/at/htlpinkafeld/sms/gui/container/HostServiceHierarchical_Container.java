@@ -89,7 +89,7 @@ public class HostServiceHierarchical_Container extends AbstractContainer impleme
             return null;
         }
 
-        BeanItem beanItem = hostServiceMap.get(itemId);
+        BeanItem beanItem = hostServiceMap.get((String) itemId);
         if (beanItem != null) {
             Object item = beanItem.getBean();
             if (item instanceof Host) {

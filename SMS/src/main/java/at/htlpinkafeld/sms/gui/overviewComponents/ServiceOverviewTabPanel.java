@@ -44,7 +44,7 @@ public class ServiceOverviewTabPanel extends Panel implements OverviewTabPanel, 
      */
     private VerticalLayout serviceVerticalLayout = null;
 
-    private final MapReferenceContainer<Service> container;
+    private final MapReferenceContainer<Service> serviceReferenceContainer;
 
     /**
      * Constant for the width of the CustomComponent which contains the Data
@@ -61,10 +61,10 @@ public class ServiceOverviewTabPanel extends Panel implements OverviewTabPanel, 
      */
     public ServiceOverviewTabPanel(MapReferenceContainer<Service> container) {
 
-        this.container = container;
+        this.serviceReferenceContainer = container;
 //        this.container.sort(new String[]{"status"}, new boolean[]{false});
 
-        this.container.addItemSetChangeListener(new Container.ItemSetChangeListener() {
+        this.serviceReferenceContainer.addItemSetChangeListener(new Container.ItemSetChangeListener() {
             @Override
             public void containerItemSetChange(Container.ItemSetChangeEvent event) {
                 refreshLayout();
@@ -91,7 +91,7 @@ public class ServiceOverviewTabPanel extends Panel implements OverviewTabPanel, 
 
     @Override
     final public void refreshLayout() {
-        Collection<String> itemIdList = container.getItemIds();
+        Collection<String> itemIdList = serviceReferenceContainer.getItemIds();
         if (serviceVerticalLayout != null) {
             serviceVerticalLayout.removeAllComponents();
 
@@ -114,17 +114,19 @@ public class ServiceOverviewTabPanel extends Panel implements OverviewTabPanel, 
                 serviceGridLayout.setDefaultComponentAlignment(Alignment.MIDDLE_CENTER);
 
                 for (String o : itemIdList) {
-                    Map.Entry<String, Service> entry = ((BeanItem<Map.Entry<String, Service>>) container.getItem(o)).getBean();
+                    Map.Entry<String, Service> entry = ((BeanItem<Map.Entry<String, Service>>) serviceReferenceContainer.getItem(o)).getBean();
                     if ((entry).getValue().getHostname().equals(hostname)) {
 
-                        ServicePanel servicePanel = new ServicePanel(entry, container);
+                        ServicePanel servicePanel = new ServicePanel(entry, serviceReferenceContainer);
 
-                        this.container.addMapChangeListener(servicePanel);
+                        this.serviceReferenceContainer.addMapChangeListener(servicePanel);
 
                         servicePanel.addClickListener(new MouseEvents.ClickListener() {
                             @Override
                             public void click(MouseEvents.ClickEvent event) {
-                                UI.getCurrent().addWindow(new ServiceDetailWindow(entry.getValue()));
+                                ServiceDetailWindow serviceDetailWindow = new ServiceDetailWindow(entry, serviceReferenceContainer);
+                                serviceReferenceContainer.addMapChangeListener(serviceDetailWindow);
+                                UI.getCurrent().addWindow(serviceDetailWindow);
                             }
                         });
                         statusCountMap.put(entry.getValue().getStatus(), statusCountMap.get(entry.getValue().getStatus()) + 1);
@@ -197,7 +199,7 @@ public class ServiceOverviewTabPanel extends Panel implements OverviewTabPanel, 
         if (event.getSource().equals(this)) {
             GridLayout gridLayout = (GridLayout) event.getSource();
             for (Component c : gridLayout) {
-                container.removeMapChangeListener((ServicePanel) c);
+                serviceReferenceContainer.removeMapChangeListener((ServicePanel) c);
             }
         }
 

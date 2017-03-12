@@ -38,6 +38,7 @@ public class HostPanel extends Panel implements HashMapWithListeners.MapChangeLi
      * Constructor for the HostPanel
      *
      * @param hostEntry Host-Entry which is wrapped with the panel
+     * @param container container of the Host-Entry which is used for Synchronisation
      */
     public HostPanel(Map.Entry<String, Host> hostEntry, MapReferenceContainer<Host> container) {
         this.hostEntry = hostEntry;
@@ -117,7 +118,7 @@ public class HostPanel extends Panel implements HashMapWithListeners.MapChangeLi
     public void mapChanged() {
         this.hostEntry = ((BeanItem<Map.Entry<String, Host>>) container.getItem(this.hostEntry.getKey())).getBean();
         updateLabels();
-        super.markAsDirtyRecursive();
+        super.markAsDirty();
     }
 
     public static String getDurationString(Duration duration) {

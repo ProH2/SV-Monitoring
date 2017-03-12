@@ -65,11 +65,8 @@ public class ContainerFactory {
         hostMap = JSONService.getHOSTS();
         if (hostMap == null) {
             //TODO use real hosts
-            List<Map.Entry<String, Host>> entries = null;
-//        entries = JSONService.getHosts();
-            if (entries == null) {
-                entries = new ArrayList<>();
-            }
+            List<Map.Entry<String, Host>> entries = new ArrayList<>();
+
             for (int i = 1; i <= 10; i++) {
                 Host h = new Host(0, "Host " + i, (Host.Hoststatus) OverviewView.getRandomEnum(Host.Hoststatus.values()), LocalDateTime.now(), Duration.ZERO, "Test informationTest informationTest tionTest informationTest informationonTest informationTest information");
                 entries.add(new AbstractMap.SimpleEntry<>(h.getHostname(), h));
@@ -92,7 +89,7 @@ public class ContainerFactory {
         serviceMap = JSONService.getSERVICES();
         if (serviceMap == null) {
             List<Map.Entry<String, Service>> entries = new ArrayList<>();
-            for (int i = 1; i <= 100; i++) { 
+            for (int i = 1; i <= 100; i++) {
                 Service s = new Service(i % 10, 0, "Service " + i, (Service.Servicestatus) OverviewView.getRandomEnum(Service.Servicestatus.values()), LocalDateTime.now(), Duration.ofMinutes(10), 0, "Test informationTest informationTest tionTest informationTest informationonTest informationTest information");
                 s.setHostname("Host " + i % 10);
                 entries.add(new AbstractMap.SimpleEntry<>(s.getHostname() + "/" + s.getName(), s));
@@ -125,6 +122,7 @@ public class ContainerFactory {
         List<User> users = new ArrayList<>();
         users.add(new User(1, "Dogist", "1234", "Martin", "noplan@gmc.at", "5421575"));
         users.add(new User(2, "Irish", "4321", "Sebastian", "noplan@qmail.com", "5788775"));
+        users.add(new User(3, "user", "12345678", "NormalUser", "abc@qmail.com", "56468762"));
         userContainer = new BeanItemContainer<>(User.class, users);
 
 //        UserDao userDao = new UserDaoImpl();
@@ -147,16 +145,16 @@ public class ContainerFactory {
      * return null if there is an error during initialisation
      */
     public static MapReferenceContainer<Host> createHostContainer() {
-        
+
         HashMapWithListeners<String, Host> changeListener = JSONService.getHOSTS();
-        
+
         if (hostMap == null || changeListener != null) {
-            initHostMap(); 
+            initHostMap();
         }
         try {
             return new MapReferenceContainer<>(hostMap, Host.class);
         } catch (IllegalAccessException | InstantiationException ex) {
-            return null; 
+            return null;
         }
     }
 
@@ -169,7 +167,7 @@ public class ContainerFactory {
      */
     public static MapReferenceContainer<Service> createServiceContainer() {
         HashMapWithListeners<String, Service> changeListener = JSONService.getSERVICES();
-        
+
         if (serviceMap == null || changeListener != null) {
             initServiceMap();
         }

@@ -9,6 +9,8 @@ import static at.htlpinkafeld.sms.gui.UserManagementView.USERNAME_PROPERTY;
 import at.htlpinkafeld.sms.gui.container.ContainerFactory;
 import at.htlpinkafeld.sms.gui.util.TimeManagementCalendarEvent;
 import at.htlpinkafeld.sms.pojo.User;
+import at.htlpinkafeld.sms.service.NoUserLoggedInException;
+import at.htlpinkafeld.sms.service.PermissionService;
 import com.vaadin.addon.calendar.gwt.client.ui.VCalendar;
 import com.vaadin.navigator.View;
 import com.vaadin.navigator.ViewChangeListener;
@@ -36,6 +38,8 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * View for the TimeManagement Page
@@ -58,14 +62,26 @@ public class TimeManagementView extends VerticalLayout implements View {
     public TimeManagementView() {
         super.addComponent(((SMS_Main) UI.getCurrent()).getMenuBarComponent());
 
-        userContainer = ContainerFactory.createIndexedUserContainer();
-        table = new Table("Available Users");
-        table.setWidth(100, Unit.PERCENTAGE);
-        table.setHeight(800, Unit.PIXELS);
+        boolean isAdmin = false;
+        try {
+            isAdmin = PermissionService.isAdmin();
+        } catch (NoUserLoggedInException ex) {
+            //redirect not logged in Users to the Login-Page
+            ((SMS_Main) UI.getCurrent()).navigateTo(LoginView.VIEW_NAME);
+        }
 
-        table.setContainerDataSource(userContainer, Collections.singletonList(USERNAME_PROPERTY));
-        table.setDragMode(Table.TableDragMode.ROW);
-        table.setSelectable(true);
+        userContainer = ContainerFactory.createIndexedUserContainer();
+        if (isAdmin) {
+            table = new Table("Available Users");
+            table.setWidth(100, Unit.PERCENTAGE);
+            table.setHeight(800, Unit.PIXELS);
+
+            table.setContainerDataSource(userContainer, Collections.singletonList(USERNAME_PROPERTY));
+            table.setDragMode(Table.TableDragMode.ROW);
+            table.setSelectable(true);
+        } else {
+            table = null;
+        }
 
         dutyProvider = ContainerFactory.createDutyEventProvider();
 
@@ -73,7 +89,9 @@ public class TimeManagementView extends VerticalLayout implements View {
         calendar.setWidth((float) 99.5, Unit.PERCENTAGE);
         calendar.setHeight(800, Unit.PIXELS);
 
-        calendar.addActionHandler(createCalendarActionHandler());
+        if (isAdmin) {
+            calendar.addActionHandler(createCalendarActionHandler());
+        }
 
         calendar.setHandler(new BasicDateClickHandler() {
             @Override
@@ -98,68 +116,81 @@ public class TimeManagementView extends VerticalLayout implements View {
         });
 
         calendar.setHandler((CalendarComponentEvents.EventClick event) -> {
-            UI.getCurrent().addWindow(new CalendarEventWindow((TimeManagementCalendarEvent) event.getCalendarEvent(), table.getContainerDataSource(), calendar));
+            UI.getCurrent().addWindow(new CalendarEventWindow((TimeManagementCalendarEvent) event.getCalendarEvent(), userContainer, calendar));
         });
 
-        //DropHandler for Dropping Users from List to Calendar to create Events
-        calendar.setDropHandler(new DropHandler() {
-            @Override
-            public void drop(DragAndDropEvent event) {
-                CalendarTargetDetails details = (CalendarTargetDetails) event.getTargetDetails();
+        if (isAdmin) {
+            //DropHandler for Dropping Users from List to Calendar to create Events
+            calendar.setDropHandler(new DropHandler() {
+                @Override
+                public void drop(DragAndDropEvent event) {
+                    CalendarTargetDetails details = (CalendarTargetDetails) event.getTargetDetails();
 
-                TableTransferable transferable = (TableTransferable) event.getTransferable();
+                    TableTransferable transferable = (TableTransferable) event.getTransferable();
 
-                Calendar cal = details.getTargetCalendar();
-                long currentCalDateRange = cal.getEndDate().getTime() - cal.getStartDate().getTime();
+                    Calendar cal = details.getTargetCalendar();
+                    long currentCalDateRange = cal.getEndDate().getTime() - cal.getStartDate().getTime();
 
-                Date dropTime = details.getDropTime();
+                    Date dropTime = details.getDropTime();
 
-                User draggedUser = (User) transferable.getItemId();
+                    User draggedUser = (User) transferable.getItemId();
 
-                //Checks if the calendar is in WeekView( or DayView)
-                if (currentCalDateRange < VCalendar.WEEKINMILLIS) {
+                    //Checks if the calendar is in WeekView( or DayView)
+                    if (currentCalDateRange < VCalendar.WEEKINMILLIS) {
 
-                    java.util.Calendar timeCalendar = details.getTargetCalendar().getInternalCalendar();
-                    timeCalendar.setTime(dropTime);
-                    timeCalendar.add(java.util.Calendar.MINUTE, 120);
-                    Date endTime = timeCalendar.getTime();
+                        java.util.Calendar timeCalendar = details.getTargetCalendar().getInternalCalendar();
+                        timeCalendar.setTime(dropTime);
+                        timeCalendar.add(java.util.Calendar.MINUTE, 120);
+                        Date endTime = timeCalendar.getTime();
 
-                    calendar.addEvent(new TimeManagementCalendarEvent(draggedUser, dropTime, endTime));
-                } else {
-                    calendar.addEvent(new TimeManagementCalendarEvent(draggedUser, dropTime));
+                        calendar.addEvent(new TimeManagementCalendarEvent(draggedUser, dropTime, endTime));
+                    } else {
+                        calendar.addEvent(new TimeManagementCalendarEvent(draggedUser, dropTime));
+                    }
                 }
-            }
 
-            @Override
-            public AcceptCriterion getAcceptCriterion() {
+                @Override
+                public AcceptCriterion getAcceptCriterion() {
 //                return new SourceIs(table);
-                return AcceptAll.get();
-            }
-        });
+                    return AcceptAll.get();
+                }
+            });
 
-        calendar.setHandler(new BasicEventMoveHandler() {
-            @Override
-            public void eventMove(CalendarComponentEvents.MoveEvent event) {
-                super.eventMove(event);
-                calendar.markAsDirty();
-            }
-        });
+            calendar.setHandler(new BasicEventMoveHandler() {
+                @Override
+                public void eventMove(CalendarComponentEvents.MoveEvent event) {
+                    super.eventMove(event);
+                    calendar.markAsDirty();
+                }
+            });
+        }
 
 //        DragAndDropWrapper dropWrapper = new DragAndDropWrapper(calendar);
 //        dropWrapper.setDropHandler(dh);
         VerticalLayout calendarLayout = new VerticalLayout(calendar);
         calendarLayout.setWidth(100, Unit.PERCENTAGE);
 
-        HorizontalSplitPanel parentSplitPanel = new HorizontalSplitPanel(calendarLayout, table);
-        parentSplitPanel.setLocked(true);
-        parentSplitPanel.setSplitPosition(90, Unit.PERCENTAGE);
-        parentSplitPanel.setSizeFull();
+        if (isAdmin && table != null) {
+            HorizontalSplitPanel parentSplitPanel = new HorizontalSplitPanel(calendarLayout, table);
+            parentSplitPanel.setLocked(true);
+            parentSplitPanel.setSplitPosition(90, Unit.PERCENTAGE);
+            parentSplitPanel.setSizeFull();
 
-        super.addComponent(parentSplitPanel);
+            super.addComponent(parentSplitPanel);
+        } else {
+            super.addComponent(calendarLayout);
+        }
     }
 
     @Override
     public void enter(ViewChangeListener.ViewChangeEvent event) {
+        try {
+            PermissionService.isAdmin();
+        } catch (NoUserLoggedInException ex) {
+            //redirect not logged in Users to the Login-Page
+            ((SMS_Main) UI.getCurrent()).navigateTo(LoginView.VIEW_NAME);
+        }
+
         ((SMS_Main) UI.getCurrent()).getMenuBarComponent().switchStyle();
     }
 

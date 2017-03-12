@@ -6,12 +6,15 @@
 package at.htlpinkafeld.sms.gui;
 
 import at.htlpinkafeld.sms.gui.container.ContainerFactory;
+import at.htlpinkafeld.sms.pojo.User;
 import at.htlpinkafeld.sms.service.JSONService;
 import com.vaadin.data.Container;
+import com.vaadin.data.util.BeanItemContainer;
 import com.vaadin.data.util.filter.SimpleStringFilter;
 import com.vaadin.data.validator.NullValidator;
 import com.vaadin.navigator.View;
 import com.vaadin.navigator.ViewChangeListener;
+import com.vaadin.server.VaadinSession;
 import com.vaadin.shared.ui.label.ContentMode;
 import com.vaadin.ui.Alignment;
 import com.vaadin.ui.Button;
@@ -33,7 +36,7 @@ public class LoginView extends VerticalLayout implements View {
 
     public static final String VIEW_NAME = "";
 
-    private Container.Filterable userContainer = null;
+    private BeanItemContainer<User> userContainer = null;
 
     /**
      * Constructor for LoginView
@@ -63,11 +66,13 @@ public class LoginView extends VerticalLayout implements View {
                 boolean loginFailed = true;
 
                 userContainer.addContainerFilter(new SimpleStringFilter("username", usernameTextF.getValue(), false, false));
-                for (Object o : userContainer.getItemIds()) {
-                    if (Objects.equals(userContainer.getContainerProperty(o, "password").getValue(), passwordTextF.getValue())) {
+                for (User user : userContainer.getItemIds()) {
+                    if (Objects.equals(user.getPassword(), passwordTextF.getValue())) {
                         loginFailed = false;
 
-                        Notification.show("Login successfull", "Hello " + usernameTextF.getValue(), Notification.Type.TRAY_NOTIFICATION);
+                        Notification.show("Login successfull", "Hello " + user.getName(), Notification.Type.TRAY_NOTIFICATION);
+
+                        VaadinSession.getCurrent().setAttribute("currentUser", user);
                         ((SMS_Main) UI.getCurrent()).navigateTo(OverviewView.VIEW_NAME);
                     }
                 }

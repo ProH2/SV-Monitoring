@@ -5,9 +5,17 @@
  */
 package at.htlpinkafeld.sms.gui.overviewComponents;
 
+import at.htlpinkafeld.sms.gui.LoginView;
+import at.htlpinkafeld.sms.gui.SMS_Main;
 import at.htlpinkafeld.sms.gui.container.ContainerFactory;
+import at.htlpinkafeld.sms.gui.container.HashMapWithListeners;
+import at.htlpinkafeld.sms.gui.container.MapReferenceContainer;
+import static at.htlpinkafeld.sms.gui.overviewComponents.HostPanel.getDurationString;
 import at.htlpinkafeld.sms.pojos.Comment;
 import at.htlpinkafeld.sms.pojos.Host;
+import at.htlpinkafeld.sms.service.NoUserLoggedInException;
+import at.htlpinkafeld.sms.service.PermissionService;
+import com.vaadin.data.util.BeanItem;
 import com.vaadin.data.util.BeanItemContainer;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.FormLayout;
@@ -17,10 +25,12 @@ import com.vaadin.ui.HorizontalSplitPanel;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.TextArea;
 import com.vaadin.ui.TextField;
+import com.vaadin.ui.UI;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.Window;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.Map;
 
 /**
  * {@link Window} which displays the data of a single {@link Host} and its
@@ -28,43 +38,54 @@ import java.time.format.DateTimeFormatter;
  *
  * @author Martin Six
  */
-//TODO Synchronisation über Map.Entry wie bei HostPanel?
-public class HostDetailWindow extends Window {
+public class HostDetailWindow extends Window implements HashMapWithListeners.MapChangeListener {
 
-    private final Host host;
+    private Map.Entry<String, Host> hostEntry;
+    private final MapReferenceContainer<Host> container;
+
+    private final TextField hostnameText;
+    private final TextField statusText;
+    private final TextArea hostInformationText;
+    private final TextField lastCheckedText;
+    private final TextField durationText;
 
     /**
      * Constructor for the {@link HostDetailWindow}
      *
-     * @param host contains the data which will be shown
+     * @param hostEntry Host-Entry which is wrapped with the Window
+     * @param container container of the Host-Entry which is used for
+     * Synchronisation
      */
-    public HostDetailWindow(Host host) {
-        super(host.getHostname());
+    public HostDetailWindow(Map.Entry<String, Host> hostEntry, MapReferenceContainer<Host> container) {
+        super(hostEntry.getKey());
         super.center();
         super.setModal(true);
-        this.host = host;
+        this.hostEntry = hostEntry;
+        this.container = container;
+
+        Host host = hostEntry.getValue();
 
         FormLayout leftDataLayout = new FormLayout();
 
         //TODO Close Window by clicking outside(Clicklistener in Parent)
         //add Layout Components
-        TextField hostnameText = new TextField("Hostname", host.getHostname());
+        hostnameText = new TextField("Hostname", host.getHostname());
         hostnameText.setReadOnly(true);
         leftDataLayout.addComponent(hostnameText);
 
-        TextField statusText = new TextField("Status", host.getStatus().name());
+        statusText = new TextField("Status", host.getStatus().name());
         statusText.setReadOnly(true);
         leftDataLayout.addComponent(statusText);
 
-        TextArea hostInformationText = new TextArea("Information", host.getInformation());
+        hostInformationText = new TextArea("Information", host.getInformation());
         hostInformationText.setReadOnly(true);
         leftDataLayout.addComponent(hostInformationText);
 
-        TextField lastCheckedText = new TextField("Last checked", host.getLastChecked().format(DateTimeFormatter.ofPattern("dd.MM.yyyy HH:mm")));
+        lastCheckedText = new TextField("Last checked", host.getLastChecked().format(DateTimeFormatter.ofPattern("dd.MM.yyyy HH:mm")));
         lastCheckedText.setReadOnly(true);
         leftDataLayout.addComponent(lastCheckedText);
 
-        TextField durationText = new TextField("Duration", HostPanel.getDurationString(host.getDuration()));
+        durationText = new TextField("Duration", HostPanel.getDurationString(host.getDuration()));
         durationText.setReadOnly(true);
         leftDataLayout.addComponent(durationText);
 
@@ -74,44 +95,69 @@ public class HostDetailWindow extends Window {
         VerticalLayout rightCommentLayout = new VerticalLayout();
 
         Grid commentGrid = new Grid(ContainerFactory.createHostCommentContainer(host.getHostname()));
-        commentGrid.setEditorEnabled(true);
-        commentGrid.getColumn("author").setEditable(false);
-        commentGrid.getColumn("entryTime").setEditable(false);
         commentGrid.setSizeFull();
-
         rightCommentLayout.addComponent(commentGrid);
 
-        Button addCommentButton = new Button("add Comment", new Button.ClickListener() {
-            @Override
-            public void buttonClick(Button.ClickEvent event) {
-                Comment newComment = new Comment(LocalDateTime.now(), "Current User", "");
-                ((BeanItemContainer<Comment>) commentGrid.getContainerDataSource()).addBean(newComment);
-                commentGrid.editItem(newComment);
-                commentGrid.focus();
+        try {
+            if (PermissionService.isAdmin()) {
+                commentGrid.setEditorEnabled(true);
+                commentGrid.getColumn("author").setEditable(false);
+                commentGrid.getColumn("entryTime").setEditable(false);
+
+                Button addCommentButton = new Button("add Comment", new Button.ClickListener() {
+                    @Override
+                    public void buttonClick(Button.ClickEvent event) {
+                        Comment newComment = new Comment(LocalDateTime.now(), "Current User", "");
+                        ((BeanItemContainer<Comment>) commentGrid.getContainerDataSource()).addBean(newComment);
+                        commentGrid.editItem(newComment);
+                        commentGrid.focus();
+                    }
+                });
+
+                Button removeCommentButton = new Button("delete Comment", new Button.ClickListener() {
+                    @Override
+                    public void buttonClick(Button.ClickEvent event) {
+                        commentGrid.getContainerDataSource().removeItem(commentGrid.getSelectedRow());
+                    }
+                });
+                Label spaceHolder = new Label("");
+
+                HorizontalLayout buttonLayout = new HorizontalLayout();
+                buttonLayout.addComponents(addCommentButton, spaceHolder, removeCommentButton);
+                buttonLayout.setWidth(94, Unit.PERCENTAGE);
+
+                rightCommentLayout.addComponent(buttonLayout);
             }
-        });
-
-        Button removeCommentButton = new Button("delete Comment", new Button.ClickListener() {
-            @Override
-            public void buttonClick(Button.ClickEvent event) {
-                commentGrid.getContainerDataSource().removeItem(commentGrid.getSelectedRow());
-            }
-        });
-        Label spaceHolder = new Label("");
-
-        HorizontalLayout buttonLayout = new HorizontalLayout();
-        buttonLayout.addComponent(addCommentButton);
-        buttonLayout.addComponent(spaceHolder);
-        buttonLayout.addComponent(removeCommentButton);
-        buttonLayout.setWidth(94, Unit.PERCENTAGE);
-
-        rightCommentLayout.addComponent(buttonLayout);
+        } catch (NoUserLoggedInException ex) {
+            ((SMS_Main) UI.getCurrent()).navigateTo(LoginView.VIEW_NAME);
+        }
 
         HorizontalSplitPanel parentSplitPanel = new HorizontalSplitPanel(leftDataLayout, rightCommentLayout);
         parentSplitPanel.setSizeUndefined();
         parentSplitPanel.setWidth(860, Unit.PIXELS);
 
         super.setContent(parentSplitPanel);
+    }
+
+    /**
+     * method used to update the TextFields when the
+     * {@link HashMapWithListeners.MapChangeListener} was notified
+     */
+    private void updateLabels() {
+        Host host = hostEntry.getValue();
+        statusText.setValue(host.getStatus().name());
+
+        hostInformationText.setValue(host.getInformation());
+        lastCheckedText.setValue(host.getLastChecked().format(DateTimeFormatter.ofPattern("dd.MM.yyyy HH:mm")));
+        durationText.setValue(getDurationString(host.getDuration()));
+    }
+
+    @Override
+    public void mapChanged() {
+        this.hostEntry = ((BeanItem<Map.Entry<String, Host>>) container.getItem(this.hostEntry.getKey())).getBean();
+        updateLabels();
+        super.markAsDirty();
+
     }
 
 }

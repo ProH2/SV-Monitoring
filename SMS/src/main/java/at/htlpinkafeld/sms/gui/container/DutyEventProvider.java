@@ -29,7 +29,7 @@ public class DutyEventProvider implements CalendarEditableEventProvider {
     /**
      * Constructor for the Eventprovider
      *
-     * @param dutyDao
+     * @param dutyDao DAO to which the calls are delegated to
      */
     public DutyEventProvider(DutyDao dutyDao) {
         this.dutyDao = dutyDao;
@@ -39,7 +39,9 @@ public class DutyEventProvider implements CalendarEditableEventProvider {
 
     @Override
     public void addEvent(CalendarEvent event) {
-        this.eventContainer.addBean((TimeManagementCalendarEvent) event);
+        if (event instanceof TimeManagementCalendarEvent) {
+            this.eventContainer.addBean((TimeManagementCalendarEvent) event);
+        }
     }
 
     @Override
