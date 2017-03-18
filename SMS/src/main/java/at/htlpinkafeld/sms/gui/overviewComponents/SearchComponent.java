@@ -58,7 +58,7 @@ public class SearchComponent extends CustomComponent {
         searchTermField.setSizeFull();
 //        searchTermField.setImmediate(true);
 
-        Button searchButton = new Button("Suchen", (Button.ClickEvent event) -> {
+        Button searchButton = new Button("Search", (Button.ClickEvent event) -> {
             container.removeAllContainerFilters();
 
             String searchTerm = searchTermField.getValue();

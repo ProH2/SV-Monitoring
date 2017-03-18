@@ -39,6 +39,8 @@ public class HostServiceHierarchical_Container extends AbstractContainer impleme
 
     private final Map<String, BeanItem> hostServiceMap;
 
+    private final List<String> toBeRemovedIds;
+
     /**
      * Collection which contains the containerPropertyIds
      */
@@ -55,6 +57,7 @@ public class HostServiceHierarchical_Container extends AbstractContainer impleme
      */
     public HostServiceHierarchical_Container(Collection<Host> hosts, Collection<Service> services) {
         hostServiceMap = new HashMap<>();
+        toBeRemovedIds = new LinkedList<>();
 
         hostServiceMap.put("", null);
 

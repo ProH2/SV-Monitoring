@@ -72,9 +72,12 @@ public class HostGroupOverviewTabPanel extends Panel implements OverviewTabPanel
 
         //create Filtermapping
         Map<String, String> filterMap = new HashMap<>();
-        filterMap.put("Host Gruppe", "name");
+        filterMap.put("Host Group", "name");
 
         SearchComponent searchComponent = new SearchComponent(filterMap, hostgroupContainer);
+        hostgroupContainer.addItemSetChangeListener((event) -> {
+            refreshLayout();
+        });
         parentVerticalLayout.addComponent(searchComponent);
         parentVerticalLayout.setComponentAlignment(searchComponent, Alignment.MIDDLE_RIGHT);
 
@@ -90,7 +93,6 @@ public class HostGroupOverviewTabPanel extends Panel implements OverviewTabPanel
     @Override
     public void attach() {
         super.attach();
-        hostgroupContainer = ContainerFactory.createHostgroupContainer();
     }
 
     @Override

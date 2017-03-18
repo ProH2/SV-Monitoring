@@ -8,9 +8,11 @@ package at.htlpinkafeld.sms.gui;
 import at.htlpinkafeld.sms.gui.window.EditHostgroupWindow;
 import at.htlpinkafeld.sms.gui.window.NewHostServiceWindow;
 import at.htlpinkafeld.sms.gui.container.ContainerFactory;
+import at.htlpinkafeld.sms.gui.container.HostServiceHierarchical_Container;
 import at.htlpinkafeld.sms.gui.container.HostgroupHierarchical_Container;
 import at.htlpinkafeld.sms.pojos.Host;
 import at.htlpinkafeld.sms.pojos.Service;
+import at.htlpinkafeld.sms.service.AddHostsAndServices_Service;
 import at.htlpinkafeld.sms.service.NoUserLoggedInException;
 import at.htlpinkafeld.sms.service.PermissionService;
 import com.vaadin.data.Container;
@@ -75,7 +77,7 @@ public class Host_Service_ManagementView extends VerticalLayout implements View 
 
         TreeTable hostService_treeTable = new TreeTable();
 
-        Container.Hierarchical hostServiceHierarchical_Container = ContainerFactory.createHostServiceHierarchical_Container();
+        HostServiceHierarchical_Container hostServiceHierarchical_Container = ContainerFactory.createHostServiceHierarchical_Container();
 
         hostService_treeTable.setContainerDataSource(hostServiceHierarchical_Container);
         hostService_treeTable.setSizeFull();
@@ -87,7 +89,7 @@ public class Host_Service_ManagementView extends VerticalLayout implements View 
                     Object bean = beanItem.getBean();
                     if (bean instanceof Host) {
                         return new Button("Create Service", (Button.ClickEvent event) -> {
-                            UI.getCurrent().addWindow(new NewHostServiceWindow((Host) bean));
+                            UI.getCurrent().addWindow(new NewHostServiceWindow((Host) bean, hostServiceHierarchical_Container));
                         });
                     }
                 }
@@ -128,10 +130,13 @@ public class Host_Service_ManagementView extends VerticalLayout implements View 
         mainLayout.addComponent(hostService_treeTable);
 
         Button createHostButton = new Button("Create Host", (Button.ClickEvent event) -> {
-            UI.getCurrent().addWindow(new NewHostServiceWindow(null));
+            UI.getCurrent().addWindow(new NewHostServiceWindow(null, hostServiceHierarchical_Container));
         });
 
         mainLayout.addComponent(createHostButton);
+        mainLayout.addComponent(new Button("Restart Nagios", (event) -> {
+            AddHostsAndServices_Service.restartNagios();
+        }));
 
         return new Panel(mainLayout);
     }
