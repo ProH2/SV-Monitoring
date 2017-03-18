@@ -55,8 +55,6 @@ public class Service {
 
     }
 
-
-
     public Service(Integer hostnr, int servicenr, String name, Servicestatus status, LocalDateTime lastChecked, Duration duration, int attempt, String information) {
         this.hostnr = hostnr;
 
@@ -125,7 +123,6 @@ public class Service {
         this.information = information;
     }
 
-
     public String getHostname() {
         return hostname;
     }
@@ -142,15 +139,14 @@ public class Service {
         this.hostnr = hostnr;
 
     }
-    
 
     public static Service createServiceFromJson(HashMap<String, Object> map, String hostname) {
 //        System.out.println(map);
 
         Service service = new Service();
         service.setHostname(hostname);
-        service.setName((String) map.get("description")); 
-        service.setInformation((String) map.get("plugin_output")); 
+        service.setName((String) map.get("description"));
+        service.setInformation((String) map.get("plugin_output"));
 //        System.out.println(map.get("last_check"));
         service.setLastChecked(LocalDateTime.ofEpochSecond((long) map.get("last_check"), 0, ZoneOffset.UTC));
 
@@ -159,7 +155,7 @@ public class Service {
         //System.out.println(map.get("last_state_change"));
 
         LocalDateTime now = LocalDateTime.now();
-        service.setDuration(Duration.between(last_state_change, now)); 
+        service.setDuration(Duration.between(last_state_change, now));
 
         switch ((Integer) map.get("status")) {
             case 2:
@@ -171,10 +167,10 @@ public class Service {
 
         return service;
     }
-    
+
     @Override
     public String toString() {
         return hostname + " " + information + " " + this.lastChecked + " " + duration + " " + status;
-    } 
+    }
 
 }

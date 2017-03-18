@@ -46,10 +46,10 @@ public class JSONService {
 
     public static List<Host> getHostsFromNagios() throws IOException {
 
-        if (HOSTS == null) { 
+        if (HOSTS == null) {
             HOSTS = new HashMapWithListeners<>();
         }
-        if(SERVICES == null){
+        if (SERVICES == null) {
             SERVICES = new HashMapWithListeners<>();
         }
 
@@ -85,7 +85,6 @@ public class JSONService {
 //            System.out.println("Key = " + key + ", Value = " + value);
 
             //System.out.println("url + key= " + key);
-            
 //            key.replace("     ", " ");
 //            if (key.contains("host-test")) {
 //                key = "host-test+++++2017%2F02%2F10+13-28-04";
@@ -124,12 +123,10 @@ public class JSONService {
             //System.out.println("3: " + (result = (HashMap<String, Object>) result.get("servicelist")));
             //System.out.println("4: " + (result = (HashMap<String, Object>) result.get(temp)));
             //HashMap<String, Object> servicemap = (HashMap<String, Object>) ((HashMap) (((HashMap) result.get("data")).get("servicelist"))).get(s);
-            
             result = (HashMap<String, Object>) result.get("data");
             result = (HashMap<String, Object>) result.get("servicelist");
             result = (HashMap<String, Object>) result.get(temp);
-            
-            
+
             entries = result.entrySet().iterator();
             while (entries.hasNext()) {
                 Map.Entry entry = (Map.Entry) entries.next();
@@ -146,7 +143,7 @@ public class JSONService {
         }
 
 //        System.out.println("map: " + map);
-    int i = 0;
+        int i = 0;
         for (String host : map.keySet()) {
             List<String> olist = (List<String>) map.get(host);
 //            System.out.println("olist: " + olist);
@@ -155,7 +152,7 @@ public class JSONService {
 //                System.out.println("serviceputs: " + host + " " + o);
                 Service s = getServiceDetails(host, o);
 //                System.out.println(i++ + " " + s + " " + s.getName());
-                SERVICES.put(host + "/" + s.getName(), s); 
+                SERVICES.put(host + "/" + s.getName(), s);
             }
         }
 
@@ -173,7 +170,6 @@ public class JSONService {
         service = service.replace(" ", "+");
 
 //         System.out.println("h+s:" + host + " " + service);
-        
         InputStream in = new URL(NAGIOS + "/nagios/cgi-bin/statusjson.cgi?query=service&hostname=" + host + "&servicedescription=" + service).openStream();
         String source = IOUtils.toString(in);
         HashMap<String, Object> result = new ObjectMapper().readValue(source, HashMap.class);
@@ -182,12 +178,9 @@ public class JSONService {
         HashMap<String, Object> servicedetails = (HashMap<String, Object>) ((HashMap) result.get("data")).get("service");
 //        System.out.println("servicedetails: " + servicedetails);
 
-        
-
-        Service s =Service.createServiceFromJson(servicedetails, host); 
+        Service s = Service.createServiceFromJson(servicedetails, host);
 
 //        System.out.println("Service: " + s);
-        
         return s;
     }
 
@@ -220,15 +213,15 @@ public class JSONService {
     }
 
     public static void setHOSTS(HashMapWithListeners<String, Host> HOSTS) {
-        JSONService.HOSTS = HOSTS; 
+        JSONService.HOSTS = HOSTS;
     }
-    
+
     public static HashMapWithListeners<String, Service> getSERVICES() {
         return SERVICES;
     }
 
     public static void setSERVICES(HashMapWithListeners<String, Service> SERVICES) {
-        JSONService.SERVICES = SERVICES; 
+        JSONService.SERVICES = SERVICES;
     }
 
 }

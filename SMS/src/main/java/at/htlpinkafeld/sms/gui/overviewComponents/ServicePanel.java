@@ -123,7 +123,7 @@ public class ServicePanel extends Panel implements HashMapWithListeners.MapChang
     @Override
     public void mapChanged() {
         this.serviceEntry = ((BeanItem<Map.Entry<String, Service>>) container.getItem(this.serviceEntry.getKey())).getBean();
-        updateLabels(); 
+        updateLabels();
         super.markAsDirty();
     }
 

@@ -13,7 +13,7 @@ import org.vaadin.addons.lazyquerycontainer.AbstractBeanQuery;
  *
  * @author neume
  */
-public class HostBeanQuery extends AbstractBeanQuery<Host>{
+public class HostBeanQuery extends AbstractBeanQuery<Host> {
 
     @Override
     protected Host constructBean() {
@@ -34,5 +34,5 @@ public class HostBeanQuery extends AbstractBeanQuery<Host>{
     protected void saveBeans(List<Host> list, List<Host> list1, List<Host> list2) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
-    
+
 }

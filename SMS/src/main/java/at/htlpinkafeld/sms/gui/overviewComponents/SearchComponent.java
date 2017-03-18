@@ -60,15 +60,15 @@ public class SearchComponent extends CustomComponent {
 
         Button searchButton = new Button("Suchen", (Button.ClickEvent event) -> {
             container.removeAllContainerFilters();
-            
+
             String searchTerm = searchTermField.getValue();
             if (!searchTerm.isEmpty()) {
                 String filterType = filterSelect.getValue().toString();
-                
+
                 if (searchFilterMapping.containsKey(filterType)) {
                     Container.Filter f = null;
                     f = new SimpleStringFilter(searchFilterMapping.get(filterSelect.getValue().toString()), searchTerm, true, false);
-                    
+
                     container.addContainerFilter(f);
                 } else {
                     Notification.show("Some Error occured during searching", Notification.Type.ERROR_MESSAGE);

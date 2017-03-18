@@ -108,7 +108,19 @@ public class Host {
         host.setInformation((String) map.get("plugin_output"));
 //        System.out.println(map.get("last_check"));
         //TODO long-Integer catch
-        host.setLastChecked(LocalDateTime.ofEpochSecond((long) map.get("last_check"), 0, ZoneOffset.UTC));
+        Object value = map.get("last_check");
+        if (value instanceof Long) {
+            host.setLastChecked(LocalDateTime.ofEpochSecond((long) value, 0, ZoneOffset.UTC));
+        } else if (value instanceof Integer) {
+            host.setLastChecked(LocalDateTime.ofEpochSecond((Integer) value, 0, ZoneOffset.UTC));
+        }
+        /*
+        try {
+            host.setLastChecked(LocalDateTime.ofEpochSecond((long) map.get("last_check"), 0, ZoneOffset.UTC));
+        } catch (Exception e) {
+            host.setLastChecked(LocalDateTime.ofEpochSecond((Integer) map.get("last_check"), 0, ZoneOffset.UTC));
+        }
+         */
 
         Timestamp stamp = new Timestamp((long) map.get("last_state_change"));
         LocalDateTime last_state_change = stamp.toLocalDateTime();
@@ -133,9 +145,9 @@ public class Host {
 
         return hostname + " " + information + " " + this.lastChecked + " " + duration + " " + status;
     }
-    
-    public boolean statusChanged(Host h){
-        return !this.status.equals(h.status); 
+
+    public boolean statusChanged(Host h) {
+        return !this.status.equals(h.status);
     }
 
 }

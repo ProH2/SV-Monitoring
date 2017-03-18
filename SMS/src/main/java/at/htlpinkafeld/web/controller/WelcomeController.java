@@ -1,5 +1,6 @@
 package at.htlpinkafeld.web.controller;
 
+/*
 import at.htlpinkafeld.dao.DutyDao;
 import java.util.List;
 
@@ -46,3 +47,4 @@ public class WelcomeController {
 	}
 
 }
+ */

@@ -12,14 +12,15 @@ import java.time.LocalDateTime;
  * @author neume
  */
 public class Comment {
+
     private LocalDateTime entryTime;
     private String author;
     private String comment;
 
-    public Comment(){
-  
+    public Comment() {
+
     }
-    
+
     public Comment(LocalDateTime entryTime, String author, String comment) {
         this.entryTime = entryTime;
         this.author = author;
@@ -49,7 +50,5 @@ public class Comment {
     public void setComment(String comment) {
         this.comment = comment;
     }
-    
-    
-    
+
 }

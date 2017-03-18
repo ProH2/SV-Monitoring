@@ -38,7 +38,8 @@ public class HostPanel extends Panel implements HashMapWithListeners.MapChangeLi
      * Constructor for the HostPanel
      *
      * @param hostEntry Host-Entry which is wrapped with the panel
-     * @param container container of the Host-Entry which is used for Synchronisation
+     * @param container container of the Host-Entry which is used for
+     * Synchronisation
      */
     public HostPanel(Map.Entry<String, Host> hostEntry, MapReferenceContainer<Host> container) {
         this.hostEntry = hostEntry;

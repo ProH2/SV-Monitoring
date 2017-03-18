@@ -45,7 +45,7 @@ public class HostAndServiceTimerTask extends TimerTask {
                 //Für Test-Zwecke
 //                System.out.println("Host: " + h.getHostname() + " Status changed from " + h.getStatus() + " to " + newhost.getStatus());
                 //Hier sollte dann diese Statusänderung in die Datenbank eingetragen werden!
-                
+
                 //System.out.println("Host: " + h.getHostname() + " has not changed his status!");  
             }
         }

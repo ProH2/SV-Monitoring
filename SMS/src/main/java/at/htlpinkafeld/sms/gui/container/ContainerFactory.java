@@ -6,11 +6,12 @@
 package at.htlpinkafeld.sms.gui.container;
 
 import at.htlpinkafeld.dao.DutyDaoImpl;
+import at.htlpinkafeld.dao.UserDao;
+import at.htlpinkafeld.dao.UserDaoImpl;
 import at.htlpinkafeld.sms.gui.Host_Service_ManagementView;
 import at.htlpinkafeld.sms.gui.OverviewView;
 import at.htlpinkafeld.sms.gui.TimeManagementView;
 import at.htlpinkafeld.sms.gui.UserManagementView;
-import at.htlpinkafeld.sms.gui.container.HashMapWithListeners.MapChangeListener;
 import at.htlpinkafeld.sms.gui.overviewComponents.HostGroupOverviewTabPanel;
 import at.htlpinkafeld.sms.gui.overviewComponents.HostOverviewTabPanel;
 import at.htlpinkafeld.sms.gui.overviewComponents.HostPanel;
@@ -22,7 +23,6 @@ import at.htlpinkafeld.sms.pojos.Host;
 import at.htlpinkafeld.sms.pojos.Hostgroup;
 import at.htlpinkafeld.sms.pojos.Service;
 import at.htlpinkafeld.sms.service.JSONService;
-import at.htlpinkafeld.sms.service.PermissionService;
 import com.vaadin.data.Container;
 import com.vaadin.data.util.BeanItemContainer;
 import com.vaadin.ui.Calendar;
@@ -58,6 +58,8 @@ public class ContainerFactory {
     private static BeanItemContainer<User> userContainer = null;
 
     private static CalendarEditableEventProvider dutyEventProvider = null;
+
+    private static UserDao userdao = new UserDaoImpl();
 
     /**
      * Initializes hostMap
@@ -127,10 +129,9 @@ public class ContainerFactory {
      */
     private static void initUserContainer() {
         //TODO create Container which also delegates to DAO
-        List<User> users = new ArrayList<>();
-        users.add(new User(1, "Dogist", PermissionService.hashPassword("1234"), "Martin", "noplan@gmc.at", "5421575"));
-        users.add(new User(2, "Irish", PermissionService.hashPassword("4321"), "Sebastian", "noplan@qmail.com", "5788775"));
-        users.add(new User(3, "user", PermissionService.hashPassword("12345678"), "NormalUser", "abc@qmail.com", "56468762"));
+
+        List<User> users = userdao.findAll();
+
         userContainer = new BeanItemContainer<>(User.class, users);
 
 //        UserDao userDao = new UserDaoImpl();

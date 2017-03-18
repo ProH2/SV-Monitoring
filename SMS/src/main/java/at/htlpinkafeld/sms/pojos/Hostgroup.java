@@ -53,5 +53,4 @@ public class Hostgroup {
         this.hostlist = hostlist;
     }
 
-    
 }

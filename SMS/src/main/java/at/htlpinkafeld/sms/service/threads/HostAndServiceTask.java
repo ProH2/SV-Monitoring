@@ -15,19 +15,19 @@ import java.util.logging.Logger;
  *
  * @author neume
  */
-public class HostAndServiceTask implements Runnable{
+public class HostAndServiceTask implements Runnable {
 
     public Exchanger ex;
-    
-    public HostAndServiceTask(Exchanger e){
+
+    public HostAndServiceTask(Exchanger e) {
         ex = e;
     }
-    
+
     @Override
     public void run() {
         try {
             ex.exchange(JSONService.getHostsFromNagios());
-             
+
             //System.out.println(JSONService.getStatusFromAllHosts());
         } catch (InterruptedException ex) {
             Logger.getLogger(HostAndServiceTask.class.getName()).log(Level.SEVERE, null, ex);
@@ -35,5 +35,5 @@ public class HostAndServiceTask implements Runnable{
             Logger.getLogger(HostAndServiceTask.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
-    
+
 }

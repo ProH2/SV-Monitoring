@@ -10,24 +10,23 @@ import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 
-@ComponentScan({ "at.htlpinkafeld" })
+@ComponentScan({"at.htlpinkafeld"})
 @Configuration
 public class SpringRootConfig {
 
-	@Autowired
-	DataSource dataSource;
+    @Autowired
+    DataSource dataSource;
 
-	@Bean
-	public NamedParameterJdbcTemplate getNamedParameterJdbcTemplate() {
-		return new NamedParameterJdbcTemplate(dataSource);
-	}
-	
-	@PostConstruct
-	public void startDBManager() {
-		
-		//hsqldb
-		//DatabaseManagerSwing.main(new String[] { "--url", "jdbc:hsqldb:mem:testdb", "--user", "sa", "--password", "" });
-	}
-	
+    @Bean
+    public NamedParameterJdbcTemplate getNamedParameterJdbcTemplate() {
+        return new NamedParameterJdbcTemplate(dataSource);
+    }
+
+    @PostConstruct
+    public void startDBManager() {
+
+        //hsqldb
+        //DatabaseManagerSwing.main(new String[] { "--url", "jdbc:hsqldb:mem:testdb", "--user", "sa", "--password", "" });
+    }
 
 }

@@ -12,6 +12,7 @@ import java.util.Date;
  * @author DarkHell2
  */
 public class Duty {
+
     private Integer dutyId;
     private int userId;
     private Date startTime;
@@ -27,7 +28,7 @@ public class Duty {
     }
 
     public Duty() {
-        
+
     }
 
     public Integer getDutyID() {
@@ -72,7 +73,7 @@ public class Duty {
 
     @Override
     public String toString() {
-	return "<br> DutyId: " +dutyId+", UserId: "+userId+" Start-Time: "+startTime+" End-Time: "+endTime+" Notification: "+notifyArt+"<br>";
+        return "<br> DutyId: " + dutyId + ", UserId: " + userId + " Start-Time: " + startTime + " End-Time: " + endTime + " Notification: " + notifyArt + "<br>";
     }
 
 }

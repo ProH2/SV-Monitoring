@@ -105,7 +105,7 @@ public class NewUserWindow extends Window {
                 nameTextF.validate();
                 emailTextF.validate();
                 phoneNrTextF.validate();
- 
+
                 containerDataSource.addBean(new User(usernameTextF.getValue(), PermissionService.hashPassword(passwordTextF.getValue()), nameTextF.getValue(), emailTextF.getValue(), phoneNrTextF.getValue()));
 
                 close();
