@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package at.htlpinkafeld.sms.gui;
+package at.htlpinkafeld.sms.gui.window;
 
 import at.htlpinkafeld.sms.pojos.Host;
 import at.htlpinkafeld.sms.pojos.Service;
@@ -42,12 +42,12 @@ public class NewHostServiceWindow extends Window {
             newHostServiceFormLayout.addComponent(destinationTextField);
         }
 
-        TextField nameTextField = new TextField(host == null ? "hostname" : "servicename");
+        TextField nameTextField = new TextField(host == null ? "Hostname" : "Servicename");
         nameTextField.setRequired(true);
 
         newHostServiceFormLayout.addComponent(nameTextField);
 
-        Button addButton = new Button(host == null ? "Add host" : "Add service");
+        Button addButton = new Button(host == null ? "Add Host" : "Add Service");
         newHostServiceFormLayout.addComponent(addButton);
 
         newHostServiceFormLayout.setSizeUndefined();

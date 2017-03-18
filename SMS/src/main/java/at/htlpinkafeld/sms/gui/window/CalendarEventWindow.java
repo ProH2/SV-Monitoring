@@ -3,15 +3,16 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package at.htlpinkafeld.sms.gui;
+package at.htlpinkafeld.sms.gui.window;
 
+import at.htlpinkafeld.sms.gui.LoginView;
+import at.htlpinkafeld.sms.gui.SMS_Main;
 import at.htlpinkafeld.sms.gui.util.TimeManagementCalendarEvent;
 import at.htlpinkafeld.sms.pojo.User;
 import at.htlpinkafeld.sms.service.NoUserLoggedInException;
 import at.htlpinkafeld.sms.service.PermissionService;
 import com.vaadin.data.Container;
 import com.vaadin.data.Validator;
-import com.vaadin.data.Validator.InvalidValueException;
 import com.vaadin.shared.ui.datefield.Resolution;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Calendar;
@@ -60,20 +61,14 @@ public class CalendarEventWindow extends Window {
         final DateField endDateField = createDateTimeField("End date", calendarEvent.getEnd(), "End date is required!");
 
         //validate for startDate>endDate
-        startDateField.addValidator(new Validator() {
-            @Override
-            public void validate(Object value) throws InvalidValueException {
-                if (((Date) value).after(endDateField.getValue())) {
-                    throw new Validator.InvalidValueException("End date before Start date not allowed!");
-                }
+        startDateField.addValidator((Object value) -> {
+            if (((Date) value).after(endDateField.getValue())) {
+                throw new Validator.InvalidValueException("End date before Start date not allowed!");
             }
         });
-        endDateField.addValidator(new Validator() {
-            @Override
-            public void validate(Object value) throws InvalidValueException {
-                if (((Date) value).before(startDateField.getValue())) {
-                    throw new Validator.InvalidValueException("End date before Start date not allowed!");
-                }
+        endDateField.addValidator((Object value) -> {
+            if (((Date) value).before(startDateField.getValue())) {
+                throw new Validator.InvalidValueException("End date before Start date not allowed!");
             }
         });
 
@@ -82,38 +77,30 @@ public class CalendarEventWindow extends Window {
         formLayout.addComponent(endDateField);
 
         //create the Buttons
-        Button createButton = new Button("Save", new Button.ClickListener() {
-            @Override
-            public void buttonClick(Button.ClickEvent event) {
-                try {
-                    userNativeSelect.validate();
-                    startDateField.validate();
-                    endDateField.validate();
+        Button createButton = new Button("Save", (Button.ClickEvent event) -> {
+            try {
+                userNativeSelect.validate();
+                startDateField.validate();
+                endDateField.validate();
 
-                    calendarEvent.setStart(startDateField.getValue());
-                    calendarEvent.setEnd(endDateField.getValue());
-                    calendarEvent.setUser((User) userNativeSelect.getValue());
-                    calendar.markAsDirty();
-                    close();
-                } catch (Validator.InvalidValueException e) {
-                    Notification.show("Validation Errorl", e.getLocalizedMessage(), Notification.Type.WARNING_MESSAGE);
-                }
-            }
-        });
-
-        Button cancelButton = new Button("Cancel", new Button.ClickListener() {
-            @Override
-            public void buttonClick(Button.ClickEvent event) {
-                close();
-            }
-        });
-
-        Button deleteButton = new Button("Delete", new Button.ClickListener() {
-            @Override
-            public void buttonClick(Button.ClickEvent event) {
                 calendar.removeEvent(calendarEvent);
+
+                calendar.addEvent(new TimeManagementCalendarEvent((User) userNativeSelect.getValue(), startDateField.getValue(), endDateField.getValue()));
+
+                calendar.markAsDirty();
                 close();
+            } catch (Validator.InvalidValueException e) {
+                Notification.show("Validation Error!", e.getLocalizedMessage(), Notification.Type.WARNING_MESSAGE);
             }
+        });
+
+        Button cancelButton = new Button("Cancel", (Button.ClickEvent event) -> {
+            close();
+        });
+
+        Button deleteButton = new Button("Delete", (Button.ClickEvent event) -> {
+            calendar.removeEvent(calendarEvent);
+            close();
         });
 
         try {

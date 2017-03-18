@@ -5,6 +5,7 @@
  */
 package at.htlpinkafeld.sms.gui.overviewComponents;
 
+import at.htlpinkafeld.sms.gui.window.HostDetailWindow;
 import at.htlpinkafeld.sms.gui.OverviewView;
 import at.htlpinkafeld.sms.gui.container.ContainerFactory;
 import at.htlpinkafeld.sms.gui.container.MapReferenceContainer;
@@ -63,7 +64,6 @@ public class HostGroupOverviewTabPanel extends Panel implements OverviewTabPanel
 
         this.hostReferenceContainer = hostReferenceContainer;
 
-        //Todo default sorting
         this.hostgroupContainer.addItemSetChangeListener((Container.ItemSetChangeEvent event) -> {
             refreshLayout();
         });
@@ -102,7 +102,6 @@ public class HostGroupOverviewTabPanel extends Panel implements OverviewTabPanel
 
             for (Hostgroup hostgroup : itemList) {
 
-                //TODO Use Container instead of this
                 Map<Host.Hoststatus, Integer> statusCountMap = new HashMap<>();
                 for (Host.Hoststatus status : Host.Hoststatus.values()) {
                     statusCountMap.put(status, 0);
@@ -145,14 +144,11 @@ public class HostGroupOverviewTabPanel extends Panel implements OverviewTabPanel
                 Panel hostsWrapperPanel = new Panel(hostgroup.getName(), hostgroupGridLayout);
 
                 StackPanel sp = StackPanel.extend(hostsWrapperPanel);
-                sp.addToggleListener(new StackPanel.ToggleListener() {
-                    @Override
-                    public void toggleClick(StackPanel source) {
-                        if (source.isOpen()) {
-                            absoluteLayout.setHeight(38 + (hostgroupGridLayout.getRows() * 180), Unit.PIXELS);
-                        } else {
-                            absoluteLayout.setHeight(37, Unit.PIXELS);
-                        }
+                sp.addToggleListener((StackPanel source) -> {
+                    if (source.isOpen()) {
+                        absoluteLayout.setHeight(38 + (hostgroupGridLayout.getRows() * 180), Unit.PIXELS);
+                    } else {
+                        absoluteLayout.setHeight(37, Unit.PIXELS);
                     }
                 });
 
@@ -173,20 +169,17 @@ public class HostGroupOverviewTabPanel extends Panel implements OverviewTabPanel
                     statusField.addStyleName("passclick");
                     statusesLayout.addComponent(statusField);
                 }
-                statusesLayout.addLayoutClickListener(new LayoutEvents.LayoutClickListener() {
-                    @Override
-                    public void layoutClick(LayoutEvents.LayoutClickEvent event) {
-                        for (Extension e : hostsWrapperPanel.getExtensions()) {
-                            if (e instanceof StackPanel) {
-                                StackPanel sp = (StackPanel) e;
-                                //TODO find better solution (not 2 setHeight)
-                                if (sp.isOpen()) {
-                                    sp.close();
-                                    absoluteLayout.setHeight(37, Unit.PIXELS);
-                                } else {
-                                    absoluteLayout.setHeight(38 + (hostgroupGridLayout.getRows() * 180), Unit.PIXELS);
-                                    sp.open();
-                                }
+                statusesLayout.addLayoutClickListener((LayoutEvents.LayoutClickEvent event) -> {
+                    for (Extension e : hostsWrapperPanel.getExtensions()) {
+                        if (e instanceof StackPanel) {
+                            StackPanel sp1 = (StackPanel) e;
+                            //TODO find better solution (not 2 setHeight)
+                            if (sp1.isOpen()) {
+                                sp1.close();
+                                absoluteLayout.setHeight(37, Unit.PIXELS);
+                            } else {
+                                absoluteLayout.setHeight(38 + (hostgroupGridLayout.getRows() * 180), Unit.PIXELS);
+                                sp1.open();
                             }
                         }
                     }

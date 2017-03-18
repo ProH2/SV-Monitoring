@@ -8,7 +8,7 @@ package at.htlpinkafeld.sms.gui;
 import at.htlpinkafeld.sms.gui.container.ContainerFactory;
 import at.htlpinkafeld.sms.pojo.User;
 import at.htlpinkafeld.sms.service.JSONService;
-import com.vaadin.data.Container;
+import at.htlpinkafeld.sms.service.PermissionService;
 import com.vaadin.data.util.BeanItemContainer;
 import com.vaadin.data.util.filter.SimpleStringFilter;
 import com.vaadin.data.validator.NullValidator;
@@ -66,13 +66,15 @@ public class LoginView extends VerticalLayout implements View {
                 boolean loginFailed = true;
 
                 userContainer.addContainerFilter(new SimpleStringFilter("username", usernameTextF.getValue(), false, false));
+
+                String hashedPassword = PermissionService.hashPassword(passwordTextF.getValue());
                 for (User user : userContainer.getItemIds()) {
-                    if (Objects.equals(user.getPassword(), passwordTextF.getValue())) {
+                    if (Objects.equals(user.getPassword(), hashedPassword)) {
                         loginFailed = false;
 
                         Notification.show("Login successfull", "Hello " + user.getName(), Notification.Type.TRAY_NOTIFICATION);
 
-                        VaadinSession.getCurrent().setAttribute("currentUser", user);
+                        VaadinSession.getCurrent().setAttribute(User.class, user);
                         ((SMS_Main) UI.getCurrent()).navigateTo(OverviewView.VIEW_NAME);
                     }
                 }

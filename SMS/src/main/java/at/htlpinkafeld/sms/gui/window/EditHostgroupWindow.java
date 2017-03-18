@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package at.htlpinkafeld.sms.gui;
+package at.htlpinkafeld.sms.gui.window;
 
 import at.htlpinkafeld.sms.gui.container.ContainerFactory;
 import at.htlpinkafeld.sms.gui.container.HostgroupHierarchical_Container;
@@ -13,7 +13,9 @@ import com.vaadin.data.util.BeanContainer;
 import com.vaadin.data.util.BeanItem;
 import com.vaadin.data.util.IndexedContainer;
 import com.vaadin.data.util.filter.SimpleStringFilter;
+import com.vaadin.data.validator.AbstractValidator;
 import com.vaadin.data.validator.StringLengthValidator;
+import com.vaadin.server.Page;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.FormLayout;
 import com.vaadin.ui.TextField;
@@ -21,6 +23,7 @@ import com.vaadin.ui.TwinColSelect;
 import com.vaadin.ui.Window;
 import java.util.Collection;
 import java.util.LinkedList;
+import javax.xml.bind.ValidationException;
 
 /**
  *
@@ -33,7 +36,7 @@ public class EditHostgroupWindow extends Window {
     private IndexedContainer hostContainer;
 
     public EditHostgroupWindow(HostgroupHierarchical_Container hostGroupContainer, String hostgroupName) {
-        super(hostgroupName == null ? "add Hostgroup" : "edit Hostgroup");
+        super(hostgroupName == null ? "Add Hostgroup" : "Edit Hostgroup");
 
         super.center();
         super.setModal(true);
@@ -43,7 +46,7 @@ public class EditHostgroupWindow extends Window {
 
         this.hostContainer = new IndexedContainer();
         hostContainer.addContainerProperty("name", String.class, "");
-        ContainerFactory.createHostContainer().getItemIds().stream().forEach((t) -> {
+        ContainerFactory.createHostContainer().getItemIds().stream().sorted().forEach((t) -> {
             hostContainer.addItem(t).getItemProperty("name").setValue(t);
         });
 
@@ -51,10 +54,22 @@ public class EditHostgroupWindow extends Window {
 
         TextField hostgroupNameTextField = new TextField("Hostgroup name", hostgroupName == null ? "" : hostgroupName);
         hostgroupNameTextField.addValidator(new StringLengthValidator("Length of Hostgroup name is invalid", 4, 20, false));
+        hostgroupNameTextField.addValidator(new AbstractValidator("Hostgroupname has to be unique!") {
+            @Override
+            protected boolean isValidValue(Object value) {
+                //Hostgroupname is the same as before or is unique
+                return value.equals(hostgroupName) || !hostGroupContainer.containsId(value);
+            }
+
+            @Override
+            public Class getType() {
+                return String.class;
+            }
+        });
 
         mainLayout.addComponent(hostgroupNameTextField);
 
-        TextField searchHostField = new TextField("search host");
+        TextField searchHostField = new TextField("Search Host");
 
         searchHostField.addValueChangeListener((event) -> {
             hostContainer.removeAllContainerFilters();
@@ -81,7 +96,7 @@ public class EditHostgroupWindow extends Window {
         }
         mainLayout.addComponent(hostassignmentColSelect);
 
-        Button addButton = new Button(hostgroupName == null ? "Add hostgroup" : "save hostgroup");
+        Button addButton = new Button(hostgroupName == null ? "Add Hostgroup" : "Save Hostgroup");
         addButton.addClickListener((event) -> {
             hostgroupNameTextField.validate();
 
@@ -92,6 +107,7 @@ public class EditHostgroupWindow extends Window {
                 newHostgroup.setHostlist(new LinkedList((Collection) hostassignmentColSelect.getValue()));
 
                 hostGroupContainer.addHostgroup(newHostgroup);
+                Page.getCurrent().reload();
             } else {
                 BeanItem<Hostgroup> hostGroupItem = (BeanItem<Hostgroup>) hostGroupContainer.getItem(hostgroupName);
 
@@ -99,6 +115,7 @@ public class EditHostgroupWindow extends Window {
                 hostGroupItem.getBean().setHostlist(new LinkedList((Collection) hostassignmentColSelect.getValue()));
 
                 hostGroupContainer.fireItemSetChange();
+                Page.getCurrent().reload();
             }
             super.close();
         });

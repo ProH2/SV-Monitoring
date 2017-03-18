@@ -3,16 +3,16 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package at.htlpinkafeld.sms.gui.overviewComponents;
+package at.htlpinkafeld.sms.gui.window;
 
 import at.htlpinkafeld.sms.gui.LoginView;
 import at.htlpinkafeld.sms.gui.SMS_Main;
 import at.htlpinkafeld.sms.gui.container.ContainerFactory;
 import at.htlpinkafeld.sms.gui.container.HashMapWithListeners;
 import at.htlpinkafeld.sms.gui.container.MapReferenceContainer;
-import static at.htlpinkafeld.sms.gui.overviewComponents.HostPanel.getDurationString;
+import at.htlpinkafeld.sms.gui.overviewComponents.HostPanel;
 import at.htlpinkafeld.sms.pojos.Comment;
-import at.htlpinkafeld.sms.pojos.Host;
+import at.htlpinkafeld.sms.pojos.Service;
 import at.htlpinkafeld.sms.service.NoUserLoggedInException;
 import at.htlpinkafeld.sms.service.PermissionService;
 import com.vaadin.data.util.BeanItem;
@@ -33,59 +33,63 @@ import java.time.format.DateTimeFormatter;
 import java.util.Map;
 
 /**
- * {@link Window} which displays the data of a single {@link Host} and its
+ * {@link Window} which displays the data of a single {@link Service} and its
  * {@link Comment Comments} in detail.
  *
  * @author Martin Six
  */
-public class HostDetailWindow extends Window implements HashMapWithListeners.MapChangeListener {
+public class ServiceDetailWindow extends Window implements HashMapWithListeners.MapChangeListener {
 
-    private Map.Entry<String, Host> hostEntry;
-    private final MapReferenceContainer<Host> container;
+    private Map.Entry<String, Service> serviceEntry;
 
+    private MapReferenceContainer<Service> container;
+
+    private final TextField servicenameText;
     private final TextField hostnameText;
     private final TextField statusText;
-    private final TextArea hostInformationText;
+    private final TextArea serviceInformationText;
     private final TextField lastCheckedText;
     private final TextField durationText;
 
     /**
-     * Constructor for the {@link HostDetailWindow}
+     * Constructor for the ServiceDetailWindow
      *
-     * @param hostEntry Host-Entry which is wrapped with the Window
-     * @param container container of the Host-Entry which is used for
+     * @param serviceEntry Service-Entry which is wrapped with the window
+     * @param container container of the Service-Entry which is used for
      * Synchronisation
      */
-    public HostDetailWindow(Map.Entry<String, Host> hostEntry, MapReferenceContainer<Host> container) {
-        super(hostEntry.getKey());
+    public ServiceDetailWindow(Map.Entry<String, Service> serviceEntry, MapReferenceContainer<Service> container) {
+        super(serviceEntry.getKey());
         super.center();
         super.setModal(true);
-        this.hostEntry = hostEntry;
-        this.container = container;
+        this.serviceEntry = serviceEntry;
 
-        Host host = hostEntry.getValue();
+        Service service = serviceEntry.getValue();
 
         FormLayout leftDataLayout = new FormLayout();
 
-        //TODO Close Window by clicking outside(Clicklistener in Parent)
         //add Layout Components
-        hostnameText = new TextField("Hostname", host.getHostname());
+        servicenameText = new TextField("Servicename", service.getName());
+        servicenameText.setReadOnly(true);
+        leftDataLayout.addComponent(servicenameText);
+
+        hostnameText = new TextField("Hostname", service.getHostname());
         hostnameText.setReadOnly(true);
         leftDataLayout.addComponent(hostnameText);
 
-        statusText = new TextField("Status", host.getStatus().name());
+        statusText = new TextField("Status", service.getStatus().name());
         statusText.setReadOnly(true);
         leftDataLayout.addComponent(statusText);
 
-        hostInformationText = new TextArea("Information", host.getInformation());
-        hostInformationText.setReadOnly(true);
-        leftDataLayout.addComponent(hostInformationText);
+        serviceInformationText = new TextArea("Information", service.getInformation());
+        serviceInformationText.setReadOnly(true);
+        leftDataLayout.addComponent(serviceInformationText);
 
-        lastCheckedText = new TextField("Last checked", host.getLastChecked().format(DateTimeFormatter.ofPattern("dd.MM.yyyy HH:mm")));
+        lastCheckedText = new TextField("Last checked", service.getLastChecked().format(DateTimeFormatter.ofPattern("dd.MM.yyyy HH:mm")));
         lastCheckedText.setReadOnly(true);
         leftDataLayout.addComponent(lastCheckedText);
 
-        durationText = new TextField("Duration", HostPanel.getDurationString(host.getDuration()));
+        durationText = new TextField("Duration", HostPanel.getDurationString(service.getDuration()));
         durationText.setReadOnly(true);
         leftDataLayout.addComponent(durationText);
 
@@ -93,8 +97,7 @@ public class HostDetailWindow extends Window implements HashMapWithListeners.Map
         leftDataLayout.setMargin(true);
 
         VerticalLayout rightCommentLayout = new VerticalLayout();
-
-        Grid commentGrid = new Grid(ContainerFactory.createHostCommentContainer(host.getHostname()));
+        Grid commentGrid = new Grid(ContainerFactory.createServiceCommentContainer(service.getHostname() + "/" + service.getName()));
         commentGrid.setSizeFull();
         rightCommentLayout.addComponent(commentGrid);
 
@@ -104,29 +107,24 @@ public class HostDetailWindow extends Window implements HashMapWithListeners.Map
                 commentGrid.getColumn("author").setEditable(false);
                 commentGrid.getColumn("entryTime").setEditable(false);
 
-                Button addCommentButton = new Button("add Comment", new Button.ClickListener() {
-                    @Override
-                    public void buttonClick(Button.ClickEvent event) {
-                        Comment newComment = new Comment(LocalDateTime.now(), "Current User", "");
-                        ((BeanItemContainer<Comment>) commentGrid.getContainerDataSource()).addBean(newComment);
-                        commentGrid.editItem(newComment);
-                        commentGrid.focus();
-                    }
+                Button addCommentButton = new Button("Add Comment", (Button.ClickEvent event) -> {
+                    Comment newComment = new Comment(LocalDateTime.now(), "Current User", "");
+                    ((BeanItemContainer<Comment>) commentGrid.getContainerDataSource()).addBean(newComment);
+                    commentGrid.editItem(newComment);
+                    commentGrid.focus();
                 });
 
-                Button removeCommentButton = new Button("delete Comment", new Button.ClickListener() {
-                    @Override
-                    public void buttonClick(Button.ClickEvent event) {
-                        commentGrid.getContainerDataSource().removeItem(commentGrid.getSelectedRow());
-                    }
+                Button removeCommentButton = new Button("Delete Comment", (Button.ClickEvent event) -> {
+                    commentGrid.getContainerDataSource().removeItem(commentGrid.getSelectedRow());
                 });
-                Label spaceHolder = new Label("");
 
                 HorizontalLayout buttonLayout = new HorizontalLayout();
+                Label spaceHolder = new Label("");
                 buttonLayout.addComponents(addCommentButton, spaceHolder, removeCommentButton);
                 buttonLayout.setWidth(94, Unit.PERCENTAGE);
 
                 rightCommentLayout.addComponent(buttonLayout);
+
             }
         } catch (NoUserLoggedInException ex) {
             ((SMS_Main) UI.getCurrent()).navigateTo(LoginView.VIEW_NAME);
@@ -140,24 +138,24 @@ public class HostDetailWindow extends Window implements HashMapWithListeners.Map
     }
 
     /**
-     * method used to update the TextFields when the
+     * method used to update the textfields when the
      * {@link HashMapWithListeners.MapChangeListener} was notified
      */
     private void updateLabels() {
-        Host host = hostEntry.getValue();
-        statusText.setValue(host.getStatus().name());
+        Service service = serviceEntry.getValue();
+        statusText.setValue(service.getStatus().name());
 
-        hostInformationText.setValue(host.getInformation());
-        lastCheckedText.setValue(host.getLastChecked().format(DateTimeFormatter.ofPattern("dd.MM.yyyy HH:mm")));
-        durationText.setValue(getDurationString(host.getDuration()));
+        hostnameText.setValue(service.getHostname());
+        serviceInformationText.setValue(service.getInformation());
+        lastCheckedText.setValue(service.getLastChecked().format(DateTimeFormatter.ofPattern("dd.MM.yyyy HH:mm")));
+        durationText.setValue(HostPanel.getDurationString(service.getDuration()));
     }
 
     @Override
     public void mapChanged() {
-        this.hostEntry = ((BeanItem<Map.Entry<String, Host>>) container.getItem(this.hostEntry.getKey())).getBean();
+        this.serviceEntry = ((BeanItem<Map.Entry<String, Service>>) container.getItem(this.serviceEntry.getKey())).getBean();
         updateLabels();
         super.markAsDirty();
-
     }
 
 }

@@ -5,6 +5,7 @@
  */
 package at.htlpinkafeld.sms.gui.overviewComponents;
 
+import at.htlpinkafeld.sms.gui.window.ServiceDetailWindow;
 import at.htlpinkafeld.sms.gui.OverviewView;
 import at.htlpinkafeld.sms.gui.container.MapReferenceContainer;
 import at.htlpinkafeld.sms.pojos.Service;
@@ -64,11 +65,8 @@ public class ServiceOverviewTabPanel extends Panel implements OverviewTabPanel, 
         this.serviceReferenceContainer = container;
 //        this.container.sort(new String[]{"status"}, new boolean[]{false});
 
-        this.serviceReferenceContainer.addItemSetChangeListener(new Container.ItemSetChangeListener() {
-            @Override
-            public void containerItemSetChange(Container.ItemSetChangeEvent event) {
-                refreshLayout();
-            }
+        this.serviceReferenceContainer.addItemSetChangeListener((Container.ItemSetChangeEvent event) -> {
+            refreshLayout();
         });
 
         VerticalLayout parentVerticalLayout = new VerticalLayout();
@@ -104,7 +102,6 @@ public class ServiceOverviewTabPanel extends Panel implements OverviewTabPanel, 
 
             for (String hostname : hostNameSet) {
 
-                //TODO Use Container instead of this
                 Map<Service.Servicestatus, Integer> statusCountMap = new HashMap<>();
                 for (Service.Servicestatus status : Service.Servicestatus.values()) {
                     statusCountMap.put(status, 0);
@@ -121,13 +118,10 @@ public class ServiceOverviewTabPanel extends Panel implements OverviewTabPanel, 
 
                         this.serviceReferenceContainer.addMapChangeListener(servicePanel);
 
-                        servicePanel.addClickListener(new MouseEvents.ClickListener() {
-                            @Override
-                            public void click(MouseEvents.ClickEvent event) {
-                                ServiceDetailWindow serviceDetailWindow = new ServiceDetailWindow(entry, serviceReferenceContainer);
-                                serviceReferenceContainer.addMapChangeListener(serviceDetailWindow);
-                                UI.getCurrent().addWindow(serviceDetailWindow);
-                            }
+                        servicePanel.addClickListener((MouseEvents.ClickEvent event) -> {
+                            ServiceDetailWindow serviceDetailWindow = new ServiceDetailWindow(entry, serviceReferenceContainer);
+                            serviceReferenceContainer.addMapChangeListener(serviceDetailWindow);
+                            UI.getCurrent().addWindow(serviceDetailWindow);
                         });
                         statusCountMap.put(entry.getValue().getStatus(), statusCountMap.get(entry.getValue().getStatus()) + 1);
                         serviceGridLayout.addComponent(servicePanel);
@@ -144,14 +138,11 @@ public class ServiceOverviewTabPanel extends Panel implements OverviewTabPanel, 
                 Panel servicesWrapperPanel = new Panel(hostname, serviceGridLayout);
 
                 StackPanel sp = StackPanel.extend(servicesWrapperPanel);
-                sp.addToggleListener(new StackPanel.ToggleListener() {
-                    @Override
-                    public void toggleClick(StackPanel source) {
-                        if (source.isOpen()) {
-                            absoluteLayout.setHeight(38 + (serviceGridLayout.getRows() * 180), Unit.PIXELS);
-                        } else {
-                            absoluteLayout.setHeight(37, Unit.PIXELS);
-                        }
+                sp.addToggleListener((StackPanel source) -> {
+                    if (source.isOpen()) {
+                        absoluteLayout.setHeight(38 + (serviceGridLayout.getRows() * 180), Unit.PIXELS);
+                    } else {
+                        absoluteLayout.setHeight(37, Unit.PIXELS);
                     }
                 });
                 sp.close();
@@ -168,20 +159,17 @@ public class ServiceOverviewTabPanel extends Panel implements OverviewTabPanel, 
                     statusField.addStyleName("passclick");
                     statusesLayout.addComponent(statusField);
                 }
-                statusesLayout.addLayoutClickListener(new LayoutEvents.LayoutClickListener() {
-                    @Override
-                    public void layoutClick(LayoutEvents.LayoutClickEvent event) {
-                        for (Extension e : servicesWrapperPanel.getExtensions()) {
-                            if (e instanceof StackPanel) {
-                                StackPanel sp = (StackPanel) e;
-                                //TODO find better solution (not 2 setHeight)
-                                if (sp.isOpen()) {
-                                    sp.close();
-                                    absoluteLayout.setHeight(37, Unit.PIXELS);
-                                } else {
-                                    absoluteLayout.setHeight(38 + (serviceGridLayout.getRows() * 180), Unit.PIXELS);
-                                    sp.open();
-                                }
+                statusesLayout.addLayoutClickListener((LayoutEvents.LayoutClickEvent event) -> {
+                    for (Extension e : servicesWrapperPanel.getExtensions()) {
+                        if (e instanceof StackPanel) {
+                            StackPanel sp1 = (StackPanel) e;
+                            //TODO find better solution (not 2 setHeight)
+                            if (sp1.isOpen()) {
+                                sp1.close();
+                                absoluteLayout.setHeight(37, Unit.PIXELS);
+                            } else {
+                                absoluteLayout.setHeight(38 + (serviceGridLayout.getRows() * 180), Unit.PIXELS);
+                                sp1.open();
                             }
                         }
                     }

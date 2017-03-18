@@ -5,6 +5,7 @@
  */
 package at.htlpinkafeld.sms.gui.overviewComponents;
 
+import at.htlpinkafeld.sms.gui.window.HostDetailWindow;
 import at.htlpinkafeld.sms.gui.OverviewView;
 import at.htlpinkafeld.sms.gui.container.MapReferenceContainer;
 import at.htlpinkafeld.sms.pojos.Host;
@@ -50,11 +51,8 @@ public class HostOverviewTabPanel extends Panel implements OverviewTabPanel, Det
         this.hostReferenceContainer = container;
 //        this.container.sort(new String[]{"status"}, new boolean[]{false});
 
-        this.hostReferenceContainer.addItemSetChangeListener(new Container.ItemSetChangeListener() {
-            @Override
-            public void containerItemSetChange(Container.ItemSetChangeEvent event) {
-                refreshLayout();
-            }
+        this.hostReferenceContainer.addItemSetChangeListener((Container.ItemSetChangeEvent event) -> {
+            refreshLayout();
         });
 
         VerticalLayout parentVerticalLayout = new VerticalLayout();

@@ -5,7 +5,8 @@
  */
 package at.htlpinkafeld.sms.gui;
 
-import static at.htlpinkafeld.sms.gui.UserManagementView.USERNAME_PROPERTY;
+import at.htlpinkafeld.sms.gui.window.CalendarEventWindow;
+import static at.htlpinkafeld.sms.gui.UserManagementView.NAME_PROPERTY;
 import at.htlpinkafeld.sms.gui.container.ContainerFactory;
 import at.htlpinkafeld.sms.gui.util.TimeManagementCalendarEvent;
 import at.htlpinkafeld.sms.pojo.User;
@@ -22,6 +23,10 @@ import com.vaadin.event.dd.DragAndDropEvent;
 import com.vaadin.event.dd.DropHandler;
 import com.vaadin.event.dd.acceptcriteria.AcceptAll;
 import com.vaadin.event.dd.acceptcriteria.AcceptCriterion;
+import com.vaadin.server.FileResource;
+import com.vaadin.server.VaadinService;
+import com.vaadin.ui.Button;
+import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.HorizontalSplitPanel;
 import com.vaadin.ui.Notification;
 import com.vaadin.ui.Table;
@@ -34,12 +39,11 @@ import com.vaadin.ui.components.calendar.event.CalendarEditableEventProvider;
 import com.vaadin.ui.components.calendar.event.CalendarEvent;
 import com.vaadin.ui.components.calendar.handler.BasicDateClickHandler;
 import com.vaadin.ui.components.calendar.handler.BasicEventMoveHandler;
+import java.io.File;
 import java.util.Collections;
 import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
  * View for the TimeManagement Page
@@ -70,13 +74,17 @@ public class TimeManagementView extends VerticalLayout implements View {
             ((SMS_Main) UI.getCurrent()).navigateTo(LoginView.VIEW_NAME);
         }
 
+        //calc calendarHeight based on Browserwindow minus 38 because of menu
+        int layoutSize = UI.getCurrent().getPage().getBrowserWindowHeight() - (38);
+
         userContainer = ContainerFactory.createIndexedUserContainer();
         if (isAdmin) {
             table = new Table("Available Users");
             table.setWidth(100, Unit.PERCENTAGE);
-            table.setHeight(800, Unit.PIXELS);
+            table.setHeight(layoutSize + 38, Unit.PIXELS);
 
-            table.setContainerDataSource(userContainer, Collections.singletonList(USERNAME_PROPERTY));
+            table.setContainerDataSource(userContainer, Collections.singletonList(NAME_PROPERTY));
+            table.setColumnHeader(NAME_PROPERTY, "Available Users");
             table.setDragMode(Table.TableDragMode.ROW);
             table.setSelectable(true);
         } else {
@@ -86,8 +94,9 @@ public class TimeManagementView extends VerticalLayout implements View {
         dutyProvider = ContainerFactory.createDutyEventProvider();
 
         Calendar calendar = new Calendar(dutyProvider);
-        calendar.setWidth((float) 99.5, Unit.PERCENTAGE);
-        calendar.setHeight(800, Unit.PIXELS);
+        calendar.setWidth((float) 100, Unit.PERCENTAGE);
+        //Reduce the height further because of visual glitches
+        calendar.setHeight(layoutSize - 167, Unit.PIXELS);
 
         if (isAdmin) {
             calendar.addActionHandler(createCalendarActionHandler());
@@ -156,6 +165,13 @@ public class TimeManagementView extends VerticalLayout implements View {
                 }
             });
 
+            calendar.setHandler((CalendarComponentEvents.RangeSelectEvent event) -> {
+                if (!event.getStart().equals(event.getEnd())) {
+                    TimeManagementCalendarEvent tmce = new TimeManagementCalendarEvent(new User(), event.getStart(), event.getEnd());
+                    UI.getCurrent().addWindow(new CalendarEventWindow(tmce, userContainer, event.getComponent()));
+                }
+            });
+
             calendar.setHandler(new BasicEventMoveHandler() {
                 @Override
                 public void eventMove(CalendarComponentEvents.MoveEvent event) {
@@ -167,14 +183,140 @@ public class TimeManagementView extends VerticalLayout implements View {
 
 //        DragAndDropWrapper dropWrapper = new DragAndDropWrapper(calendar);
 //        dropWrapper.setDropHandler(dh);
-        VerticalLayout calendarLayout = new VerticalLayout(calendar);
-        calendarLayout.setWidth(100, Unit.PERCENTAGE);
+        // Find the application directory
+        String basepath = VaadinService.getCurrent().getBaseDirectory().getAbsolutePath();
+
+        // Image as a file resource
+        FileResource arrowLeftResource = new FileResource(new File(basepath + "/WEB-INF/images/chevron-left.svg"));
+
+        Button calendarLeftButton = new Button(arrowLeftResource);
+        calendarLeftButton.setIconAlternateText("Calendar Backward");
+        calendarLeftButton.addClickListener((event) -> {
+
+            java.util.Calendar timeCalendar = calendar.getInternalCalendar();
+
+            //Checks if the calendar is in MonthlyMode
+            if (calendar.isMonthlyMode()) {
+
+                timeCalendar.setTime(calendar.getStartDate());
+                timeCalendar.add(java.util.Calendar.DAY_OF_YEAR, -28);
+                Date startTime = timeCalendar.getTime();
+
+                timeCalendar.setTime(calendar.getEndDate());
+                timeCalendar.add(java.util.Calendar.DAY_OF_YEAR, -28);
+                Date endTime = timeCalendar.getTime();
+
+                //Moves the calendar 28 Days back
+                calendar.setStartDate(startTime);
+                calendar.setEndDate(endTime);
+            } else {
+                timeCalendar.setTime(calendar.getStartDate());
+                timeCalendar.add(java.util.Calendar.DAY_OF_YEAR, -7);
+                Date startTime = timeCalendar.getTime();
+
+                timeCalendar.setTime(calendar.getEndDate());
+                timeCalendar.add(java.util.Calendar.DAY_OF_YEAR, -7);
+                Date endTime = timeCalendar.getTime();
+
+                //Moves the calendar 7 Days back
+                calendar.setStartDate(startTime);
+                calendar.setEndDate(endTime);
+            }
+        });
+
+        FileResource arrowRigthResource = new FileResource(new File(basepath + "/WEB-INF/images/chevron-right.svg"));
+
+        Button calendarRightButton = new Button(arrowRigthResource);
+        calendarRightButton.setIconAlternateText("Calendar Forward");
+        calendarRightButton.addClickListener((event) -> {
+            java.util.Calendar timeCalendar = calendar.getInternalCalendar();
+
+            //Checks if the calendar is in MonthlyMode
+            if (calendar.isMonthlyMode()) {
+
+                timeCalendar.setTime(calendar.getStartDate());
+                timeCalendar.add(java.util.Calendar.DAY_OF_YEAR, 28);
+                Date startTime = timeCalendar.getTime();
+
+                timeCalendar.setTime(calendar.getEndDate());
+                timeCalendar.add(java.util.Calendar.DAY_OF_YEAR, 28);
+                Date endTime = timeCalendar.getTime();
+
+                //Moves the calendar 28 Days forward
+                calendar.setStartDate(startTime);
+                calendar.setEndDate(endTime);
+            } else {
+                timeCalendar.setTime(calendar.getStartDate());
+                timeCalendar.add(java.util.Calendar.DAY_OF_YEAR, 7);
+                Date startTime = timeCalendar.getTime();
+
+                timeCalendar.setTime(calendar.getEndDate());
+                timeCalendar.add(java.util.Calendar.DAY_OF_YEAR, 7);
+                Date endTime = timeCalendar.getTime();
+
+                //Moves the calendar 7 Days forward
+                calendar.setStartDate(startTime);
+                calendar.setEndDate(endTime);
+            }
+        });
+
+        FileResource exchangeViewsResource = new FileResource(new File(basepath + "/WEB-INF/images/exchange.svg"));
+
+        Button calendarToggleViewButton = new Button("Toggle Calendar View", exchangeViewsResource);
+        calendarToggleViewButton.addClickListener((event) -> {
+            long currentCalDateRange = calendar.getEndDate().getTime() - calendar.getStartDate().getTime();
+            GregorianCalendar gregorianCalendar = new GregorianCalendar();
+            gregorianCalendar.setTime(calendar.getStartDate());
+
+            if (currentCalDateRange <= VCalendar.WEEKINMILLIS) {
+                // Change the date range to the current month
+                gregorianCalendar.set(java.util.Calendar.DAY_OF_MONTH, 1);
+                calendar.setStartDate(gregorianCalendar.getTime());
+                gregorianCalendar.set(java.util.Calendar.DAY_OF_MONTH, gregorianCalendar.getActualMaximum(java.util.Calendar.DAY_OF_MONTH));
+                calendar.setEndDate(gregorianCalendar.getTime());
+
+            } else {
+                //change date range to the week
+                gregorianCalendar.set(java.util.Calendar.DAY_OF_MONTH, 1);
+                calendar.setStartDate(gregorianCalendar.getTime());
+                gregorianCalendar.add(java.util.Calendar.DAY_OF_MONTH, 6);
+                calendar.setEndDate(gregorianCalendar.getTime());
+
+            }
+
+        });
+        calendarToggleViewButton.setSizeFull();
+
+        //TODO also add Button to change between week and month view?
+        calendarLeftButton.setSizeFull();
+        calendarRightButton.setSizeFull();
+
+        calendar.setHandler((CalendarComponentEvents.BackwardHandler) null);
+        calendar.setHandler((CalendarComponentEvents.ForwardHandler) null);
+
+        HorizontalLayout calendarLeftRightLayout = new HorizontalLayout(calendarLeftButton, calendar, calendarRightButton);
+
+        calendarLeftRightLayout.setExpandRatio(calendarLeftButton, 3);
+        calendarLeftRightLayout.setExpandRatio(calendar, 94);
+        calendarLeftRightLayout.setExpandRatio(calendarRightButton, 3);
+
+//        calendarLeftRightLayout.setWidth((float) 100, Unit.PERCENTAGE);
+        calendarLeftRightLayout.setSizeFull();
+
+        VerticalLayout calendarLayout = new VerticalLayout(calendarToggleViewButton, calendarLeftRightLayout);
+        calendarLayout.setExpandRatio(calendarToggleViewButton, 5);
+        calendarLayout.setExpandRatio(calendarLeftRightLayout, 95);
+        calendarLayout.setSizeFull();
 
         if (isAdmin && table != null) {
             HorizontalSplitPanel parentSplitPanel = new HorizontalSplitPanel(calendarLayout, table);
-            parentSplitPanel.setLocked(true);
+//            parentSplitPanel.setLocked(true);
             parentSplitPanel.setSplitPosition(90, Unit.PERCENTAGE);
-            parentSplitPanel.setSizeFull();
+            parentSplitPanel.setMaxSplitPosition(95, Unit.PERCENTAGE);
+            parentSplitPanel.setMinSplitPosition(60, Unit.PERCENTAGE);
+
+            parentSplitPanel.setWidth(100, Unit.PERCENTAGE);
+            parentSplitPanel.setHeight(layoutSize, Unit.PIXELS);
 
             super.addComponent(parentSplitPanel);
         } else {
@@ -183,6 +325,7 @@ public class TimeManagementView extends VerticalLayout implements View {
     }
 
     @Override
+
     public void enter(ViewChangeListener.ViewChangeEvent event) {
         try {
             PermissionService.isAdmin();
@@ -197,6 +340,7 @@ public class TimeManagementView extends VerticalLayout implements View {
     private Action.Handler createCalendarActionHandler() {
         Action.Handler actionHandler = new Action.Handler() {
 
+            Action createEventAction = new Action("Create Event");
             Action editEventAction = new Action("Edit Event");
             Action deleteEventAction = new Action("Delete Event");
 
@@ -225,10 +369,10 @@ public class TimeManagementView extends VerticalLayout implements View {
                 // information.
                 for (CalendarEvent e : events) {
                     if (!e.isAllDay()) {
-                        return new Action[]{editEventAction, deleteEventAction};
+                        return new Action[]{createEventAction, editEventAction, deleteEventAction};
                     }
                 }
-                return new Action[]{};
+                return new Action[]{createEventAction};
 
             }
 
@@ -237,8 +381,24 @@ public class TimeManagementView extends VerticalLayout implements View {
                 // The sender is the Calendar object
                 Calendar calendar = (Calendar) sender;
 
-                if (action == editEventAction) {
-                    // Check that the click was not done on an event
+                if (action == createEventAction) {
+                    TimeManagementCalendarEvent tmce = null;
+                    if (target instanceof TimeManagementCalendarEvent) {
+                        TimeManagementCalendarEvent tarTmce = (TimeManagementCalendarEvent) target;
+                        tmce = new TimeManagementCalendarEvent(new User(), tarTmce.getLocalStart(), tarTmce.getLocalStart().plusHours(2));
+                    } else if (target instanceof Date) {
+                        java.util.Calendar timeCalendar = calendar.getInternalCalendar();
+                        timeCalendar.setTime((Date) target);
+                        timeCalendar.add(java.util.Calendar.MINUTE, 120);
+                        Date endTime = timeCalendar.getTime();
+
+                        tmce = new TimeManagementCalendarEvent(new User(), (Date) target, endTime);
+                    } else {
+                        Notification.show("No event to edit");
+                    }
+                    UI.getCurrent().addWindow(new CalendarEventWindow(tmce, userContainer, calendar));
+                } else if (action == editEventAction) {
+                    // Check that the click was done on an event
                     if (target instanceof TimeManagementCalendarEvent) {
                         UI.getCurrent().addWindow(new CalendarEventWindow((TimeManagementCalendarEvent) target, table.getContainerDataSource(), calendar));
                     } else {

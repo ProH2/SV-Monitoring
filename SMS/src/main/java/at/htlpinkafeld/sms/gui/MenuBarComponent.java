@@ -7,10 +7,13 @@ package at.htlpinkafeld.sms.gui;
 
 import at.htlpinkafeld.sms.service.NoUserLoggedInException;
 import at.htlpinkafeld.sms.service.PermissionService;
+import com.vaadin.server.FileResource;
+import com.vaadin.server.VaadinService;
 import com.vaadin.server.VaadinSession;
 import com.vaadin.ui.CustomComponent;
 import com.vaadin.ui.MenuBar;
 import com.vaadin.ui.UI;
+import java.io.File;
 import java.security.Permission;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -39,62 +42,46 @@ public final class MenuBarComponent extends CustomComponent {
         menuBar = new MenuBar();
         menuBar.setWidth(100, Unit.PERCENTAGE);
 
-        overviewMItem = menuBar.addItem("Overview", new MenuBar.Command() {
-
-            @Override
-            public void menuSelected(MenuBar.MenuItem selectedItem) {
-                UI ui = UI.getCurrent();
-                if (ui instanceof SMS_Main) {
-                    ((SMS_Main) ui).navigateTo(OverviewView.VIEW_NAME);
-                }
-            }
-
-        });
-
-        host_service_ManagementMItem = menuBar.addItem("Host-Service Management", new MenuBar.Command() {
-            @Override
-            public void menuSelected(MenuBar.MenuItem selectedItem) {
-                UI ui = UI.getCurrent();
-                if (ui instanceof SMS_Main) {
-                    ((SMS_Main) ui).navigateTo(Host_Service_ManagementView.VIEW_NAME);
-                }
+        overviewMItem = menuBar.addItem("Overview", (MenuBar.MenuItem selectedItem) -> {
+            UI ui = UI.getCurrent();
+            if (ui instanceof SMS_Main) {
+                ((SMS_Main) ui).navigateTo(OverviewView.VIEW_NAME);
             }
         });
 
-        userManagementMItem = menuBar.addItem("User Management", new MenuBar.Command() {
-            @Override
-            public void menuSelected(MenuBar.MenuItem selectedItem) {
-                UI ui = UI.getCurrent();
-                if (ui instanceof SMS_Main) {
-                    ((SMS_Main) ui).navigateTo(UserManagementView.VIEW_NAME);
-                }
+        host_service_ManagementMItem = menuBar.addItem("Host-Service Management", (MenuBar.MenuItem selectedItem) -> {
+            UI ui = UI.getCurrent();
+            if (ui instanceof SMS_Main) {
+                ((SMS_Main) ui).navigateTo(Host_Service_ManagementView.VIEW_NAME);
             }
         });
 
-        timeManagementMItem = menuBar.addItem("Time Management", new MenuBar.Command() {
-            @Override
-            public void menuSelected(MenuBar.MenuItem selectedItem) {
-                UI ui = UI.getCurrent();
-                if (ui instanceof SMS_Main) {
-                    ((SMS_Main) ui).navigateTo(TimeManagementView.VIEW_NAME);
-                }
+        userManagementMItem = menuBar.addItem("User Management", (MenuBar.MenuItem selectedItem) -> {
+            UI ui = UI.getCurrent();
+            if (ui instanceof SMS_Main) {
+                ((SMS_Main) ui).navigateTo(UserManagementView.VIEW_NAME);
             }
         });
 
-        MenuBar.MenuItem logoutMItem = menuBar.addItem("Logout", new MenuBar.Command() {
-            @Override
-            public void menuSelected(MenuBar.MenuItem selectedItem) {
-                for (UI ui : VaadinSession.getCurrent().getUIs()) {
-                    ui.access(() -> {
-                        // Redirect from the page
-                        ui.getPage().setLocation("/SMS/");
-                    });
-                }
-
-                getSession().close();
+        timeManagementMItem = menuBar.addItem("Time Management", (MenuBar.MenuItem selectedItem) -> {
+            UI ui = UI.getCurrent();
+            if (ui instanceof SMS_Main) {
+                ((SMS_Main) ui).navigateTo(TimeManagementView.VIEW_NAME);
             }
         });
 
+        MenuBar.MenuItem logoutMItem = menuBar.addItem("Logout", (MenuBar.MenuItem selectedItem) -> {
+            for (UI ui : VaadinSession.getCurrent().getUIs()) {
+                ui.access(() -> {
+                    // Redirect from the page
+                    ui.getPage().setLocation("/SMS/");
+                });
+            }
+
+            getSession().close();
+        });
+
+        logoutMItem.setIcon(new FileResource(new File(VaadinService.getCurrent().getBaseDirectory().getAbsolutePath() + "/WEB-INF/images/sign-out.svg")));
         logoutMItem.setStyleName("right");
 
         switchStyle();

@@ -6,7 +6,6 @@
 package at.htlpinkafeld.sms.gui.overviewComponents;
 
 import at.htlpinkafeld.sms.gui.OverviewView;
-import com.sun.javafx.print.Units;
 import com.vaadin.data.Container;
 import com.vaadin.data.Property;
 import com.vaadin.data.util.filter.SimpleStringFilter;
@@ -24,10 +23,10 @@ import java.util.Map;
  * @author Martin Six
  */
 public class SearchComponent extends CustomComponent {
-    
+
     private TextField searchTermField;
     private NativeSelect filterSelect;
-    
+
     private final Container.Filterable container;
 
     /**
@@ -38,66 +37,57 @@ public class SearchComponent extends CustomComponent {
      * @param container container which is filtered
      */
     public SearchComponent(Map<String, String> searchFilterMapping, Container.Filterable container) {
-        
+
         this.container = container;
-        
+
         filterSelect = new NativeSelect();
-        
+
         for (String filterId : searchFilterMapping.keySet()) {
             filterSelect.addItem(filterId);
         }
-        
+
         filterSelect.setHeight(37, Unit.PIXELS);
         filterSelect.select(filterSelect.getItemIds().toArray()[0]);
         filterSelect.setNullSelectionAllowed(false);
-        
-        filterSelect.addValueChangeListener(new Property.ValueChangeListener() {
-            @Override
-            public void valueChange(Property.ValueChangeEvent event) {
-                searchTermField.clear();
-            }
+
+        filterSelect.addValueChangeListener((Property.ValueChangeEvent event) -> {
+            searchTermField.clear();
         });
-        
+
         searchTermField = new TextField();
         searchTermField.setSizeFull();
 //        searchTermField.setImmediate(true);
 
-        Button searchButton = new Button("Suchen", new Button.ClickListener() {
-            @Override
-            public void buttonClick(Button.ClickEvent event) {
-                container.removeAllContainerFilters();
+        Button searchButton = new Button("Suchen", (Button.ClickEvent event) -> {
+            container.removeAllContainerFilters();
+            
+            String searchTerm = searchTermField.getValue();
+            if (!searchTerm.isEmpty()) {
+                String filterType = filterSelect.getValue().toString();
                 
-                String searchTerm = searchTermField.getValue();
-                if (!searchTerm.isEmpty()) {
-                    String filterType = filterSelect.getValue().toString();
+                if (searchFilterMapping.containsKey(filterType)) {
+                    Container.Filter f = null;
+                    f = new SimpleStringFilter(searchFilterMapping.get(filterSelect.getValue().toString()), searchTerm, true, false);
                     
-                    if (searchFilterMapping.containsKey(filterType)) {
-                        Container.Filter f = null;
-                        f = new SimpleStringFilter(searchFilterMapping.get(filterSelect.getValue().toString()), searchTerm, true, false);
-                        
-                        container.addContainerFilter(f);
-                    } else {
-                        Notification.show("Some Error occured during searching", Notification.Type.ERROR_MESSAGE);
-                    }
+                    container.addContainerFilter(f);
+                } else {
+                    Notification.show("Some Error occured during searching", Notification.Type.ERROR_MESSAGE);
                 }
             }
         });
 
         //Automatically apply filter if searchTermField is changed
-        searchTermField.addValueChangeListener(new Property.ValueChangeListener() {
-            @Override
-            public void valueChange(Property.ValueChangeEvent event) {
-                searchButton.click();
-                SearchComponent.super.focus();
-            }
+        searchTermField.addValueChangeListener((Property.ValueChangeEvent event) -> {
+            searchButton.click();
+            SearchComponent.super.focus();
         });
-        
+
         HorizontalLayout searchLayout = new HorizontalLayout(filterSelect, searchTermField, searchButton);
         searchLayout.setMargin(true);
-        
+
         super.setSizeUndefined();
         super.setCompositionRoot(searchLayout);
-        
+
     }
-    
+
 }

@@ -3,9 +3,11 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package at.htlpinkafeld.sms.gui;
+package at.htlpinkafeld.sms.gui.window;
 
+import at.htlpinkafeld.sms.gui.UserManagementView;
 import at.htlpinkafeld.sms.pojo.User;
+import at.htlpinkafeld.sms.service.PermissionService;
 import com.vaadin.data.Container;
 import com.vaadin.data.Container.Indexed;
 import com.vaadin.data.Validator;
@@ -18,8 +20,8 @@ import com.vaadin.ui.Button;
 import com.vaadin.ui.FormLayout;
 import com.vaadin.ui.Notification;
 import com.vaadin.ui.TextField;
-import com.vaadin.ui.TwinColSelect;
 import com.vaadin.ui.Window;
+import java.util.Collection;
 
 /**
  * Window used for creating a new User from {@link UserManagementView}. Receives
@@ -39,20 +41,29 @@ public class NewUserWindow extends Window {
         super("Create New User");
         super.center();
         super.setModal(true);
-        
+
         FormLayout formLayout = new FormLayout();
 
         final TextField usernameTextF = new TextField("Username");
         usernameTextF.setRequired(true);
         usernameTextF.setRequiredError("Username is required!");
-        usernameTextF.addValidator(new StringLengthValidator("The Username is too short!", 5, null, false));
-        usernameTextF.addBlurListener(new FieldEvents.BlurListener() {
+        usernameTextF.addValidator(new StringLengthValidator("The Username is too short!", 3, null, false));
+        usernameTextF.addValidator(new Validator() {
             @Override
-            public void blur(FieldEvents.BlurEvent event) {
-                AbstractTextField c = ((AbstractTextField) event.getComponent());
-                if (c.getValue() != null) {
-                    c.setValue(c.getValue().trim());
+            public void validate(Object username) throws Validator.InvalidValueException {
+                Collection<User> users = (Collection<User>) containerDataSource.getItemIds();
+                if (users.stream().anyMatch((u) -> {
+                    return username.equals(u.getUsername());
+                })) {
+                    throw new Validator.InvalidValueException("Username already in use!");
                 }
+
+            }
+        });
+        usernameTextF.addBlurListener((FieldEvents.BlurEvent event) -> {
+            AbstractTextField c = ((AbstractTextField) event.getComponent());
+            if (c.getValue() != null) {
+                c.setValue(c.getValue().trim());
             }
         });
 
@@ -60,13 +71,10 @@ public class NewUserWindow extends Window {
         passwordTextF.setRequired(true);
         passwordTextF.setRequiredError("Password is required!");
         passwordTextF.addValidator(new StringLengthValidator("The Password is too short!", 8, null, false));
-        passwordTextF.addBlurListener(new FieldEvents.BlurListener() {
-            @Override
-            public void blur(FieldEvents.BlurEvent event) {
-                AbstractTextField c = ((AbstractTextField) event.getComponent());
-                if (c.getValue() != null) {
-                    c.setValue(c.getValue().trim());
-                }
+        passwordTextF.addBlurListener((FieldEvents.BlurEvent event) -> {
+            AbstractTextField c = ((AbstractTextField) event.getComponent());
+            if (c.getValue() != null) {
+                c.setValue(c.getValue().trim());
             }
         });
 
@@ -74,13 +82,10 @@ public class NewUserWindow extends Window {
         nameTextF.setRequired(true);
         nameTextF.setRequiredError("Name is required!");
         nameTextF.addValidator(new StringLengthValidator("The Name is too short!", 2, null, false));
-        nameTextF.addBlurListener(new FieldEvents.BlurListener() {
-            @Override
-            public void blur(FieldEvents.BlurEvent event) {
-                AbstractTextField c = ((AbstractTextField) event.getComponent());
-                if (c.getValue() != null) {
-                    c.setValue(c.getValue().trim());
-                }
+        nameTextF.addBlurListener((FieldEvents.BlurEvent event) -> {
+            AbstractTextField c = ((AbstractTextField) event.getComponent());
+            if (c.getValue() != null) {
+                c.setValue(c.getValue().trim());
             }
         });
 
@@ -93,30 +98,24 @@ public class NewUserWindow extends Window {
 
         formLayout.addComponents(usernameTextF, passwordTextF, nameTextF, emailTextF, phoneNrTextF);
 
-        Button createButton = new Button("Create User", new Button.ClickListener() {
-            @Override
-            public void buttonClick(Button.ClickEvent event) {
-                try {
-                    usernameTextF.validate();
-                    passwordTextF.validate();
-                    nameTextF.validate();
-                    emailTextF.validate();
-                    phoneNrTextF.validate();
+        Button createButton = new Button("Create User", (Button.ClickEvent event) -> {
+            try {
+                usernameTextF.validate();
+                passwordTextF.validate();
+                nameTextF.validate();
+                emailTextF.validate();
+                phoneNrTextF.validate();
+ 
+                containerDataSource.addBean(new User(usernameTextF.getValue(), PermissionService.hashPassword(passwordTextF.getValue()), nameTextF.getValue(), emailTextF.getValue(), phoneNrTextF.getValue()));
 
-                    containerDataSource.addBean(new User(usernameTextF.getValue(), passwordTextF.getValue(), nameTextF.getValue(), emailTextF.getValue(), phoneNrTextF.getValue()));
-
-                    close();
-                } catch (Validator.InvalidValueException e) {
-                    Notification.show("Validation Errorl", e.getLocalizedMessage(), Notification.Type.WARNING_MESSAGE);
-                }
+                close();
+            } catch (Validator.InvalidValueException e) {
+                Notification.show("Validation Error!", e.getLocalizedMessage(), Notification.Type.WARNING_MESSAGE);
             }
         });
 
-        Button cancelButton = new Button("Cancel", new Button.ClickListener() {
-            @Override
-            public void buttonClick(Button.ClickEvent event) {
-                close();
-            }
+        Button cancelButton = new Button("Cancel", (Button.ClickEvent event) -> {
+            close();
         });
 
         formLayout.addComponents(createButton, cancelButton);

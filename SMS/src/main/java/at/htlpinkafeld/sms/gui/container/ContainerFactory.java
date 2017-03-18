@@ -22,6 +22,7 @@ import at.htlpinkafeld.sms.pojos.Host;
 import at.htlpinkafeld.sms.pojos.Hostgroup;
 import at.htlpinkafeld.sms.pojos.Service;
 import at.htlpinkafeld.sms.service.JSONService;
+import at.htlpinkafeld.sms.service.PermissionService;
 import com.vaadin.data.Container;
 import com.vaadin.data.util.BeanItemContainer;
 import com.vaadin.ui.Calendar;
@@ -38,6 +39,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.stream.Collectors;
 
 /**
  * Class with multiple static Factory or Singelton methods to create various
@@ -64,7 +66,7 @@ public class ContainerFactory {
 
         hostMap = JSONService.getHOSTS();
         if (hostMap == null) {
-            //TODO use real hosts
+
             List<Map.Entry<String, Host>> entries = new ArrayList<>();
 
             for (int i = 1; i <= 10; i++) {
@@ -112,6 +114,12 @@ public class ContainerFactory {
         hostgroups.add(new Hostgroup(2, "Pinkafeld", new LinkedList(Arrays.asList())));
         hostgroups.add(new Hostgroup(3, "Wien", new LinkedList(Arrays.asList("Host 1", "Host 3", "Host 4", "Host 8", "Host 7", "Host 9"))));
 
+        hostgroups = hostgroups.stream().sorted((hg1, hg2) -> {
+            return hg1.getName().compareToIgnoreCase(hg2.getName());
+        }).peek((hg) -> {
+            hg.setHostlist(hg.getHostlist().stream().sorted().collect(Collectors.toList()));
+        }).collect(Collectors.toList());
+
     }
 
     /**
@@ -120,9 +128,9 @@ public class ContainerFactory {
     private static void initUserContainer() {
         //TODO create Container which also delegates to DAO
         List<User> users = new ArrayList<>();
-        users.add(new User(1, "Dogist", "1234", "Martin", "noplan@gmc.at", "5421575"));
-        users.add(new User(2, "Irish", "4321", "Sebastian", "noplan@qmail.com", "5788775"));
-        users.add(new User(3, "user", "12345678", "NormalUser", "abc@qmail.com", "56468762"));
+        users.add(new User(1, "Dogist", PermissionService.hashPassword("1234"), "Martin", "noplan@gmc.at", "5421575"));
+        users.add(new User(2, "Irish", PermissionService.hashPassword("4321"), "Sebastian", "noplan@qmail.com", "5788775"));
+        users.add(new User(3, "user", PermissionService.hashPassword("12345678"), "NormalUser", "abc@qmail.com", "56468762"));
         userContainer = new BeanItemContainer<>(User.class, users);
 
 //        UserDao userDao = new UserDaoImpl();

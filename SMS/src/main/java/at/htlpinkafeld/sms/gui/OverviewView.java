@@ -62,22 +62,18 @@ public class OverviewView extends VerticalLayout implements View {
 
         BeanItemContainer<Hostgroup> hostgroupItemContainer = ContainerFactory.createHostgroupContainer();
 
-        tabSheet.addSelectedTabChangeListener(new TabSheet.SelectedTabChangeListener() {
-            @Override
-            public void selectedTabChange(TabSheet.SelectedTabChangeEvent event) {
-                // Find the tabsheet
-                TabSheet tabsheet = event.getTabSheet();
+        tabSheet.addSelectedTabChangeListener((TabSheet.SelectedTabChangeEvent event) -> {
+            // Find the tabsheet
+            TabSheet tabsheet = event.getTabSheet();
 
 //                Test for MapContainer
 //                for (Map.Entry<String, Host> entry : hostMap.entrySet()) {
 //                    entry.getValue().setDuration(entry.getValue().getDuration().plusSeconds(10));
 //                    hostMap.put(entry.getKey(), entry.getValue());
 //                }
-                // Find the tab and cast it
-                OverviewTabPanel tab = (OverviewTabPanel) tabsheet.getSelectedTab();
-                tab.refreshLayout();
-
-            }
+//          Find the tab and cast it
+            OverviewTabPanel tab = (OverviewTabPanel) tabsheet.getSelectedTab();
+            tab.refreshLayout();
         });
 
         hostGroupsTab = tabSheet.addTab(new HostGroupOverviewTabPanel(hostgroupItemContainer, hostItemContainer), "Host Groups");

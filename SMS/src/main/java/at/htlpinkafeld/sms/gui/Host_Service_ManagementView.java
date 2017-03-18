@@ -5,6 +5,8 @@
  */
 package at.htlpinkafeld.sms.gui;
 
+import at.htlpinkafeld.sms.gui.window.EditHostgroupWindow;
+import at.htlpinkafeld.sms.gui.window.NewHostServiceWindow;
 import at.htlpinkafeld.sms.gui.container.ContainerFactory;
 import at.htlpinkafeld.sms.gui.container.HostgroupHierarchical_Container;
 import at.htlpinkafeld.sms.pojos.Host;
@@ -15,6 +17,7 @@ import com.vaadin.data.Container;
 import com.vaadin.data.util.BeanItem;
 import com.vaadin.navigator.View;
 import com.vaadin.navigator.ViewChangeListener;
+import com.vaadin.server.Page;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Panel;
 import com.vaadin.ui.TabSheet;
@@ -77,76 +80,55 @@ public class Host_Service_ManagementView extends VerticalLayout implements View 
         hostService_treeTable.setContainerDataSource(hostServiceHierarchical_Container);
         hostService_treeTable.setSizeFull();
 
-        hostService_treeTable.addGeneratedColumn("new Service", new Table.ColumnGenerator() {
-            @Override
-            public Object generateCell(Table source, Object itemId, Object columnId) {
-                if (!String.valueOf(itemId).isEmpty()) {
-                    BeanItem beanItem = (BeanItem) source.getItem(itemId);
-                    if (beanItem != null) {
-                        Object bean = beanItem.getBean();
-                        if (bean instanceof Host) {
-                            return new Button("Create Service", new Button.ClickListener() {
-                                @Override
-                                public void buttonClick(Button.ClickEvent event) {
-                                    UI.getCurrent().addWindow(new NewHostServiceWindow((Host) bean));
-                                }
-                            });
-                        }
+        hostService_treeTable.addGeneratedColumn("Create Service", (Table source, Object itemId, Object columnId) -> {
+            if (!String.valueOf(itemId).isEmpty()) {
+                BeanItem beanItem = (BeanItem) source.getItem(itemId);
+                if (beanItem != null) {
+                    Object bean = beanItem.getBean();
+                    if (bean instanceof Host) {
+                        return new Button("Create Service", (Button.ClickEvent event) -> {
+                            UI.getCurrent().addWindow(new NewHostServiceWindow((Host) bean));
+                        });
                     }
                 }
-                return "";
             }
+            return "";
         });
 
-        hostService_treeTable.addGeneratedColumn("remove", new Table.ColumnGenerator() {
-            @Override
-            public Object generateCell(Table source, Object itemId, Object columnId) {
-                if (!String.valueOf(itemId).isEmpty()) {
-                    BeanItem beanItem = (BeanItem) source.getItem(itemId);
-                    if (beanItem != null) {
-                        Object bean = beanItem.getBean();
-                        if (bean instanceof Host) {
-                            return new Button("Remove Host", new Button.ClickListener() {
-                                @Override
-                                public void buttonClick(Button.ClickEvent event) {
-                                    source.removeItem(itemId);
-                                    source.refreshRowCache();
-                                }
-                            });
-                        } else if (bean instanceof Service) {
-                            return new Button("Remove Service", new Button.ClickListener() {
-                                @Override
-                                public void buttonClick(Button.ClickEvent event) {
-                                    source.removeItem(itemId);
-                                    source.refreshRowCache();
-                                }
-                            });
-                        }
+        hostService_treeTable.addGeneratedColumn("Remove", (Table source, Object itemId, Object columnId) -> {
+            if (!String.valueOf(itemId).isEmpty()) {
+                BeanItem beanItem = (BeanItem) source.getItem(itemId);
+                if (beanItem != null) {
+                    Object bean = beanItem.getBean();
+                    if (bean instanceof Host) {
+                        return new Button("Remove Host", (Button.ClickEvent event) -> {
+                            source.removeItem(itemId);
+                            Page.getCurrent().reload();
+                        });
+                    } else if (bean instanceof Service) {
+                        return new Button("Remove Service", (Button.ClickEvent event) -> {
+                            source.removeItem(itemId);
+                            Page.getCurrent().reload();
+                        });
                     }
                 }
-                return "";
             }
+            return "";
         });
 
-        hostService_treeTable.setCellStyleGenerator(new Table.CellStyleGenerator() {
-            @Override
-            public String getStyle(Table source, Object itemId, Object propertyId) {
-                if (String.valueOf(itemId).isEmpty()) {
-                    return "hiderow";
-                } else {
-                    return null;
-                }
+        hostService_treeTable.setCellStyleGenerator((Table source, Object itemId, Object propertyId) -> {
+            if (String.valueOf(itemId).isEmpty()) {
+                return "hiderow";
+            } else {
+                return null;
             }
         });
         hostService_treeTable.setCollapsed("", false);
 
         mainLayout.addComponent(hostService_treeTable);
 
-        Button createHostButton = new Button("Create Host", new Button.ClickListener() {
-            @Override
-            public void buttonClick(Button.ClickEvent event) {
-                UI.getCurrent().addWindow(new NewHostServiceWindow(null));
-            }
+        Button createHostButton = new Button("Create Host", (Button.ClickEvent event) -> {
+            UI.getCurrent().addWindow(new NewHostServiceWindow(null));
         });
 
         mainLayout.addComponent(createHostButton);
@@ -165,54 +147,43 @@ public class Host_Service_ManagementView extends VerticalLayout implements View 
         TreeTable hostgroup_treeTable = new TreeTable();
 
         HostgroupHierarchical_Container hostgroupHierarchical_Container = ContainerFactory.createHostgroupHierarchical_Container();
+        //TODO auto Sorting (with Hosts inside)
 
         hostgroup_treeTable.setContainerDataSource(hostgroupHierarchical_Container);
         hostgroup_treeTable.setSizeFull();
         hostgroup_treeTable.setBuffered(false);
 
-        hostgroup_treeTable.addGeneratedColumn("edit Hostgroup", new Table.ColumnGenerator() {
-            @Override
-            public Object generateCell(Table source, Object itemId, Object columnId) {
-                if (!String.valueOf(itemId).isEmpty() && !String.valueOf(itemId).contains("/")) {
-                    return new Button("edit Hostgroup", new Button.ClickListener() {
-                        @Override
-                        public void buttonClick(Button.ClickEvent event) {
-                            UI.getCurrent().addWindow(new EditHostgroupWindow(hostgroupHierarchical_Container, String.valueOf(itemId)));
-                        }
+        hostgroup_treeTable.addGeneratedColumn("Edit Hostgroup", (Table source, Object itemId, Object columnId) -> {
+            if (!String.valueOf(itemId).isEmpty() && !String.valueOf(itemId).contains("/")) {
+                return new Button("Edit Hostgroup", (Button.ClickEvent event) -> {
+                    UI.getCurrent().addWindow(new EditHostgroupWindow(hostgroupHierarchical_Container, String.valueOf(itemId)));
+                });
+            }
+            return "";
+        });
+
+        hostgroup_treeTable.addGeneratedColumn("Remove", (Table source, Object itemId, Object columnId) -> {
+            if (!String.valueOf(itemId).isEmpty()) {
+                if (!String.valueOf(itemId).contains("/")) {
+                    return new Button("Delete Hostgroup", (Button.ClickEvent event) -> {
+                        source.removeItem(itemId);
+                        Page.getCurrent().reload();
+                    });
+                } else if (String.valueOf(itemId).contains("/")) {
+                    return new Button("Remove Host", (Button.ClickEvent event) -> {
+                        source.removeItem(itemId);
+                        Page.getCurrent().reload();
                     });
                 }
-                return "";
             }
+            return "";
         });
 
-        hostgroup_treeTable.addGeneratedColumn("remove", new Table.ColumnGenerator() {
-            @Override
-            public Object generateCell(Table source, Object itemId, Object columnId) {
-                if (!String.valueOf(itemId).isEmpty()) {
-                    if (!String.valueOf(itemId).contains("/")) {
-                        return new Button("Delete Hostgroup", (Button.ClickEvent event) -> {
-                            source.removeItem(itemId);
-                            source.refreshRowCache();
-                        });
-                    } else if (String.valueOf(itemId).contains("/")) {
-                        return new Button("Remove Host", (Button.ClickEvent event) -> {
-                            source.removeItem(itemId);
-                            source.refreshRowCache();
-                        });
-                    }
-                }
-                return "";
-            }
-        });
-
-        hostgroup_treeTable.setCellStyleGenerator(new Table.CellStyleGenerator() {
-            @Override
-            public String getStyle(Table source, Object itemId, Object propertyId) {
-                if (String.valueOf(itemId).isEmpty()) {
-                    return "hiderow";
-                } else {
-                    return null;
-                }
+        hostgroup_treeTable.setCellStyleGenerator((Table source, Object itemId, Object propertyId) -> {
+            if (String.valueOf(itemId).isEmpty()) {
+                return "hiderow";
+            } else {
+                return null;
             }
         });
         hostgroup_treeTable.setCollapsed("", false);

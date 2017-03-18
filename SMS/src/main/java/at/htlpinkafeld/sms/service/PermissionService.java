@@ -7,6 +7,8 @@ package at.htlpinkafeld.sms.service;
 
 import at.htlpinkafeld.sms.pojo.User;
 import com.vaadin.server.VaadinSession;
+import java.security.DigestException;
+import org.apache.commons.codec.digest.DigestUtils;
 
 /**
  * Service to check the Permissions of the current User
@@ -28,7 +30,7 @@ public class PermissionService {
     public static boolean isAdmin() throws NoUserLoggedInException {
 
         try {
-            User currentUser = (User) VaadinSession.getCurrent().getAttribute("currentUser");
+            User currentUser = (User) VaadinSession.getCurrent().getAttribute(User.class);
             if (currentUser != null) {
                 if (ALL_USERS_ARE_ADMIN && !"user".equals(currentUser.getUsername())) {
                     return true;
@@ -42,6 +44,10 @@ public class PermissionService {
         } catch (NullPointerException exception) {
             throw new NoUserLoggedInException();
         }
+    }
+
+    public static String hashPassword(String password) {
+        return DigestUtils.sha512Hex(password);
     }
 
 }
