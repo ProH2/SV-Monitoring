@@ -128,7 +128,17 @@ public class DutyDaoImpl implements DutyDao {
         
         List<Duty> result = template.query(sql, params, new DutyMapper());
         return result;
+    }
+    
+    public List<Duty> getDutiesByRange(Date starttime, Date endtime) {
+        Map<String, Object> params = new HashMap<String, Object>();
         
+        String sql = "SELECT * FROM duty WHERE starttime BETWEEN :starttime AND :endtime";
+        params.put("starttime", starttime);
+        params.put("endtime", endtime);
+        
+        List<Duty> result = template.query(sql, params, new DutyMapper());
+        return result;
     }
 
     @Override
