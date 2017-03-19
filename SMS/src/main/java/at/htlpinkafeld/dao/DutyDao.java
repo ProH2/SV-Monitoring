@@ -14,11 +14,7 @@ import java.util.List;
  *
  * @author DarkHell2
  */
-public interface DutyDao {
-    
-    void insertDuty(Integer dutyId, Integer userId, LocalDateTime startTime, LocalDateTime endtime, Integer notifyart);
-    
-    void deleteDuty(Integer dutyId);
+public interface DutyDao extends BaseDao<Duty>{
     
     List<Duty> getDutiesByRange(LocalDateTime startTime, LocalDateTime endTime);
 
@@ -26,5 +22,4 @@ public interface DutyDao {
 
     List<Duty> findByUserId(int userId);
 
-    List<Duty> findAll();
 }

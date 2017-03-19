@@ -13,16 +13,11 @@ import java.util.List;
  *
  * @author DarkHell2
  */
-public interface CommentDao {
-    void insertComment(Integer commentId, String comment, String commentTo, Integer author, LocalDateTime lastChanged);
-    
-    void deleteComment(Integer commentId);
+public interface CommentDao extends BaseDao<Comment>{
     
     List<Comment> getCommentByRange(LocalDateTime time1, LocalDateTime time2);
 
     Comment findByCommentId(int commentId);
 
     List<Comment> findByAuthor(int userId);
-
-    List<Comment> findAll();
 }

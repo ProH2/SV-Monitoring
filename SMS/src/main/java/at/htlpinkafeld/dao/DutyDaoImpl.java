@@ -80,18 +80,15 @@ public class DutyDaoImpl implements DutyDao {
     }*/
     
     @Override
-    public void insertDuty(Integer dutyid, Integer userid, LocalDateTime starttime, LocalDateTime endtime, Integer notifyart) {
-        Date startt=new Date(starttime.atZone(ZoneId.systemDefault()).toInstant().toEpochMilli());
-        Date endt=new Date(endtime.atZone(ZoneId.systemDefault()).toInstant().toEpochMilli());
-        
+    public void insert(Duty o) {
         Map<String, Object> params = new HashMap<String, Object>();
         String sql = "INSERT INTO duty(dutyid, userid, starttime, endtime, notifyart) VALUES (:dutyid, :userid, :starttime, :endtime, :notifyart)";
         
-        params.put("dutyid", dutyid);
-        params.put("userid", userid);
-        params.put("starttime", startt);
-        params.put("endtime", endt);
-        params.put("notifyart", notifyart);
+        params.put("dutyid", o.getDutyID());
+        params.put("userid", o.getUserID());
+        params.put("starttime", o.getStartTime());
+        params.put("endtime", o.getEndTime());
+        params.put("notifyart", o.getNotifyArt());
 
         template.update(sql, params);
         System.out.println("Inserted Duty");
@@ -104,7 +101,7 @@ public class DutyDaoImpl implements DutyDao {
     }
 
     @Override
-    public void deleteDuty(Integer dutyid) {
+    public void delete(Integer dutyid) {
         Map<String, Object> params = new HashMap<String, Object>();
         String sql = "DELETE FROM duty WHERE dutyid = :dutyid";
         
@@ -132,6 +129,20 @@ public class DutyDaoImpl implements DutyDao {
         List<Duty> result = template.query(sql, params, new DutyMapper());
         return result;
         
+    }
+
+    @Override
+    public void update(Duty o) {
+        Map<String, Object> params = new HashMap<String, Object>();
+        String sql= "UPDATE duty SET userid=:userid, starttime=:starttime, endtime=:endtime, notifyart=:notifyart WHERE dutyid=:dutyid";
+        
+        params.put("dutyid", o.getDutyID());
+        params.put("userid", o.getUserID());
+        params.put("starttime", o.getStartTime());
+        params.put("endtime", o.getEndTime());
+        params.put("notifyart", o.getNotifyArt());
+
+        template.update(sql, params);
     }
 
     private static final class DutyMapper implements RowMapper<Duty> {

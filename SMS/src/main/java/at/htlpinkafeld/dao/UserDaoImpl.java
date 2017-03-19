@@ -60,15 +60,16 @@ public class UserDaoImpl implements UserDao {
     }
 
     @Override
-    public void insertUser(Integer userid, String name, String username, String password, String email, String phonenr) {
+    public void insert(User o) {
         Map<String, Object> params = new HashMap<String, Object>();
         String sql = "INSERT INTO users(userid, name, username, password, phonenr, email) VALUES (:userid, :name, :username, :password, :phonenr, :email)";
-        params.put("userid", userid);
-        params.put("name", name);
-        params.put("username", username);
-        params.put("password", password);
-        params.put("phonenr", phonenr);
-        params.put("email", email);
+        
+        params.put("userid", o.getUserNr());
+        params.put("name", o.getName());
+        params.put("username", o.getUsername());
+        params.put("password", o.getPassword());
+        params.put("phonenr", o.getPhoneNr());
+        params.put("email", o.getEmail());
 
         template.update(sql, params);
         System.out.println("Inserted User");
@@ -81,7 +82,7 @@ public class UserDaoImpl implements UserDao {
     }
 
     @Override
-    public void deleteUser(Integer userid) {
+    public void delete(Integer userid) {
         Map<String, Object> params = new HashMap<String, Object>();
         String sql = "DELETE FROM users WHERE userid = :userid";
         
@@ -95,6 +96,21 @@ public class UserDaoImpl implements UserDao {
         } catch (SQLException ex) {
             Logger.getLogger(UserDaoImpl.class.getName()).log(Level.SEVERE, null, ex);
         }
+    }
+
+    @Override
+    public void update(User o) {
+        Map<String, Object> params = new HashMap<String, Object>();
+        String sql= "UPDATE duty SET name=:name, username=:username, password=:password, phonenr=:phonenr, email=:email WHERE userid=:userid";
+        
+        params.put("userid", o.getUserNr());
+        params.put("name", o.getName());
+        params.put("username", o.getUsername());
+        params.put("password", o.getPassword());
+        params.put("phonenr", o.getPhoneNr());
+        params.put("email", o.getEmail());
+
+        template.update(sql, params);
     }
 
     private static final class UserMapper implements RowMapper<User> {

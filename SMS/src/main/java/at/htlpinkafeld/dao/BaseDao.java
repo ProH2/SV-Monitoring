@@ -5,13 +5,19 @@
  */
 package at.htlpinkafeld.dao;
 
-import at.htlpinkafeld.sms.pojos.Log;
-import java.sql.Timestamp;
 import java.util.List;
 
 /**
  *
  * @author DarkHell2
  */
-public interface LogDao extends BaseDao<Log>{
+public interface BaseDao<T>{
+    
+    public List<T> findAll();
+    
+    public void insert(T o);
+    
+    public void delete(Integer id);
+    
+    public void update(T o);
 }

@@ -26,16 +26,16 @@ public class LogDaoImpl implements LogDao{
     NamedParameterJdbcTemplate template = new NamedParameterJdbcTemplate(db.dataSource());
     
     @Override
-    public void insertLog(Log log) {
+    public void insert(Log o) {
         Map<String, Object> params = new HashMap<String, Object>();
         
         
         String sql = "INSERT INTO users(logid, timestamp, logcause, logentry) VALUES (:logid, :timestamp, :logcause, :logentry)";
         
-        params.put("logid", log.getLogId());
-        params.put("timestamp", log.getTimestamp());
-        params.put("logcause", log.getLogCause());
-        params.put("logentry", log.getLogEntry());
+        params.put("logid", o.getLogId());
+        params.put("timestamp", o.getTimestamp());
+        params.put("logcause", o.getLogCause());
+        params.put("logentry", o.getLogEntry());
 
         template.update(sql, params);
         System.out.println("Inserted User");
@@ -48,7 +48,7 @@ public class LogDaoImpl implements LogDao{
     }
 
     @Override
-    public void deleteLog(Integer logid) {
+    public void delete(Integer logid) {
         Map<String, Object> params = new HashMap<String, Object>();
         String sql = "DELETE FROM log WHERE logid = :logid";
         
@@ -72,6 +72,19 @@ public class LogDaoImpl implements LogDao{
         List<Log> result = template.query(sql, params, new LogDaoImpl.LogMapper());
 
         return result;
+    }
+
+    @Override
+    public void update(Log o) {
+        Map<String, Object> params = new HashMap<String, Object>();
+        String sql= "UPDATE log SET timestamp=:timestamp, logcause=:logcause, logentry=:logentry WHERE logid=:logid";
+        
+        params.put("logid", o.getLogId());
+        params.put("timestamp", o.getTimestamp());
+        params.put("logcause", o.getLogCause());
+        params.put("logentry", o.getLogEntry());
+
+        template.update(sql, params);
     }
     
     private static final class LogMapper implements RowMapper<Log> {

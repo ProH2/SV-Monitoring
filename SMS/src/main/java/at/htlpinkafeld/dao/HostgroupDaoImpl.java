@@ -27,13 +27,13 @@ public class HostgroupDaoImpl implements HostgroupDao{
     NamedParameterJdbcTemplate template = new NamedParameterJdbcTemplate(db.dataSource());
 
     @Override
-    public void insertHostgroup(Hostgroup group) {
-        if(group != null){
+    public void insert(Hostgroup o) {
+        if(o != null){
             Map<String, Object> params = new HashMap<String, Object>();
             
-            Integer hostgroupnr = group.getHostGroupNr();
-            String name = group.getName();
-            List<String> hostlist = group.getHostlist();
+            Integer hostgroupnr = o.getHostGroupNr();
+            String name = o.getName();
+            List<String> hostlist = o.getHostlist();
             
             String help = "";
             
@@ -59,7 +59,7 @@ public class HostgroupDaoImpl implements HostgroupDao{
     }
 
     @Override
-    public void deleteHostgroup(Integer hostgroupnr) {
+    public void delete(Integer hostgroupnr) {
         Map<String, Object> params = new HashMap<String, Object>();
         String sql = "DELETE FROM hostgroup WHERE hostgroupnr = :hostgroupnr";
         
@@ -110,6 +110,31 @@ public class HostgroupDaoImpl implements HostgroupDao{
         }
         
         return result;
+    }
+
+    @Override
+    public void update(Hostgroup o) {
+        if(o != null){
+            Map<String, Object> params = new HashMap<String, Object>();
+            String sql= "UPDATE hostgroup SET name=:name, hostlist=:hostlist WHERE hostgroupnr=:hostgroupnr";
+            
+            Integer hostgroupnr = o.getHostGroupNr();
+            String name = o.getName();
+            List<String> hostlist = o.getHostlist();
+            
+            String help = "";
+            
+            for(int i=0; i<hostlist.size(); i++){
+                help = help + hostlist.get(i) + ";";
+            }
+            
+            
+            params.put("hostgroupnr", hostgroupnr);
+            params.put("name", name);
+            params.put("hostlist", help);
+
+            template.update(sql, params);
+        }
     }
     
     private static final class HostgroupMapper implements RowMapper<Hostgroup> {

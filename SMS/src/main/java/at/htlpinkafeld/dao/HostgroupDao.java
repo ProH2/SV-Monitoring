@@ -12,14 +12,8 @@ import java.util.List;
  *
  * @author DarkHell2
  */
-public interface HostgroupDao {
-    
-    void insertHostgroup(Hostgroup group);
-    
-    void deleteHostgroup(Integer hostgroupNr);
+public interface HostgroupDao extends BaseDao<Hostgroup>{
 
     Hostgroup findByHostgroupNr(int hostgroupNr);
-
-    List<Hostgroup> findAll();
     
 }

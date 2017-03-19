@@ -29,17 +29,15 @@ public class CommentDaoImpl implements CommentDao {
     NamedParameterJdbcTemplate template = new NamedParameterJdbcTemplate(db.dataSource());
 
     @Override
-    public void insertComment(Integer commentid, String comment, String commentto, Integer author, LocalDateTime lastchanged) {
-        Date last=new Date(lastchanged.atZone(ZoneId.systemDefault()).toInstant().toEpochMilli());
-        
+    public void insert(Comment comment) {    
         Map<String, Object> params = new HashMap<String, Object>();
         String sql = "INSERT INTO comment(commentid, comment, commentto, author, lastchanged) VALUES (:commentid, :comment, :commentto, :author, :lastchanged)";
         
-        params.put("commentid", commentid);
-        params.put("comment", comment);
-        params.put("commentto", commentto);
-        params.put("author", author);
-        params.put("lastchanged", lastchanged);
+        params.put("commentid", comment.getCommentId());
+        params.put("comment", comment.getComment());
+        params.put("commentto", comment.getCommentTo());
+        params.put("author", comment.getAuthor());
+        params.put("lastchanged", comment.getLastChanged());
 
         template.update(sql, params);
         System.out.println("Inserted Comment");
@@ -52,7 +50,7 @@ public class CommentDaoImpl implements CommentDao {
     }
 
     @Override
-    public void deleteComment(Integer commentid) {
+    public void delete(Integer commentid) {
         Map<String, Object> params = new HashMap<String, Object>();
         String sql = "DELETE FROM comment WHERE commentid = :commentid";
         
@@ -113,6 +111,20 @@ public class CommentDaoImpl implements CommentDao {
         List<Comment> result = template.query(sql, params, new CommentDaoImpl.CommentMapper());
 
         return result;
+    }
+
+    @Override
+    public void update(Comment o) {
+        Map<String, Object> params = new HashMap<String, Object>();
+        String sql= "UPDATE comment SET comment=:comment, commentto=:commentto, author=:author, lastchanged=:lastchanged WHERE commentid=:commentid";
+        
+        params.put("commentid", o.getCommentId());
+        params.put("comment", o.getComment());
+        params.put("commentto", o.getCommentTo());
+        params.put("author", o.getAuthor());
+        params.put("lastchanged", o.getLastChanged());
+
+        template.update(sql, params);
     }
     
     private static final class CommentMapper implements RowMapper<Comment> {
