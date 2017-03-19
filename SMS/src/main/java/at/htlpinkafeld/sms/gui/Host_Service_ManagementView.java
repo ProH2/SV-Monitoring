@@ -20,7 +20,10 @@ import com.vaadin.data.util.BeanItem;
 import com.vaadin.navigator.View;
 import com.vaadin.navigator.ViewChangeListener;
 import com.vaadin.server.Page;
+import com.vaadin.ui.AbsoluteLayout;
 import com.vaadin.ui.Button;
+import com.vaadin.ui.CssLayout;
+import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Panel;
 import com.vaadin.ui.TabSheet;
 import com.vaadin.ui.Table;
@@ -74,6 +77,7 @@ public class Host_Service_ManagementView extends VerticalLayout implements View 
      */
     private Panel createHostServiceManagementPanel() {
         VerticalLayout mainLayout = new VerticalLayout();
+        mainLayout.setHeight(UI.getCurrent().getPage().getBrowserWindowHeight() - 38 * 2, Unit.PIXELS);
 
         TreeTable hostService_treeTable = new TreeTable();
 
@@ -128,15 +132,21 @@ public class Host_Service_ManagementView extends VerticalLayout implements View 
         hostService_treeTable.setCollapsed("", false);
 
         mainLayout.addComponent(hostService_treeTable);
+        mainLayout.setExpandRatio(hostService_treeTable, 90);
 
-        Button createHostButton = new Button("Create Host", (Button.ClickEvent event) -> {
+        AbsoluteLayout buttonLayout = new AbsoluteLayout();
+        buttonLayout.setSizeFull();
+
+        buttonLayout.addComponent(new Button("Create Host", (Button.ClickEvent event) -> {
             UI.getCurrent().addWindow(new NewHostServiceWindow(null, hostServiceHierarchical_Container));
-        });
-
-        mainLayout.addComponent(createHostButton);
-        mainLayout.addComponent(new Button("Restart Nagios", (event) -> {
-            AddHostsAndServices_Service.restartNagios();
         }));
+
+        buttonLayout.addComponent(new Button("Restart Nagios", (event) -> {
+            AddHostsAndServices_Service.restartNagios();
+        }), "right:0px");
+
+        mainLayout.addComponent(buttonLayout);
+        mainLayout.setExpandRatio(buttonLayout, 10);
 
         return new Panel(mainLayout);
     }
@@ -148,6 +158,7 @@ public class Host_Service_ManagementView extends VerticalLayout implements View 
      */
     private Panel createHostgroupManagementPanel() {
         VerticalLayout mainLayout = new VerticalLayout();
+        mainLayout.setHeight(UI.getCurrent().getPage().getBrowserWindowHeight() - 38 * 2, Unit.PIXELS);
 
         TreeTable hostgroup_treeTable = new TreeTable();
 
@@ -194,12 +205,14 @@ public class Host_Service_ManagementView extends VerticalLayout implements View 
         hostgroup_treeTable.setCollapsed("", false);
 
         mainLayout.addComponent(hostgroup_treeTable);
+        mainLayout.setExpandRatio(hostgroup_treeTable, 90);
 
         Button createHostButton = new Button("Create Hostgroup", (Button.ClickEvent event) -> {
             UI.getCurrent().addWindow(new EditHostgroupWindow(hostgroupHierarchical_Container, null));
         });
 
         mainLayout.addComponent(createHostButton);
+        mainLayout.setExpandRatio(createHostButton, 10);
 
         return new Panel(mainLayout);
     }

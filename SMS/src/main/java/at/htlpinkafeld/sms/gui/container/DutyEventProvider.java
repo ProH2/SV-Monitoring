@@ -6,14 +6,16 @@
 package at.htlpinkafeld.sms.gui.container;
 
 import at.htlpinkafeld.dao.DutyDao;
+import at.htlpinkafeld.dao.DutyDaoImpl;
 import at.htlpinkafeld.sms.gui.TimeManagementView;
 import at.htlpinkafeld.sms.gui.util.TimeManagementCalendarEvent;
-import com.vaadin.data.util.BeanItemContainer;
+import at.htlpinkafeld.sms.pojo.Duty;
 import com.vaadin.ui.Calendar;
 import com.vaadin.ui.components.calendar.event.CalendarEditableEventProvider;
 import com.vaadin.ui.components.calendar.event.CalendarEvent;
 import java.util.Date;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * CalendarEditableEventProvider for the {@link Calendar} in
@@ -23,35 +25,43 @@ import java.util.List;
  */
 public class DutyEventProvider implements CalendarEditableEventProvider {
 
-    private final DutyDao dutyDao;
-    private final BeanItemContainer<CalendarEvent> eventContainer;
+    private final DutyDaoImpl dutyDao;
 
     /**
      * Constructor for the Eventprovider
      *
      * @param dutyDao DAO to which the calls are delegated to
      */
-    public DutyEventProvider(DutyDao dutyDao) {
+    public DutyEventProvider(DutyDaoImpl dutyDao) {
         this.dutyDao = dutyDao;
 
-        this.eventContainer = new BeanItemContainer<>(CalendarEvent.class);
     }
 
     @Override
     public void addEvent(CalendarEvent event) {
         if (event instanceof TimeManagementCalendarEvent) {
-            this.eventContainer.addBean((TimeManagementCalendarEvent) event);
+            dutyDao.insert(new Duty(null, ((TimeManagementCalendarEvent) event).getUser(),
+                    new java.sql.Date(event.getStart().getTime()), new java.sql.Date(event.getEnd().getTime())));
         }
     }
 
     @Override
     public void removeEvent(CalendarEvent event) {
-        this.eventContainer.removeItem(event);
+        if (event instanceof TimeManagementCalendarEvent) {
+            dutyDao.delete(((TimeManagementCalendarEvent) event).getDutyId());
+        }
+
+    }
+
+    public void updateEvent(TimeManagementCalendarEvent event) {
+        dutyDao.update(new Duty(event.getDutyId(), event.getUser(), event.getStart(), event.getEnd()));
     }
 
     @Override
     public List<CalendarEvent> getEvents(Date startDate, Date endDate) {
-        return this.eventContainer.getItemIds();
+        return dutyDao.getDutiesByRange(new java.sql.Date(startDate.getTime()), new java.sql.Date(endDate.getTime())).stream().map((duty) -> {
+            return new TimeManagementCalendarEvent(duty);
+        }).collect(Collectors.toList());
     }
 
 }

@@ -65,7 +65,7 @@ public class ContainerFactory {
 
     private static BeanItemContainer<User> userContainer = null;
 
-    private static CalendarEditableEventProvider dutyEventProvider = null;
+    private static DutyEventProvider dutyEventProvider = null;
 
     private static UserDao userdao = new UserDaoImpl();
     
@@ -263,7 +263,7 @@ public class ContainerFactory {
      *
      * @return {@link CalendarEditableEventProvider} which contains the Duties
      */
-    public static CalendarEditableEventProvider createDutyEventProvider() {
+    public static DutyEventProvider createDutyEventProvider() {
         if (dutyEventProvider == null) {
             initDutyEventProvider();
         }

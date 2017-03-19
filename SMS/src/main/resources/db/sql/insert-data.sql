@@ -5,13 +5,13 @@ INSERT INTO users (name, username, password, phonenr, email) VALUES ('Manuel', '
 INSERT INTO users (name, username, password, phonenr, email) VALUES ('Andreas', 'Hoche', 'b109f3bbbc244eb82441917ed06d618b9008dd09b3befd1b5e07394c706a8bb980b1d7785e5976ec049b46df5f1326af5a2ea6d103fd07c95385ffab0cacbc86', '0664 / 921 17 95', 'Andi@gmail.com');
 INSERT INTO users (name, username, password, phonenr, email) VALUES ('Seppl', 'Klaris', 'b109f3bbbc244eb82441917ed06d618b9008dd09b3befd1b5e07394c706a8bb980b1d7785e5976ec049b46df5f1326af5a2ea6d103fd07c95385ffab0cacbc86', '0664 / 921 17 95', 'sepplKlaris@gmail.com');
 
-INSERT INTO duty (userid, starttime, endtime, notifyart) VALUES (1, '2016-03-03', '2016-03-04', 0);
-INSERT INTO duty (userid, starttime, endtime, notifyart) VALUES (1, '2016-03-05', '2016-03-06', 1);
-INSERT INTO duty (userid, starttime, endtime, notifyart) VALUES (5, '2016-03-07', '2016-03-08', 1);
-INSERT INTO duty (userid, starttime, endtime, notifyart) VALUES (5, '2016-03-09', '2016-03-10', 1);
-INSERT INTO duty (userid, starttime, endtime, notifyart) VALUES (2, '2016-03-11', '2016-03-12', 0);
-INSERT INTO duty (userid, starttime, endtime, notifyart) VALUES (3, '2016-03-13', '2016-03-14', 1);
-INSERT INTO duty (userid, starttime, endtime, notifyart) VALUES (4, '2016-03-15', '2016-03-16', 0); 
+INSERT INTO duty (userid, starttime, endtime) VALUES (1, '2016-03-03 00:00:00', '2016-03-04 20:00:00');
+INSERT INTO duty (userid, starttime, endtime) VALUES (1, '2016-03-05 00:00:00', '2016-03-06 20:00:00');
+INSERT INTO duty (userid, starttime, endtime) VALUES (5, '2016-03-07 00:00:00', '2016-03-08 20:00:00');
+INSERT INTO duty (userid, starttime, endtime) VALUES (5, '2016-03-09 00:00:00', '2016-03-10 20:00:00');
+INSERT INTO duty (userid, starttime, endtime) VALUES (2, '2016-03-11 00:00:00', '2016-03-12 20:00:00');
+INSERT INTO duty (userid, starttime, endtime) VALUES (3, '2016-03-13 00:00:00', '2016-03-14 20:00:00');
+INSERT INTO duty (userid, starttime, endtime) VALUES (4, '2016-03-15 00:00:00', '2016-03-16 20:00:00'); 
 
 /*
 INSERT INTO comment (comment, commentto, author, lastchanged) VALUES ('TestComment_01', 'Comment to TestComment_01', 1, '2017-03-03');

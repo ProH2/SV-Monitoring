@@ -30,6 +30,7 @@ import org.springframework.stereotype.Repository;
  */
 @Repository
 public class DutyDaoImpl implements DutyDao {
+
     private static UserDao userdao = new UserDaoImpl();
     HsqlDataSource db = HsqlDataSource.getInstance();
     NamedParameterJdbcTemplate template = new NamedParameterJdbcTemplate(db.dataSource());
@@ -42,7 +43,7 @@ public class DutyDaoImpl implements DutyDao {
         String sql = "SELECT * FROM duty WHERE dutyid=:dutyid";
 
         Duty result = template.queryForObject(sql, params, new DutyMapper());
-        
+
         return result;
     }
 
@@ -59,7 +60,7 @@ public class DutyDaoImpl implements DutyDao {
     public List<Duty> findByUserId(int userid) {
         Map<String, Object> params = new HashMap<String, Object>();
         params.put("userid", userid);
-        
+
         String sql = "SELECT * FROM duty WHERE userid:=userid";
 
         List<Duty> result = template.query(sql, params, new DutyMapper());
@@ -80,12 +81,11 @@ public class DutyDaoImpl implements DutyDao {
         template.update(sql, params);
         System.out.println("Inserted Duty");
     }*/
-    
     @Override
     public void insert(Duty o) {
         Map<String, Object> params = new HashMap<String, Object>();
         String sql = "INSERT INTO duty(dutyid, userid, starttime, endtime) VALUES (:dutyid, :userid, :starttime, :endtime)";
-        
+
         params.put("dutyid", o.getDutyID());
         params.put("userid", o.getUser().getUserNr());
         params.put("starttime", o.getStartTime());
@@ -99,34 +99,34 @@ public class DutyDaoImpl implements DutyDao {
     public void delete(Integer dutyid) {
         Map<String, Object> params = new HashMap<String, Object>();
         String sql = "DELETE FROM duty WHERE dutyid = :dutyid";
-        
+
         params.put("dutyid", dutyid);
         template.update(sql, params);
     }
 
     @Override
     public List<Duty> getDutiesByRange(LocalDateTime starttime, LocalDateTime endtime) {
-        Date startt=new Date(starttime.atZone(ZoneId.systemDefault()).toInstant().toEpochMilli());
-        Date endt=new Date(endtime.atZone(ZoneId.systemDefault()).toInstant().toEpochMilli());
-        
+        Date startt = new Date(starttime.atZone(ZoneId.systemDefault()).toInstant().toEpochMilli());
+        Date endt = new Date(endtime.atZone(ZoneId.systemDefault()).toInstant().toEpochMilli());
+
         Map<String, Object> params = new HashMap<String, Object>();
-        
+
         String sql = "SELECT * FROM duty WHERE starttime BETWEEN :starttime AND :endtime";
         params.put("starttime", startt);
         params.put("endtime", endt);
-        
+
         List<Duty> result = template.query(sql, params, new DutyMapper());
         return result;
     }
-    
+
     @Override
     public List<Duty> getDutiesByRange(Date starttime, Date endtime) {
         Map<String, Object> params = new HashMap<String, Object>();
-        
+
         String sql = "SELECT * FROM duty WHERE starttime BETWEEN :starttime AND :endtime";
         params.put("starttime", starttime);
         params.put("endtime", endtime);
-        
+
         List<Duty> result = template.query(sql, params, new DutyMapper());
         return result;
     }
@@ -134,8 +134,8 @@ public class DutyDaoImpl implements DutyDao {
     @Override
     public void update(Duty o) {
         Map<String, Object> params = new HashMap<String, Object>();
-        String sql= "UPDATE duty SET userid=:userid, starttime=:starttime, endtime=:endtime WHERE dutyid=:dutyid";
-        
+        String sql = "UPDATE duty SET userid=:userid, starttime=:starttime, endtime=:endtime WHERE dutyid=:dutyid";
+
         params.put("dutyid", o.getDutyID());
         params.put("userid", o.getUser().getUserNr());
         params.put("starttime", o.getStartTime());
@@ -150,9 +150,9 @@ public class DutyDaoImpl implements DutyDao {
             Duty duty = new Duty();
             duty.setDutyID(rs.getInt("dutyId"));
             duty.setUser(userdao.findByUserId(rs.getInt("userid")));
-            duty.setStartTime(rs.getDate("startTime"));
-            duty.setEndTime(rs.getDate("endTime"));
-            
+            duty.setStartTime(new java.util.Date(rs.getTimestamp("startTime").getTime()));
+            duty.setEndTime(new java.util.Date(rs.getTimestamp("endTime").getTime()));
+
             return duty;
         }
     }

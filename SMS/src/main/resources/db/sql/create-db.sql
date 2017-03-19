@@ -11,9 +11,8 @@ CREATE TABLE users (
 CREATE TABLE duty(
     dutyid INTEGER IDENTITY PRIMARY KEY,
     userid INTEGER NOT NULL,
-    starttime DATE NOT NULL,
-    endtime DATE NOT NULL,
-    notifyart INTEGER NOT NULL,
+    starttime TIMESTAMP NOT NULL,
+    endtime TIMESTAMP NOT NULL,
 
     FOREIGN KEY (userid) REFERENCES users(userid) on delete cascade
 );
@@ -24,7 +23,7 @@ CREATE TABLE comment(
     comment varchar(100) NOT NULL,
     commentto varchar(80) NOT NULL,
     author INTEGER NOT NULL,
-    lastchanged DATE NOT NULL,
+    lastchanged TIMESTAMP NOT NULL,
 
     FOREIGN KEY (author) REFERENCES users(userid) on delete cascade
 );

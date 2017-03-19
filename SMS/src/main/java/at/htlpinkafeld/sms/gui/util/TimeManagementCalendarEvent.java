@@ -5,6 +5,7 @@
  */
 package at.htlpinkafeld.sms.gui.util;
 
+import at.htlpinkafeld.sms.pojo.Duty;
 import at.htlpinkafeld.sms.pojo.User;
 import com.vaadin.ui.components.calendar.event.BasicEvent;
 import java.text.SimpleDateFormat;
@@ -25,12 +26,24 @@ import java.util.Date;
 public class TimeManagementCalendarEvent extends BasicEvent {
 
     private User user;
+    private Integer dutyId;
 
     private static DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("dd.MM.yyyy");
     private static DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("dd.MM.yyyy HH:mm");
 
     private static SimpleDateFormat dateFormatterOld = new SimpleDateFormat("dd.MM.yyyy");
     private static SimpleDateFormat dateTimeFormatterOld = new SimpleDateFormat("dd.MM.yyyy HH:mm");
+
+    /**
+     * A Constructor which uses a Duty to create the Event
+     *
+     * @param duty The Duty which is used to creae
+     */
+    public TimeManagementCalendarEvent(Duty duty) {
+        super(duty.getUser().getName(), dateFormatterOld.format(duty.getStartTime()), duty.getStartTime(), duty.getEndTime());
+        user = duty.getUser();
+        dutyId = duty.getDutyID();
+    }
 
     /**
      * A Constructor which uses LocalDate for convenience. Creates an Event for
@@ -40,7 +53,7 @@ public class TimeManagementCalendarEvent extends BasicEvent {
      * @param date The date for the event
      */
     public TimeManagementCalendarEvent(User user, LocalDate date) {
-        super(user.getUsername(), date.format(dateFormatter), localToDate(date.atStartOfDay()), localToDate(date.atTime(23, 59, 59)));
+        super(user.getName(), date.format(dateFormatter), localToDate(date.atStartOfDay()), localToDate(date.atTime(23, 59, 59)));
         this.user = user;
     }
 
@@ -53,7 +66,7 @@ public class TimeManagementCalendarEvent extends BasicEvent {
      * @param endDateTime The endDateTime for the event
      */
     public TimeManagementCalendarEvent(User user, LocalDateTime startDateTime, LocalDateTime endDateTime) {
-        super(user.getUsername(), startDateTime.format(dateTimeFormatter) + " - " + endDateTime.format(dateTimeFormatter), localToDate(startDateTime), localToDate(endDateTime));
+        super(user.getName(), startDateTime.format(dateTimeFormatter) + " - " + endDateTime.format(dateTimeFormatter), localToDate(startDateTime), localToDate(endDateTime));
         this.user = user;
     }
 
@@ -64,7 +77,7 @@ public class TimeManagementCalendarEvent extends BasicEvent {
      * @param date The date for the event
      */
     public TimeManagementCalendarEvent(User user, Date date) {
-        super(user.getUsername(), dateFormatterOld.format(date), date);
+        super(user.getName(), dateFormatterOld.format(date), date);
         this.user = user;
 
         Calendar cal = Calendar.getInstance();
@@ -90,8 +103,26 @@ public class TimeManagementCalendarEvent extends BasicEvent {
      * @param endDate The endDateTime for the event
      */
     public TimeManagementCalendarEvent(User user, Date startDate, Date endDate) {
-        super(user.getUsername(), dateTimeFormatterOld.format(startDate) + " - " + dateTimeFormatterOld.format(endDate), startDate, endDate);
+        super(user.getName(), dateTimeFormatterOld.format(startDate) + " - " + dateTimeFormatterOld.format(endDate), startDate, endDate);
         this.user = user;
+    }
+
+    /**
+     * returns the dutyId of the event
+     *
+     * @return the dutyId of the event
+     */
+    public Integer getDutyId() {
+        return dutyId;
+    }
+
+    /**
+     * Setter for the DutyId
+     *
+     * @param dutyId new DutyId for the event
+     */
+    public void setDutyId(Integer dutyId) {
+        this.dutyId = dutyId;
     }
 
     /**

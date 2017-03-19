@@ -7,6 +7,7 @@ package at.htlpinkafeld.sms.gui.window;
 
 import at.htlpinkafeld.sms.gui.LoginView;
 import at.htlpinkafeld.sms.gui.SMS_Main;
+import at.htlpinkafeld.sms.gui.container.DutyEventProvider;
 import at.htlpinkafeld.sms.gui.util.TimeManagementCalendarEvent;
 import at.htlpinkafeld.sms.pojo.User;
 import at.htlpinkafeld.sms.service.NoUserLoggedInException;
@@ -23,6 +24,7 @@ import com.vaadin.ui.Notification;
 import com.vaadin.ui.PopupDateField;
 import com.vaadin.ui.UI;
 import com.vaadin.ui.Window;
+import com.vaadin.ui.components.calendar.event.CalendarEventProvider;
 import java.util.Date;
 
 /**
@@ -54,6 +56,7 @@ public class CalendarEventWindow extends Window {
         userNativeSelect.setRequired(true);
         userNativeSelect.setRequiredError("User is required!");
         userNativeSelect.select(calendarEvent.getUser());
+        userNativeSelect.setItemCaptionPropertyId("name");
         userNativeSelect.setNullSelectionAllowed(false);
 
         final DateField startDateField = createDateTimeField("Start date", calendarEvent.getStart(), "Start date is required!");
@@ -83,9 +86,17 @@ public class CalendarEventWindow extends Window {
                 startDateField.validate();
                 endDateField.validate();
 
-                calendar.removeEvent(calendarEvent);
-
-                calendar.addEvent(new TimeManagementCalendarEvent((User) userNativeSelect.getValue(), startDateField.getValue(), endDateField.getValue()));
+                if (calendarEvent.getDutyId() == null) {
+                    calendar.addEvent(new TimeManagementCalendarEvent((User) userNativeSelect.getValue(), startDateField.getValue(), endDateField.getValue()));
+                } else {
+                    CalendarEventProvider eventProvider = calendar.getEventProvider();
+                    if (eventProvider instanceof DutyEventProvider) {
+                        calendarEvent.setUser((User) userNativeSelect.getValue());
+                        calendarEvent.setStart(startDateField.getValue());
+                        calendarEvent.setEnd(endDateField.getValue());
+                        ((DutyEventProvider) eventProvider).updateEvent(calendarEvent);
+                    }
+                }
 
                 calendar.markAsDirty();
                 close();
