@@ -143,6 +143,12 @@ public class DutyDaoImpl implements DutyDao {
         params.put("notifyart", o.getNotifyArt());
 
         template.update(sql, params);
+        
+        try {
+            db.dataSource().getConnection().commit();
+        } catch (SQLException ex) {
+            Logger.getLogger(DutyDaoImpl.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 
     private static final class DutyMapper implements RowMapper<Duty> {

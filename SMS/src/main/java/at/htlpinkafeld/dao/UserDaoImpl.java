@@ -111,6 +111,12 @@ public class UserDaoImpl implements UserDao {
         params.put("email", o.getEmail());
 
         template.update(sql, params);
+        
+        try {
+            db.dataSource().getConnection().commit();
+        } catch (SQLException ex) {
+            Logger.getLogger(DutyDaoImpl.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 
     private static final class UserMapper implements RowMapper<User> {

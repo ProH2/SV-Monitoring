@@ -85,6 +85,12 @@ public class LogDaoImpl implements LogDao{
         params.put("logentry", o.getLogEntry());
 
         template.update(sql, params);
+        
+        try {
+            db.dataSource().getConnection().commit();
+        } catch (SQLException ex) {
+            Logger.getLogger(DutyDaoImpl.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
     
     private static final class LogMapper implements RowMapper<Log> {

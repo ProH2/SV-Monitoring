@@ -134,6 +134,12 @@ public class HostgroupDaoImpl implements HostgroupDao{
             params.put("hostlist", help);
 
             template.update(sql, params);
+            
+            try {
+                db.dataSource().getConnection().commit();
+            } catch (SQLException ex) {
+                Logger.getLogger(DutyDaoImpl.class.getName()).log(Level.SEVERE, null, ex);
+        }
         }
     }
     

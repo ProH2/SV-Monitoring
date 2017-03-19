@@ -125,6 +125,12 @@ public class CommentDaoImpl implements CommentDao {
         params.put("lastchanged", o.getLastChanged());
 
         template.update(sql, params);
+        
+        try {
+            db.dataSource().getConnection().commit();
+        } catch (SQLException ex) {
+            Logger.getLogger(DutyDaoImpl.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
     
     private static final class CommentMapper implements RowMapper<Comment> {
