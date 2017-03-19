@@ -107,7 +107,7 @@ public class HostDetailWindow extends Window implements HashMapWithListeners.Map
                 Button addCommentButton = new Button("Add Comment", new Button.ClickListener() {
                     @Override
                     public void buttonClick(Button.ClickEvent event) {
-                        Comment newComment = new Comment(LocalDateTime.now(), "Current User", "");
+                        Comment newComment = new Comment(3, "Testcomment", "Testcomment to -* HostDetailWindow *-", 1, LocalDateTime.now());
                         ((BeanItemContainer<Comment>) commentGrid.getContainerDataSource()).addBean(newComment);
                         commentGrid.editItem(newComment);
                         commentGrid.focus();

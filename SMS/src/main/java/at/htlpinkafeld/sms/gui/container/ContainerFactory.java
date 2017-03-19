@@ -5,7 +5,14 @@
  */
 package at.htlpinkafeld.sms.gui.container;
 
+import at.htlpinkafeld.dao.CommentDao;
+import at.htlpinkafeld.dao.CommentDaoImpl;
+import at.htlpinkafeld.dao.DutyDao;
 import at.htlpinkafeld.dao.DutyDaoImpl;
+import at.htlpinkafeld.dao.HostgroupDao;
+import at.htlpinkafeld.dao.HostgroupDaoImpl;
+import at.htlpinkafeld.dao.LogDao;
+import at.htlpinkafeld.dao.LogDaoImpl;
 import at.htlpinkafeld.dao.UserDao;
 import at.htlpinkafeld.dao.UserDaoImpl;
 import at.htlpinkafeld.sms.gui.Host_Service_ManagementView;
@@ -60,6 +67,14 @@ public class ContainerFactory {
     private static CalendarEditableEventProvider dutyEventProvider = null;
 
     private static UserDao userdao = new UserDaoImpl();
+    
+    private static DutyDao dutydao = new DutyDaoImpl();
+    
+    private static CommentDao commentdao = new CommentDaoImpl();
+    
+    private static HostgroupDao hostgroupdao = new HostgroupDaoImpl();
+    
+    private static LogDao logdao = new LogDaoImpl();
 
     /**
      * Initializes hostMap
@@ -129,9 +144,8 @@ public class ContainerFactory {
      */
     private static void initUserContainer() {
         //TODO create Container which also delegates to DAO
-
         List<User> users = userdao.findAll();
-
+        
         userContainer = new BeanItemContainer<>(User.class, users);
 
 //        UserDao userDao = new UserDaoImpl();
@@ -262,8 +276,10 @@ public class ContainerFactory {
      */
     public static BeanItemContainer<Comment> createHostCommentContainer(String hostname) {
         BeanItemContainer<Comment> itemContainer = new BeanItemContainer<>(Comment.class);
+        
         for (int i = 0; i < 5; i++) {
-            itemContainer.addBean(new Comment(LocalDateTime.now(), hostname, "Test Comment " + i + " at " + hostname));
+            //itemContainer.addBean(new Comment(LocalDateTime.now(), hostname, "Test Comment " + i + " at " + hostname));
+            itemContainer.addBean(new Comment(1, "Testcomment", "Testcomment to" + hostname, 1, LocalDateTime.now()));
         }
         return itemContainer;
     }
@@ -278,8 +294,9 @@ public class ContainerFactory {
      */
     public static BeanItemContainer<Comment> createServiceCommentContainer(String serviceUId) {
         BeanItemContainer<Comment> itemContainer = new BeanItemContainer<>(Comment.class);
+        
         for (int i = 0; i < 5; i++) {
-            itemContainer.addBean(new Comment(LocalDateTime.now(), serviceUId, "Test Comment " + i + " at " + serviceUId));
+            itemContainer.addBean(new Comment(1, "Testcomment", "Testcomment to" + serviceUId, 1, LocalDateTime.now()));
         }
         return itemContainer;
     }

@@ -108,7 +108,7 @@ public class ServiceDetailWindow extends Window implements HashMapWithListeners.
                 commentGrid.getColumn("entryTime").setEditable(false);
 
                 Button addCommentButton = new Button("Add Comment", (Button.ClickEvent event) -> {
-                    Comment newComment = new Comment(LocalDateTime.now(), "Current User", "");
+                    Comment newComment = new Comment(4, "Testcomment", "Testcomment to -* ServiceDetailWindow *-", 1, LocalDateTime.now());
                     ((BeanItemContainer<Comment>) commentGrid.getContainerDataSource()).addBean(newComment);
                     commentGrid.editItem(newComment);
                     commentGrid.focus();

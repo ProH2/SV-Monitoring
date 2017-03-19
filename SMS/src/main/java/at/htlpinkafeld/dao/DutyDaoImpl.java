@@ -5,14 +5,20 @@
  */
 package at.htlpinkafeld.dao;
 
+import at.htlpinkafeld.config.db.HsqlDataSource;
 import at.htlpinkafeld.sms.pojo.Duty;
+import java.sql.Date;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Timestamp;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Repository;
@@ -23,24 +29,18 @@ import org.springframework.stereotype.Repository;
  */
 @Repository
 public class DutyDaoImpl implements DutyDao {
-
-    NamedParameterJdbcTemplate namedParameterJdbcTemplate;
-
-    @Autowired
-    public void setNamedParameterJdbcTemplate(NamedParameterJdbcTemplate namedParameterJdbcTemplate) {
-        this.namedParameterJdbcTemplate = namedParameterJdbcTemplate;
-    }
+    HsqlDataSource db = new HsqlDataSource();
+    NamedParameterJdbcTemplate template = new NamedParameterJdbcTemplate(db.dataSource());
 
     @Override
-    public Duty findByDutyId(int dutyId) {
+    public Duty findByDutyId(int dutyid) {
         Map<String, Object> params = new HashMap<String, Object>();
-        params.put("name", dutyId);
+        params.put("dutyid", dutyid);
 
-        String sql = "SELECT * FROM duty WHERE dutyid=:dutyId";
+        String sql = "SELECT * FROM duty WHERE dutyid=:dutyid";
 
-        Duty result = namedParameterJdbcTemplate.queryForObject(sql, params, new DutyMapper());
-
-        //new BeanPropertyRowMapper(Customer.class));
+        Duty result = template.queryForObject(sql, params, new DutyMapper());
+        
         return result;
     }
 
@@ -49,17 +49,89 @@ public class DutyDaoImpl implements DutyDao {
         Map<String, Object> params = new HashMap<String, Object>();
         String sql = "SELECT * FROM duty";
 
-        List<Duty> result = namedParameterJdbcTemplate.query(sql, params, new DutyMapper());
+        List<Duty> result = template.query(sql, params, new DutyMapper());
         return result;
     }
 
     @Override
-    public List<Duty> findByUserId(int userId) {
+    public List<Duty> findByUserId(int userid) {
         Map<String, Object> params = new HashMap<String, Object>();
-        String sql = "SELECT * FROM duty WHERE userid:=userId";
+        params.put("userid", userid);
+        
+        String sql = "SELECT * FROM duty WHERE userid:=userid";
 
-        List<Duty> result = namedParameterJdbcTemplate.query(sql, params, new DutyMapper());
+        List<Duty> result = template.query(sql, params, new DutyMapper());
         return result;
+    }
+
+    /*@Override
+    public void insertDuty(Integer dutyid, Integer userid, Date starttime, Date endtime, Integer notifyart) {
+        Map<String, Object> params = new HashMap<String, Object>();
+        String sql = "INSERT INTO duty(dutyid, userid, starttime, endtime, notifyart) VALUES (:dutyid, :userid, :starttime, :endtime, :notifyart)";
+        
+        params.put("dutyid", dutyid);
+        params.put("userid", userid);
+        params.put("starttime", starttime);
+        params.put("endtime", endtime);
+        params.put("notifyart", notifyart);
+
+        template.update(sql, params);
+        System.out.println("Inserted Duty");
+    }*/
+    
+    @Override
+    public void insertDuty(Integer dutyid, Integer userid, LocalDateTime starttime, LocalDateTime endtime, Integer notifyart) {
+        Date startt=new Date(starttime.atZone(ZoneId.systemDefault()).toInstant().toEpochMilli());
+        Date endt=new Date(endtime.atZone(ZoneId.systemDefault()).toInstant().toEpochMilli());
+        
+        Map<String, Object> params = new HashMap<String, Object>();
+        String sql = "INSERT INTO duty(dutyid, userid, starttime, endtime, notifyart) VALUES (:dutyid, :userid, :starttime, :endtime, :notifyart)";
+        
+        params.put("dutyid", dutyid);
+        params.put("userid", userid);
+        params.put("starttime", startt);
+        params.put("endtime", endt);
+        params.put("notifyart", notifyart);
+
+        template.update(sql, params);
+        System.out.println("Inserted Duty");
+        
+        try {
+            db.dataSource().getConnection().commit();
+        } catch (SQLException ex) {
+            Logger.getLogger(DutyDaoImpl.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+
+    @Override
+    public void deleteDuty(Integer dutyid) {
+        Map<String, Object> params = new HashMap<String, Object>();
+        String sql = "DELETE FROM duty WHERE dutyid = :dutyid";
+        
+        params.put("dutyid", dutyid);
+        template.update(sql, params);
+        
+        try {
+            db.dataSource().getConnection().commit();
+        } catch (SQLException ex) {
+            Logger.getLogger(DutyDaoImpl.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+
+    @Override
+    public List<Duty> getDutiesByRange(LocalDateTime starttime, LocalDateTime endtime) {
+        Date startt=new Date(starttime.atZone(ZoneId.systemDefault()).toInstant().toEpochMilli());
+        Date endt=new Date(endtime.atZone(ZoneId.systemDefault()).toInstant().toEpochMilli());
+        
+        Map<String, Object> params = new HashMap<String, Object>();
+        
+        String sql = "SELECT * FROM duty WHERE starttime BETWEEN :starttime AND :endtime";
+        params.put("starttime", startt);
+        params.put("endtime", endt);
+        
+        List<Duty> result = template.query(sql, params, new DutyMapper());
+        return result;
+        
     }
 
     private static final class DutyMapper implements RowMapper<Duty> {

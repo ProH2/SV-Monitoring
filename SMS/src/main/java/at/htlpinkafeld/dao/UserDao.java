@@ -7,7 +7,7 @@ public interface UserDao {
 
     void insertUser(Integer userId, String name, String username, String password, String email, String phoneNr);
 
-    void deleteUser(User userId);
+    void deleteUser(Integer userId);
 
     User findByName(String name);
 

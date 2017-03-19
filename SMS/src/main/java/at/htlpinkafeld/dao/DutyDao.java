@@ -6,6 +6,8 @@
 package at.htlpinkafeld.dao;
 
 import at.htlpinkafeld.sms.pojo.Duty;
+import java.sql.Date;
+import java.time.LocalDateTime;
 import java.util.List;
 
 /**
@@ -13,6 +15,12 @@ import java.util.List;
  * @author DarkHell2
  */
 public interface DutyDao {
+    
+    void insertDuty(Integer dutyId, Integer userId, LocalDateTime startTime, LocalDateTime endtime, Integer notifyart);
+    
+    void deleteDuty(Integer dutyId);
+    
+    List<Duty> getDutiesByRange(LocalDateTime startTime, LocalDateTime endTime);
 
     Duty findByDutyId(int dutyId);
 

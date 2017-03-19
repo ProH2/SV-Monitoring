@@ -18,6 +18,7 @@ public class Hostgroup {
 
     // List with the hostnames
     private List<String> hostlist;
+    private String helplist;
 
     public Hostgroup() {
 
@@ -52,5 +53,15 @@ public class Hostgroup {
     public void setHostlist(List<String> hostlist) {
         this.hostlist = hostlist;
     }
+
+    public void setHelplist(String helplist) {
+        this.helplist = helplist;
+    }
+
+    public String getHelplist() {
+        return helplist;
+    }
+    
+    
 
 }
