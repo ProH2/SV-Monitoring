@@ -14,17 +14,15 @@ import java.util.Date;
 public class Duty {
 
     private Integer dutyId;
-    private int userId;
+    private User user;
     private Date startTime;
     private Date endTime;
-    private int notifyArt;
 
-    public Duty(Integer dutyId, int userId, Date startTime, Date endTime, int notifyArt) {
+    public Duty(Integer dutyId, User user, Date startTime, Date endTime) {
         this.dutyId = dutyId;
-        this.userId = userId;
+        this.user = user;
         this.startTime = startTime;
         this.endTime = endTime;
-        this.notifyArt = notifyArt;
     }
 
     public Duty() {
@@ -39,12 +37,20 @@ public class Duty {
         this.dutyId = dutyID;
     }
 
-    public int getUserID() {
-        return userId;
+    public Integer getDutyId() {
+        return dutyId;
     }
 
-    public void setUserID(int userID) {
-        this.userId = userID;
+    public void setDutyId(Integer dutyId) {
+        this.dutyId = dutyId;
+    }
+
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
     }
 
     public Date getStartTime() {
@@ -63,17 +69,10 @@ public class Duty {
         this.endTime = endTime;
     }
 
-    public int getNotifyArt() {
-        return notifyArt;
-    }
-
-    public void setNotifyArt(int notifyArt) {
-        this.notifyArt = notifyArt;
-    }
-
     @Override
     public String toString() {
-        return "<br> DutyId: " + dutyId + ", UserId: " + userId + " Start-Time: " + startTime + " End-Time: " + endTime + " Notification: " + notifyArt + "<br>";
+        return "Duty{" + "dutyId=" + dutyId + ", user=" + user + ", startTime=" + startTime + ", endTime=" + endTime + '}';
     }
+
 
 }

@@ -29,6 +29,7 @@ import org.springframework.stereotype.Repository;
  */
 @Repository
 public class DutyDaoImpl implements DutyDao {
+    private static UserDao userdao = new UserDaoImpl();
     HsqlDataSource db = new HsqlDataSource();
     NamedParameterJdbcTemplate template = new NamedParameterJdbcTemplate(db.dataSource());
 
@@ -82,13 +83,12 @@ public class DutyDaoImpl implements DutyDao {
     @Override
     public void insert(Duty o) {
         Map<String, Object> params = new HashMap<String, Object>();
-        String sql = "INSERT INTO duty(dutyid, userid, starttime, endtime, notifyart) VALUES (:dutyid, :userid, :starttime, :endtime, :notifyart)";
+        String sql = "INSERT INTO duty(dutyid, userid, starttime, endtime) VALUES (:dutyid, :userid, :starttime, :endtime)";
         
         params.put("dutyid", o.getDutyID());
-        params.put("userid", o.getUserID());
+        params.put("userid", o.getUser().getUserNr());
         params.put("starttime", o.getStartTime());
         params.put("endtime", o.getEndTime());
-        params.put("notifyart", o.getNotifyArt());
 
         template.update(sql, params);
         System.out.println("Inserted Duty");
@@ -134,13 +134,12 @@ public class DutyDaoImpl implements DutyDao {
     @Override
     public void update(Duty o) {
         Map<String, Object> params = new HashMap<String, Object>();
-        String sql= "UPDATE duty SET userid=:userid, starttime=:starttime, endtime=:endtime, notifyart=:notifyart WHERE dutyid=:dutyid";
+        String sql= "UPDATE duty SET userid=:userid, starttime=:starttime, endtime=:endtime WHERE dutyid=:dutyid";
         
         params.put("dutyid", o.getDutyID());
-        params.put("userid", o.getUserID());
+        params.put("userid", o.getUser().getUserNr());
         params.put("starttime", o.getStartTime());
         params.put("endtime", o.getEndTime());
-        params.put("notifyart", o.getNotifyArt());
 
         template.update(sql, params);
         
@@ -156,11 +155,10 @@ public class DutyDaoImpl implements DutyDao {
         public Duty mapRow(ResultSet rs, int rowNum) throws SQLException {
             Duty duty = new Duty();
             duty.setDutyID(rs.getInt("dutyId"));
-            duty.setUserID(rs.getInt("userId"));
+            duty.setUser(userdao.findByUserId(rs.getInt("userid")));
             duty.setStartTime(rs.getDate("startTime"));
             duty.setEndTime(rs.getDate("endTime"));
-            duty.setNotifyArt(rs.getInt("notifyArt"));
-
+            
             return duty;
         }
     }
