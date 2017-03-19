@@ -24,6 +24,7 @@ import at.htlpinkafeld.sms.gui.overviewComponents.HostOverviewTabPanel;
 import at.htlpinkafeld.sms.gui.overviewComponents.HostPanel;
 import at.htlpinkafeld.sms.gui.overviewComponents.ServiceOverviewTabPanel;
 import at.htlpinkafeld.sms.gui.overviewComponents.ServicePanel;
+import at.htlpinkafeld.sms.pojo.Duty;
 import at.htlpinkafeld.sms.pojo.User;
 import at.htlpinkafeld.sms.pojos.Comment;
 import at.htlpinkafeld.sms.pojos.Host;
@@ -145,6 +146,9 @@ public class ContainerFactory {
     private static void initUserContainer() {
         //TODO create Container which also delegates to DAO
         List<User> users = userdao.findAll();
+        System.out.println("hekki");
+        List<Duty> duties = dutydao.findAll();
+        System.out.println("helli");
         
         userContainer = new BeanItemContainer<>(User.class, users);
 

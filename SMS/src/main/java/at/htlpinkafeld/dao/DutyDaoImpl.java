@@ -13,6 +13,7 @@ import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
+import java.time.ZoneOffset;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -30,7 +31,7 @@ import org.springframework.stereotype.Repository;
 @Repository
 public class DutyDaoImpl implements DutyDao {
     private static UserDao userdao = new UserDaoImpl();
-    HsqlDataSource db = new HsqlDataSource();
+    HsqlDataSource db = HsqlDataSource.getInstance();
     NamedParameterJdbcTemplate template = new NamedParameterJdbcTemplate(db.dataSource());
 
     @Override
@@ -92,12 +93,6 @@ public class DutyDaoImpl implements DutyDao {
 
         template.update(sql, params);
         System.out.println("Inserted Duty");
-        
-        try {
-            db.dataSource().getConnection().commit();
-        } catch (SQLException ex) {
-            Logger.getLogger(DutyDaoImpl.class.getName()).log(Level.SEVERE, null, ex);
-        }
     }
 
     @Override
@@ -107,12 +102,6 @@ public class DutyDaoImpl implements DutyDao {
         
         params.put("dutyid", dutyid);
         template.update(sql, params);
-        
-        try {
-            db.dataSource().getConnection().commit();
-        } catch (SQLException ex) {
-            Logger.getLogger(DutyDaoImpl.class.getName()).log(Level.SEVERE, null, ex);
-        }
     }
 
     @Override
@@ -130,6 +119,7 @@ public class DutyDaoImpl implements DutyDao {
         return result;
     }
     
+    @Override
     public List<Duty> getDutiesByRange(Date starttime, Date endtime) {
         Map<String, Object> params = new HashMap<String, Object>();
         
@@ -152,12 +142,6 @@ public class DutyDaoImpl implements DutyDao {
         params.put("endtime", o.getEndTime());
 
         template.update(sql, params);
-        
-        try {
-            db.dataSource().getConnection().commit();
-        } catch (SQLException ex) {
-            Logger.getLogger(DutyDaoImpl.class.getName()).log(Level.SEVERE, null, ex);
-        }
     }
 
     private static final class DutyMapper implements RowMapper<Duty> {

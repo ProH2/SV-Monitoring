@@ -23,7 +23,7 @@ import org.springframework.jdbc.core.namedparam.SqlParameterSource;
  * @author ÐarkHell2
  */
 public class UserDaoImpl implements UserDao {
-    HsqlDataSource db = new HsqlDataSource();
+    HsqlDataSource db = HsqlDataSource.getInstance();
     NamedParameterJdbcTemplate template = new NamedParameterJdbcTemplate(db.dataSource());
 
     @Override
@@ -73,12 +73,6 @@ public class UserDaoImpl implements UserDao {
 
         template.update(sql, params);
         System.out.println("Inserted User");
-        
-        try {
-            db.dataSource().getConnection().commit();
-        } catch (SQLException ex) {
-            Logger.getLogger(UserDaoImpl.class.getName()).log(Level.SEVERE, null, ex);
-        }
     }
 
     @Override
@@ -90,12 +84,6 @@ public class UserDaoImpl implements UserDao {
         template.update(sql, params);
         
         System.out.println("Deleted Record with EMPID = " + userid );
-        
-        try {
-            db.dataSource().getConnection().commit();
-        } catch (SQLException ex) {
-            Logger.getLogger(UserDaoImpl.class.getName()).log(Level.SEVERE, null, ex);
-        }
     }
 
     @Override
@@ -111,12 +99,6 @@ public class UserDaoImpl implements UserDao {
         params.put("email", o.getEmail());
 
         template.update(sql, params);
-        
-        try {
-            db.dataSource().getConnection().commit();
-        } catch (SQLException ex) {
-            Logger.getLogger(DutyDaoImpl.class.getName()).log(Level.SEVERE, null, ex);
-        }
     }
 
     private static final class UserMapper implements RowMapper<User> {

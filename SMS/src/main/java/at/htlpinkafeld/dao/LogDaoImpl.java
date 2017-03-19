@@ -22,7 +22,7 @@ import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
  * @author DarkHell2
  */
 public class LogDaoImpl implements LogDao{
-    HsqlDataSource db = new HsqlDataSource();
+    HsqlDataSource db =  HsqlDataSource.getInstance();
     NamedParameterJdbcTemplate template = new NamedParameterJdbcTemplate(db.dataSource());
     
     @Override
@@ -39,12 +39,6 @@ public class LogDaoImpl implements LogDao{
 
         template.update(sql, params);
         System.out.println("Inserted User");
-        
-        try {
-            db.dataSource().getConnection().commit();
-        } catch (SQLException ex) {
-            Logger.getLogger(LogDaoImpl.class.getName()).log(Level.SEVERE, null, ex);
-        }
     }
 
     @Override
@@ -84,13 +78,7 @@ public class LogDaoImpl implements LogDao{
         params.put("logcause", o.getLogCause());
         params.put("logentry", o.getLogEntry());
 
-        template.update(sql, params);
-        
-        try {
-            db.dataSource().getConnection().commit();
-        } catch (SQLException ex) {
-            Logger.getLogger(DutyDaoImpl.class.getName()).log(Level.SEVERE, null, ex);
-        }
+        template.update(sql, params);  
     }
     
     private static final class LogMapper implements RowMapper<Log> {

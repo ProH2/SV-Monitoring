@@ -1,5 +1,5 @@
 CREATE TABLE users (
-  userid INTEGER PRIMARY KEY,
+  userid INTEGER IDENTITY PRIMARY KEY,
   name VARCHAR(30) NOT NULL,
   username varchar(30) NOT NULL,
   password varchar(128) NOT NULL,
@@ -9,7 +9,7 @@ CREATE TABLE users (
 
 
 CREATE TABLE duty(
-    dutyid INTEGER PRIMARY KEY,
+    dutyid INTEGER IDENTITY PRIMARY KEY,
     userid INTEGER NOT NULL,
     starttime DATE NOT NULL,
     endtime DATE NOT NULL,
@@ -19,8 +19,8 @@ CREATE TABLE duty(
 );
 
 
-CREATe TABLE comment(
-    commentid INTEGER PRIMARY KEY,
+CREATE TABLE comment(
+    commentid INTEGER IDENTITY PRIMARY KEY,
     comment varchar(100) NOT NULL,
     commentto varchar(80) NOT NULL,
     author INTEGER NOT NULL,
@@ -31,14 +31,14 @@ CREATe TABLE comment(
 
 
 CREATE TABLE hostgroup(
-    hostgroupnr INTEGER PRIMARY KEY,
+    hostgroupnr INTEGER IDENTITY PRIMARY KEY,
     name varchar(45) NOT NULL,
     hostlist varchar(2000) NOT NULL
 );
 
 
 CREATE TABLE log(
-    logid INTEGER PRIMARY KEY,
+    logid INTEGER IDENTITY PRIMARY KEY,
     timestamp TIMESTAMP NOT NULL,
     logcause varchar(80) NOT NULL,
     logentry varchar(200) NOT NULL

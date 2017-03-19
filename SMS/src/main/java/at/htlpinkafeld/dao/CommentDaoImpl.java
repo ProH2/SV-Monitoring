@@ -25,7 +25,7 @@ import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
  * @author DarkHell2
  */
 public class CommentDaoImpl implements CommentDao {
-    HsqlDataSource db = new HsqlDataSource();
+    HsqlDataSource db = HsqlDataSource.getInstance();
     NamedParameterJdbcTemplate template = new NamedParameterJdbcTemplate(db.dataSource());
 
     @Override
@@ -41,12 +41,6 @@ public class CommentDaoImpl implements CommentDao {
 
         template.update(sql, params);
         System.out.println("Inserted Comment");
-        
-        try {
-            db.dataSource().getConnection().commit();
-        } catch (SQLException ex) {
-            Logger.getLogger(DutyDaoImpl.class.getName()).log(Level.SEVERE, null, ex);
-        }
     }
 
     @Override
@@ -57,11 +51,6 @@ public class CommentDaoImpl implements CommentDao {
         params.put("commentid", commentid);
         template.update(sql, params);
         
-        try {
-            db.dataSource().getConnection().commit();
-        } catch (SQLException ex) {
-            Logger.getLogger(DutyDaoImpl.class.getName()).log(Level.SEVERE, null, ex);
-        }
     }
 
     @Override
@@ -125,12 +114,6 @@ public class CommentDaoImpl implements CommentDao {
         params.put("lastchanged", o.getLastChanged());
 
         template.update(sql, params);
-        
-        try {
-            db.dataSource().getConnection().commit();
-        } catch (SQLException ex) {
-            Logger.getLogger(DutyDaoImpl.class.getName()).log(Level.SEVERE, null, ex);
-        }
     }
     
     private static final class CommentMapper implements RowMapper<Comment> {

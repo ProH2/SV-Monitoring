@@ -13,11 +13,10 @@ import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 @ComponentScan({"at.htlpinkafeld"})
 @Configuration
 public class SpringRootConfig {
-
-    @Autowired
+    //@Autowired
     DataSource dataSource;
 
-    @Bean
+    //@Bean
     public NamedParameterJdbcTemplate getNamedParameterJdbcTemplate() {
         return new NamedParameterJdbcTemplate(dataSource);
     }

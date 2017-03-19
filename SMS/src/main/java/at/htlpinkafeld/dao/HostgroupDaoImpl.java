@@ -23,7 +23,7 @@ import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
  * @author DarkHell2
  */
 public class HostgroupDaoImpl implements HostgroupDao{
-    HsqlDataSource db = new HsqlDataSource();
+    HsqlDataSource db = HsqlDataSource.getInstance();
     NamedParameterJdbcTemplate template = new NamedParameterJdbcTemplate(db.dataSource());
 
     @Override
@@ -49,12 +49,6 @@ public class HostgroupDaoImpl implements HostgroupDao{
 
             template.update(sql, params);
             System.out.println("Inserted Hostgroup");
-            
-            try {
-                db.dataSource().getConnection().commit();
-            } catch (SQLException ex) {
-                Logger.getLogger(HostgroupDaoImpl.class.getName()).log(Level.SEVERE, null, ex);
-            }
         }
     }
 
@@ -65,12 +59,6 @@ public class HostgroupDaoImpl implements HostgroupDao{
         
         params.put("hostgroupnr", hostgroupnr);
         template.update(sql, params);
-        
-        try {
-            db.dataSource().getConnection().commit();
-        } catch (SQLException ex) {
-            Logger.getLogger(DutyDaoImpl.class.getName()).log(Level.SEVERE, null, ex);
-        }
     }
 
     @Override
@@ -134,12 +122,6 @@ public class HostgroupDaoImpl implements HostgroupDao{
             params.put("hostlist", help);
 
             template.update(sql, params);
-            
-            try {
-                db.dataSource().getConnection().commit();
-            } catch (SQLException ex) {
-                Logger.getLogger(DutyDaoImpl.class.getName()).log(Level.SEVERE, null, ex);
-        }
         }
     }
     

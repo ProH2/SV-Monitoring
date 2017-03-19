@@ -17,6 +17,8 @@ import java.util.List;
 public interface DutyDao extends BaseDao<Duty>{
     
     List<Duty> getDutiesByRange(LocalDateTime startTime, LocalDateTime endTime);
+    
+    List<Duty> getDutiesByRange(Date starttime, Date endtime);
 
     Duty findByDutyId(int dutyId);
 
