@@ -5,6 +5,7 @@
  */
 package at.htlpinkafeld.sms.pojos;
 
+import at.htlpinkafeld.sms.pojo.IPojo;
 import java.sql.Date;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
@@ -13,8 +14,8 @@ import java.time.ZoneId;
  *
  * @author neume / DarkHell2
  */
-public class Comment {
-    private int commentId;
+public class Comment implements IPojo{
+    private Integer commentId;
     private String comment;
     private String commentTo;
     private Date lastChanged;
@@ -25,10 +26,9 @@ public class Comment {
 
     }
 
-    public Comment(int commentId, String comment, String commentTo, int author, LocalDateTime lDt) {
+    public Comment(String comment, String commentTo, int author, LocalDateTime lDt) {
         Date lastC = new Date(lDt.atZone(ZoneId.systemDefault()).toInstant().toEpochMilli());
         
-        this.commentId = commentId;
         this.comment = comment;
         this.commentTo = commentTo;
         this.author = author;
@@ -37,19 +37,18 @@ public class Comment {
     
     
 
-    public Comment(int commentId, String comment, String commentTo, int author, Date lastChanged) {
-        this.commentId = commentId;
+    public Comment(String comment, String commentTo, int author, Date lastChanged) {
         this.comment = comment;
         this.commentTo = commentTo;
         this.author = author;
         this.lastChanged = lastChanged;
     }
 
-    public int getCommentId() {
+    public Integer getId() {
         return commentId;
     }
 
-    public void setCommentId(int commentId) {
+    public void setId(Integer commentId) {
         this.commentId = commentId;
     }
 

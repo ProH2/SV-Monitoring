@@ -7,6 +7,7 @@ package at.htlpinkafeld.sms.gui;
 
 import at.htlpinkafeld.sms.gui.window.NewUserWindow;
 import at.htlpinkafeld.sms.gui.container.ContainerFactory;
+import at.htlpinkafeld.sms.gui.container.DaoDelegatingContainer;
 import at.htlpinkafeld.sms.gui.window.ResetPasswordWindow;
 import at.htlpinkafeld.sms.pojo.User;
 import at.htlpinkafeld.sms.service.NoUserLoggedInException;
@@ -14,6 +15,7 @@ import at.htlpinkafeld.sms.service.PermissionService;
 import com.vaadin.data.Container;
 import com.vaadin.data.Item;
 import com.vaadin.data.Validator;
+import com.vaadin.data.fieldgroup.FieldGroup;
 import com.vaadin.data.util.BeanItemContainer;
 import com.vaadin.data.util.GeneratedPropertyContainer;
 import com.vaadin.data.util.PropertyValueGenerator;
@@ -92,6 +94,16 @@ public class UserManagementView extends VerticalLayout implements View {
         });
         newUserButton.setSizeFull();
 
+        grid.getEditorFieldGroup().addCommitHandler(new FieldGroup.CommitHandler() {
+            @Override
+            public void preCommit(FieldGroup.CommitEvent commitEvent) throws FieldGroup.CommitException {
+            }
+
+            @Override
+            public void postCommit(FieldGroup.CommitEvent commitEvent) throws FieldGroup.CommitException {
+                baseUserContainer.updateItem((User) grid.getEditedItemId());
+            }
+        });
 //        Button delSelectedButton = new Button("Delete Selected");
 //        delSelectedButton.addClickListener((Button.ClickEvent event) -> {
 //            User u = VaadinSession.getCurrent().getAttribute(User.class);
@@ -238,7 +250,7 @@ public class UserManagementView extends VerticalLayout implements View {
     /**
      * PropertyId constant for {@link Container}
      */
-    public static final String USERNR_PROPERTY = "userNr";
+    public static final String USERNR_PROPERTY = "id";
     /**
      * PropertyId constant for {@link Container}
      */
@@ -272,6 +284,6 @@ public class UserManagementView extends VerticalLayout implements View {
      */
     public static final String DELETEUSER_COLUMN = "deleteUser";
 
-    private BeanItemContainer<User> baseUserContainer;
+    private DaoDelegatingContainer<User> baseUserContainer;
 
 }

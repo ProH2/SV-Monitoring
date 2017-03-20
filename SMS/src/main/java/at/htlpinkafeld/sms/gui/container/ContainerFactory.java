@@ -68,13 +68,13 @@ public class ContainerFactory {
     private static DutyEventProvider dutyEventProvider = null;
 
     private static UserDao userdao = new UserDaoImpl();
-    
+
     private static DutyDao dutydao = new DutyDaoImpl();
-    
+
     private static CommentDao commentdao = new CommentDaoImpl();
-    
+
     private static HostgroupDao hostgroupdao = new HostgroupDaoImpl();
-    
+
     private static LogDao logdao = new LogDaoImpl();
 
     /**
@@ -149,7 +149,7 @@ public class ContainerFactory {
         System.out.println("hekki");
         List<Duty> duties = dutydao.findAll();
         System.out.println("helli");
-        
+
         userContainer = new BeanItemContainer<>(User.class, users);
 
 //        UserDao userDao = new UserDaoImpl();
@@ -227,7 +227,7 @@ public class ContainerFactory {
         if (hostgroups == null) {
             initHostgroupList();
         }
-        return new HostgroupHierarchical_Container(hostgroups);
+        return new HostgroupHierarchical_Container(hostgroupdao);
     }
 
     /**
@@ -236,11 +236,11 @@ public class ContainerFactory {
      *
      * @return {@link Container} which contains the Hostgroups
      */
-    public static BeanItemContainer<Hostgroup> createHostgroupContainer() {
+    public static DaoDelegatingContainer<Hostgroup> createHostgroupContainer() {
         if (hostgroups == null) {
             initHostgroupList();
         }
-        return new BeanItemContainer(Hostgroup.class, hostgroups);
+        return new DaoDelegatingContainer<>(Hostgroup.class, hostgroupdao);
     }
 
     /**
@@ -249,12 +249,12 @@ public class ContainerFactory {
      *
      * @return {@link Container} which contains the Users
      */
-    public static BeanItemContainer<User> createIndexedUserContainer() {
+    public static DaoDelegatingContainer<User> createIndexedUserContainer() {
         if (userContainer == null) {
             initUserContainer();
         }
 
-        return userContainer;
+        return new DaoDelegatingContainer<>(User.class, userdao);
     }
 
     /**
@@ -280,12 +280,12 @@ public class ContainerFactory {
      */
     public static BeanItemContainer<Comment> createHostCommentContainer(String hostname) {
         BeanItemContainer<Comment> itemContainer = new BeanItemContainer<>(Comment.class);
-        
+
         for (int i = 0; i < 5; i++) {
             //itemContainer.addBean(new Comment(LocalDateTime.now(), hostname, "Test Comment " + i + " at " + hostname));
-            itemContainer.addBean(new Comment(1, "Testcomment", "Testcomment to" + hostname, 1, LocalDateTime.now()));
+            itemContainer.addBean(new Comment("Testcomment", "Testcomment to" + hostname, 1, LocalDateTime.now()));
         }
-        return itemContainer;
+        return new DaoDelegatingContainer<>(Comment.class, commentdao, commentdao.findByCommentTo(hostname));
     }
 
     /**
@@ -298,11 +298,11 @@ public class ContainerFactory {
      */
     public static BeanItemContainer<Comment> createServiceCommentContainer(String serviceUId) {
         BeanItemContainer<Comment> itemContainer = new BeanItemContainer<>(Comment.class);
-        
+
         for (int i = 0; i < 5; i++) {
-            itemContainer.addBean(new Comment(1, "Testcomment", "Testcomment to" + serviceUId, 1, LocalDateTime.now()));
+            itemContainer.addBean(new Comment("Testcomment", "Testcomment to" + serviceUId, 1, LocalDateTime.now()));
         }
-        return itemContainer;
+        return new DaoDelegatingContainer<>(Comment.class, commentdao, commentdao.findByCommentTo(serviceUId));
     }
 
 }

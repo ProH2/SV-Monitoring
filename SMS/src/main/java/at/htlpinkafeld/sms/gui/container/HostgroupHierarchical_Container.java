@@ -5,6 +5,7 @@
  */
 package at.htlpinkafeld.sms.gui.container;
 
+import at.htlpinkafeld.dao.HostgroupDao;
 import at.htlpinkafeld.sms.pojos.Hostgroup;
 import com.vaadin.data.Container;
 import com.vaadin.data.Item;
@@ -36,6 +37,7 @@ import java.util.Objects;
 public class HostgroupHierarchical_Container extends AbstractContainer implements Container.Hierarchical, Container.Ordered {
 
     private final List<Hostgroup> hostgroups;
+    private final HostgroupDao hostgroupDao;
 
     /**
      * Collection which contains the containerPropertyIds
@@ -46,10 +48,11 @@ public class HostgroupHierarchical_Container extends AbstractContainer implement
      * Constructor for HostgroupHierarchical_Container which uses a {@link List}
      * of {@link Hostgroup Hostgroups}
      *
-     * @param hostgroups the hostgroups which are used to create the hierarchy
+     * @param hostgroupDao dao for the Hostgroups
      */
-    public HostgroupHierarchical_Container(List<Hostgroup> hostgroups) {
-        this.hostgroups = hostgroups;
+    public HostgroupHierarchical_Container(HostgroupDao hostgroupDao) {
+        this.hostgroupDao = hostgroupDao;
+        this.hostgroups = hostgroupDao.findAll();
     }
 
     @Override
@@ -144,6 +147,17 @@ public class HostgroupHierarchical_Container extends AbstractContainer implement
      */
     public void addHostgroup(Hostgroup hostgroup) {
         this.hostgroups.add(hostgroup);
+        hostgroupDao.insert(hostgroup);
+        fireItemSetChange();
+    }
+
+    /**
+     * Updates a Hostgroup in the DAO
+     *
+     * @param hostgroup the Hostgroup which will be updated
+     */
+    public void updateHostgroup(Hostgroup hostgroup) {
+        hostgroupDao.update(hostgroup);
         fireItemSetChange();
     }
 
@@ -154,6 +168,7 @@ public class HostgroupHierarchical_Container extends AbstractContainer implement
 
     @Override
     public boolean removeItem(Object itemId) {
+        //remove Host
         if (String.valueOf(itemId).contains("/")) {
             for (Hostgroup hostgroup : hostgroups) {
                 if (String.valueOf(itemId).split("/")[0].equals(hostgroup.getName())) {
@@ -168,6 +183,8 @@ public class HostgroupHierarchical_Container extends AbstractContainer implement
 //                    hostGIterator.remove();
 //                }
 //            }
+
+            //remove Hostgroup
             Hostgroup deleteHostgroup = null;
             for (Hostgroup hostgroup : hostgroups) {
                 if (hostgroup.getName().equals(itemId)) {
@@ -175,6 +192,7 @@ public class HostgroupHierarchical_Container extends AbstractContainer implement
                 }
             }
             if (hostgroups.remove(deleteHostgroup)) {
+                hostgroupDao.delete(deleteHostgroup.getId());
                 fireItemSetChange();
             }
         }

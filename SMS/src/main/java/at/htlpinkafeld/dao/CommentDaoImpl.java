@@ -18,28 +18,47 @@ import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.springframework.jdbc.core.RowMapper;
+import org.springframework.jdbc.core.namedparam.AbstractSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
+import org.springframework.jdbc.core.namedparam.SqlParameterSource;
+import org.springframework.jdbc.support.GeneratedKeyHolder;
+import org.springframework.jdbc.support.KeyHolder;
 
 /**
  *
  * @author DarkHell2
  */
 public class CommentDaoImpl implements CommentDao {
+
     HsqlDataSource db = HsqlDataSource.getInstance();
     NamedParameterJdbcTemplate template = new NamedParameterJdbcTemplate(db.dataSource());
 
     @Override
-    public void insert(Comment comment) {    
+    public void insert(Comment comment) {
         Map<String, Object> params = new HashMap<String, Object>();
         String sql = "INSERT INTO comment(commentid, comment, commentto, author, lastchanged) VALUES (:commentid, :comment, :commentto, :author, :lastchanged)";
-        
-        params.put("commentid", comment.getCommentId());
+
+        params.put("commentid", comment.getId());
         params.put("comment", comment.getComment());
         params.put("commentto", comment.getCommentTo());
         params.put("author", comment.getAuthor());
         params.put("lastchanged", comment.getLastChanged());
 
-        template.update(sql, params);
+        KeyHolder keyHolder = new GeneratedKeyHolder();
+
+        template.update(sql, new AbstractSqlParameterSource() {
+            @Override
+            public boolean hasValue(String paramName) {
+                return params.containsKey(paramName);
+            }
+
+            @Override
+            public Object getValue(String paramName) throws IllegalArgumentException {
+                return params.get(paramName);
+            }
+
+        }, keyHolder);
+        comment.setId(keyHolder.getKey().intValue());
         System.out.println("Inserted Comment");
     }
 
@@ -47,23 +66,23 @@ public class CommentDaoImpl implements CommentDao {
     public void delete(Integer commentid) {
         Map<String, Object> params = new HashMap<String, Object>();
         String sql = "DELETE FROM comment WHERE commentid = :commentid";
-        
+
         params.put("commentid", commentid);
         template.update(sql, params);
-        
+
     }
 
     @Override
     public List<Comment> getCommentByRange(LocalDateTime time1, LocalDateTime time2) {
-        Date startt=new Date(time1.atZone(ZoneId.systemDefault()).toInstant().toEpochMilli());
-        Date endt=new Date(time2.atZone(ZoneId.systemDefault()).toInstant().toEpochMilli());
-        
+        Date startt = new Date(time1.atZone(ZoneId.systemDefault()).toInstant().toEpochMilli());
+        Date endt = new Date(time2.atZone(ZoneId.systemDefault()).toInstant().toEpochMilli());
+
         Map<String, Object> params = new HashMap<String, Object>();
-        
+
         String sql = "SELECT * FROM comment WHERE lastchanged BETWEEN :time1 AND :time2";
         params.put("time1", startt);
         params.put("time2", endt);
-        
+
         List<Comment> result = template.query(sql, params, new CommentMapper());
         return result;
     }
@@ -76,7 +95,7 @@ public class CommentDaoImpl implements CommentDao {
         String sql = "SELECT * FROM comment WHERE commentid=:commentid";
 
         Comment result = template.queryForObject(sql, params, new CommentMapper());
-        
+
         return result;
     }
 
@@ -88,7 +107,7 @@ public class CommentDaoImpl implements CommentDao {
         String sql = "SELECT * FROM comment WHERE author=:author";
 
         List<Comment> result = template.query(sql, params, new CommentDaoImpl.CommentMapper());
-        
+
         return result;
     }
 
@@ -105,9 +124,9 @@ public class CommentDaoImpl implements CommentDao {
     @Override
     public void update(Comment o) {
         Map<String, Object> params = new HashMap<String, Object>();
-        String sql= "UPDATE comment SET comment=:comment, commentto=:commentto, author=:author, lastchanged=:lastchanged WHERE commentid=:commentid";
-        
-        params.put("commentid", o.getCommentId());
+        String sql = "UPDATE comment SET comment=:comment, commentto=:commentto, author=:author, lastchanged=:lastchanged WHERE commentid=:commentid";
+
+        params.put("commentid", o.getId());
         params.put("comment", o.getComment());
         params.put("commentto", o.getCommentTo());
         params.put("author", o.getAuthor());
@@ -115,12 +134,24 @@ public class CommentDaoImpl implements CommentDao {
 
         template.update(sql, params);
     }
-    
+
+    @Override
+    public List<Comment> findByCommentTo(String commentTo) {
+        Map<String, Object> params = new HashMap<String, Object>();
+        params.put("commentto", commentTo);
+
+        String sql = "SELECT * FROM comment WHERE commentto=:commentto";
+
+        List<Comment> result = template.query(sql, params, new CommentDaoImpl.CommentMapper());
+
+        return result;
+    }
+
     private static final class CommentMapper implements RowMapper<Comment> {
 
         public Comment mapRow(ResultSet rs, int rowNum) throws SQLException {
             Comment comment = new Comment();
-            comment.setCommentId(rs.getInt("commentid"));
+            comment.setId(rs.getInt("commentid"));
             comment.setComment(rs.getString("comment"));
             comment.setCommentTo(rs.getString("commentto"));
             comment.setAuthor(rs.getInt("author"));
@@ -129,5 +160,5 @@ public class CommentDaoImpl implements CommentDao {
             return comment;
         }
     }
-    
+
 }

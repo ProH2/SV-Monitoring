@@ -12,7 +12,7 @@ import java.util.Objects;
  *
  * @author Martin Six
  */
-public class User implements Serializable {
+public class User implements Serializable, IPojo {
 
     private Integer userNr;
     private String username;
@@ -42,11 +42,13 @@ public class User implements Serializable {
         this.phoneNr = phoneNr;
     }
 
-    public Integer getUserNr() {
+    @Override
+    public Integer getId() {
         return userNr;
     }
 
-    public void setUserNr(Integer userNr) {
+    @Override
+    public void setId(Integer userNr) {
         this.userNr = userNr;
     }
 

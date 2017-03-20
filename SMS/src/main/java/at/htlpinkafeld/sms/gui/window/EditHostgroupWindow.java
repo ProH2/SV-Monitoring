@@ -114,7 +114,8 @@ public class EditHostgroupWindow extends Window {
                 hostGroupItem.getBean().setName(hostgroupNameTextField.getValue());
                 hostGroupItem.getBean().setHostlist(new LinkedList((Collection) hostassignmentColSelect.getValue()));
 
-                hostGroupContainer.fireItemSetChange();
+                hostGroupContainer.updateHostgroup(hostGroupItem.getBean());
+
                 Page.getCurrent().reload();
             }
             super.close();

@@ -5,15 +5,16 @@
  */
 package at.htlpinkafeld.sms.pojos;
 
+import at.htlpinkafeld.sms.pojo.IPojo;
 import java.util.List;
 
 /**
  *
  * @author neume
  */
-public class Hostgroup {
+public class Hostgroup implements IPojo{
 
-    private int hostGroupNr;
+    private Integer hostGroupNr;
     private String name;
 
     // List with the hostnames
@@ -24,17 +25,19 @@ public class Hostgroup {
 
     }
 
-    public Hostgroup(int hostGroupNr, String name, List<String> hostlist) {
+    public Hostgroup(Integer hostGroupNr, String name, List<String> hostlist) {
         this.hostGroupNr = hostGroupNr;
         this.name = name;
         this.hostlist = hostlist;
     }
 
-    public int getHostGroupNr() {
+    @Override
+    public Integer getId() {
         return hostGroupNr;
     }
 
-    public void setHostGroupNr(int hostGroupNr) {
+    @Override
+    public void setId(Integer hostGroupNr) {
         this.hostGroupNr = hostGroupNr;
     }
 

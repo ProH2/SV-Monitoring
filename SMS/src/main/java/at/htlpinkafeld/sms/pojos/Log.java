@@ -5,20 +5,21 @@
  */
 package at.htlpinkafeld.sms.pojos;
 
+import at.htlpinkafeld.sms.pojo.IPojo;
 import java.sql.Timestamp;
 
 /**
  *
  * @author DarkHell2
  */
-public class Log {
-    private int logId;
+public class Log implements IPojo{
+    private Integer logId;
     private Timestamp timestamp;
     private String logCause;
     private String logEntry;
     
 
-    public Log(int logId, Timestamp timestamp, String logCause, String logEntry) {
+    public Log(Integer logId, Timestamp timestamp, String logCause, String logEntry) {
         this.logId = logId;
         this.timestamp = timestamp;
         this.logCause = logCause;
@@ -28,11 +29,13 @@ public class Log {
     public Log() {
     }
 
-    public int getLogId() {
+    @Override
+    public Integer getId() {
         return logId;
     }
 
-    public void setLogId(int logId) {
+    @Override
+    public void setId(Integer logId) {
         this.logId = logId;
     }
 

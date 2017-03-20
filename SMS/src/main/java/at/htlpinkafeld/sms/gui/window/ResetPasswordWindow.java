@@ -5,6 +5,7 @@
  */
 package at.htlpinkafeld.sms.gui.window;
 
+import at.htlpinkafeld.sms.gui.container.DaoDelegatingContainer;
 import at.htlpinkafeld.sms.pojo.User;
 import at.htlpinkafeld.sms.service.PermissionService;
 import at.htlpinkafeld.sms.service.RandomString;
@@ -31,7 +32,7 @@ public class ResetPasswordWindow extends Window {
      * @param objectId the objectId identifying the user whos password will be
      * changed
      */
-    public ResetPasswordWindow(Container userContainer, Object objectId) {
+    public ResetPasswordWindow(DaoDelegatingContainer<User> userContainer, Object objectId) {
         super("Reset Password");
         super.center();
         super.setModal(true);
@@ -51,8 +52,12 @@ public class ResetPasswordWindow extends Window {
         mainLayout.addComponent(new Button("Reset", (event) -> {
             textField.validate();
 
-            userContainer.getContainerProperty(objectId, "password").setValue(PermissionService.hashPassword(textField.getValue()));
-            super.close();
+            if (objectId instanceof User) {
+                ((User) objectId).setPassword(PermissionService.hashPassword(textField.getValue()));
+                userContainer.updateItem((User) objectId);
+
+                super.close();
+            }
         }));
 
         mainLayout.addComponent(new Button("Cancel", (event) -> {

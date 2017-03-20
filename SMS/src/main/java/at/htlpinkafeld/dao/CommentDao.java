@@ -20,4 +20,6 @@ public interface CommentDao extends BaseDao<Comment>{
     Comment findByCommentId(int commentId);
 
     List<Comment> findByAuthor(int userId);
+    
+    List<Comment> findByCommentTo(String commentTo);
 }

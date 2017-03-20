@@ -15,7 +15,10 @@ import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.springframework.jdbc.core.RowMapper;
+import org.springframework.jdbc.core.namedparam.AbstractSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
+import org.springframework.jdbc.support.GeneratedKeyHolder;
+import org.springframework.jdbc.support.KeyHolder;
 
 /**
  *
@@ -26,18 +29,32 @@ public class LogDaoImpl implements LogDao{
     NamedParameterJdbcTemplate template = new NamedParameterJdbcTemplate(db.dataSource());
     
     @Override
-    public void insert(Log o) {
+    public void insert(Log log) {
         Map<String, Object> params = new HashMap<String, Object>();
         
         
         String sql = "INSERT INTO users(logid, timestamp, logcause, logentry) VALUES (:logid, :timestamp, :logcause, :logentry)";
         
-        params.put("logid", o.getLogId());
-        params.put("timestamp", o.getTimestamp());
-        params.put("logcause", o.getLogCause());
-        params.put("logentry", o.getLogEntry());
+        params.put("logid", log.getId());
+        params.put("timestamp", log.getTimestamp());
+        params.put("logcause", log.getLogCause());
+        params.put("logentry", log.getLogEntry());
 
-        template.update(sql, params);
+        KeyHolder keyHolder = new GeneratedKeyHolder();
+
+        template.update(sql, new AbstractSqlParameterSource() {
+            @Override
+            public boolean hasValue(String paramName) {
+                return params.containsKey(paramName);
+            }
+
+            @Override
+            public Object getValue(String paramName) throws IllegalArgumentException {
+                return params.get(paramName);
+            }
+
+        }, keyHolder);
+        log.setId(keyHolder.getKey().intValue());
         System.out.println("Inserted User");
     }
 
@@ -73,7 +90,7 @@ public class LogDaoImpl implements LogDao{
         Map<String, Object> params = new HashMap<String, Object>();
         String sql= "UPDATE log SET timestamp=:timestamp, logcause=:logcause, logentry=:logentry WHERE logid=:logid";
         
-        params.put("logid", o.getLogId());
+        params.put("logid", o.getId());
         params.put("timestamp", o.getTimestamp());
         params.put("logcause", o.getLogCause());
         params.put("logentry", o.getLogEntry());
@@ -85,7 +102,7 @@ public class LogDaoImpl implements LogDao{
 
     public Log mapRow(ResultSet rs, int rowNum) throws SQLException {
         Log log = new Log();
-        log.setLogId(rs.getInt("logId"));
+        log.setId(rs.getInt("logId"));
         log.setTimestamp(rs.getTimestamp("timestamp"));
         log.setLogCause(rs.getString("logcause"));
         log.setLogEntry(rs.getString("logentry"));

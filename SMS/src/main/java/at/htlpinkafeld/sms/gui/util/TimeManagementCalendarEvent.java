@@ -42,7 +42,7 @@ public class TimeManagementCalendarEvent extends BasicEvent {
     public TimeManagementCalendarEvent(Duty duty) {
         super(duty.getUser().getName(), dateFormatterOld.format(duty.getStartTime()), duty.getStartTime(), duty.getEndTime());
         user = duty.getUser();
-        dutyId = duty.getDutyID();
+        dutyId = duty.getId();
     }
 
     /**

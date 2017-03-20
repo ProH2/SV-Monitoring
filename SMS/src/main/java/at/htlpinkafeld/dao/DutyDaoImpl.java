@@ -21,7 +21,10 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import org.springframework.jdbc.core.RowMapper;
+import org.springframework.jdbc.core.namedparam.AbstractSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
+import org.springframework.jdbc.support.GeneratedKeyHolder;
+import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 
 /**
@@ -82,16 +85,30 @@ public class DutyDaoImpl implements DutyDao {
         System.out.println("Inserted Duty");
     }*/
     @Override
-    public void insert(Duty o) {
+    public void insert(Duty duty) {
         Map<String, Object> params = new HashMap<String, Object>();
         String sql = "INSERT INTO duty(dutyid, userid, starttime, endtime) VALUES (:dutyid, :userid, :starttime, :endtime)";
 
-        params.put("dutyid", o.getDutyID());
-        params.put("userid", o.getUser().getUserNr());
-        params.put("starttime", o.getStartTime());
-        params.put("endtime", o.getEndTime());
+        params.put("dutyid", duty.getId());
+        params.put("userid", duty.getUser().getId());
+        params.put("starttime", duty.getStartTime());
+        params.put("endtime", duty.getEndTime());
 
-        template.update(sql, params);
+        KeyHolder keyHolder = new GeneratedKeyHolder();
+
+        template.update(sql, new AbstractSqlParameterSource() {
+            @Override
+            public boolean hasValue(String paramName) {
+                return params.containsKey(paramName);
+            }
+
+            @Override
+            public Object getValue(String paramName) throws IllegalArgumentException {
+                return params.get(paramName);
+            }
+
+        }, keyHolder);
+        duty.setId(keyHolder.getKey().intValue());
         System.out.println("Inserted Duty");
     }
 
@@ -136,8 +153,8 @@ public class DutyDaoImpl implements DutyDao {
         Map<String, Object> params = new HashMap<String, Object>();
         String sql = "UPDATE duty SET userid=:userid, starttime=:starttime, endtime=:endtime WHERE dutyid=:dutyid";
 
-        params.put("dutyid", o.getDutyID());
-        params.put("userid", o.getUser().getUserNr());
+        params.put("dutyid", o.getId());
+        params.put("userid", o.getUser().getId());
         params.put("starttime", o.getStartTime());
         params.put("endtime", o.getEndTime());
 
@@ -148,7 +165,7 @@ public class DutyDaoImpl implements DutyDao {
 
         public Duty mapRow(ResultSet rs, int rowNum) throws SQLException {
             Duty duty = new Duty();
-            duty.setDutyID(rs.getInt("dutyId"));
+            duty.setId(rs.getInt("dutyId"));
             duty.setUser(userdao.findByUserId(rs.getInt("userid")));
             duty.setStartTime(new java.util.Date(rs.getTimestamp("startTime").getTime()));
             duty.setEndTime(new java.util.Date(rs.getTimestamp("endTime").getTime()));

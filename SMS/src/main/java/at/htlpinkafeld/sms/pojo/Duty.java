@@ -11,7 +11,7 @@ import java.util.Date;
  *
  * @author DarkHell2
  */
-public class Duty {
+public class Duty implements IPojo{
 
     private Integer dutyId;
     private User user;
@@ -29,11 +29,12 @@ public class Duty {
 
     }
 
-    public Integer getDutyID() {
+    @Override
+    public Integer getId() {
         return dutyId;
     }
 
-    public void setDutyID(Integer dutyID) {
+    public void setId(Integer dutyID) {
         this.dutyId = dutyID;
     }
 

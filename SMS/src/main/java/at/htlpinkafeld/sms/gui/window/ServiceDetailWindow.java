@@ -8,6 +8,7 @@ package at.htlpinkafeld.sms.gui.window;
 import at.htlpinkafeld.sms.gui.LoginView;
 import at.htlpinkafeld.sms.gui.SMS_Main;
 import at.htlpinkafeld.sms.gui.container.ContainerFactory;
+import at.htlpinkafeld.sms.gui.container.DaoDelegatingContainer;
 import at.htlpinkafeld.sms.gui.container.HashMapWithListeners;
 import at.htlpinkafeld.sms.gui.container.MapReferenceContainer;
 import at.htlpinkafeld.sms.gui.overviewComponents.HostPanel;
@@ -15,6 +16,7 @@ import at.htlpinkafeld.sms.pojos.Comment;
 import at.htlpinkafeld.sms.pojos.Service;
 import at.htlpinkafeld.sms.service.NoUserLoggedInException;
 import at.htlpinkafeld.sms.service.PermissionService;
+import com.vaadin.data.fieldgroup.FieldGroup;
 import com.vaadin.data.util.BeanItem;
 import com.vaadin.data.util.BeanItemContainer;
 import com.vaadin.ui.Button;
@@ -104,14 +106,25 @@ public class ServiceDetailWindow extends Window implements HashMapWithListeners.
         try {
             if (PermissionService.isAdmin()) {
                 commentGrid.setEditorEnabled(true);
-                commentGrid.getColumn("author").setEditable(false);
-                commentGrid.getColumn("entryTime").setEditable(false);
+                commentGrid.removeAllColumns();
+                commentGrid.addColumn("comment");
 
                 Button addCommentButton = new Button("Add Comment", (Button.ClickEvent event) -> {
-                    Comment newComment = new Comment(4, "Testcomment", "Testcomment to -* ServiceDetailWindow *-", 1, LocalDateTime.now());
+                    Comment newComment = new Comment("", service.getHostname() + "/" + service.getName(), 1, LocalDateTime.now());
                     ((BeanItemContainer<Comment>) commentGrid.getContainerDataSource()).addBean(newComment);
                     commentGrid.editItem(newComment);
                     commentGrid.focus();
+                });
+
+                commentGrid.getEditorFieldGroup().addCommitHandler(new FieldGroup.CommitHandler() {
+                    @Override
+                    public void preCommit(FieldGroup.CommitEvent commitEvent) throws FieldGroup.CommitException {
+                    }
+
+                    @Override
+                    public void postCommit(FieldGroup.CommitEvent commitEvent) throws FieldGroup.CommitException {
+                        ((DaoDelegatingContainer<Comment>) commentGrid.getContainerDataSource()).updateItem((Comment) commentGrid.getEditedItemId());
+                    }
                 });
 
                 Button removeCommentButton = new Button("Delete Comment", (Button.ClickEvent event) -> {
