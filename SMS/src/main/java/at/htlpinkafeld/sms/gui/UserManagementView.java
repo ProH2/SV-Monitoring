@@ -16,7 +16,7 @@ import com.vaadin.data.Container;
 import com.vaadin.data.Item;
 import com.vaadin.data.Validator;
 import com.vaadin.data.fieldgroup.FieldGroup;
-import com.vaadin.data.util.BeanItemContainer;
+import com.vaadin.data.sort.SortOrder;
 import com.vaadin.data.util.GeneratedPropertyContainer;
 import com.vaadin.data.util.PropertyValueGenerator;
 import com.vaadin.data.validator.EmailValidator;
@@ -56,10 +56,11 @@ public class UserManagementView extends VerticalLayout implements View {
 
         baseUserContainer = ContainerFactory.createIndexedUserContainer();
         Grid grid = new Grid(addGeneratedProperties(baseUserContainer));
-        //Restructure auto-generated columns
+//Restructure auto-generated columns
         grid.removeColumn(USERNR_PROPERTY);
         grid.removeColumn(PASSWORD_PROPERTY);
-        grid.setColumnOrder(USERNAME_PROPERTY, NAME_PROPERTY, RESETPASSW_COLUMN, EMAIL_PROPERTY, PHONENR_PROPERTY, EDITUSER_COLUMN, DELETEUSER_COLUMN);
+        grid.removeColumn(DISABLED_PROPERTY);
+        grid.setColumnOrder(USERNAME_PROPERTY, NAME_PROPERTY, RESETPASSW_COLUMN, EMAIL_PROPERTY, PHONENR_PROPERTY, EDITUSER_COLUMN, DISABLEUSER_COLUMN);
 
 //        grid.setSelectionMode(SelectionMode.MULTI);
         grid.setEditorEnabled(true);
@@ -75,17 +76,25 @@ public class UserManagementView extends VerticalLayout implements View {
             grid.editItem(event.getItemId());
         }));
 
-        grid.getColumn(DELETEUSER_COLUMN).setRenderer(new ButtonRenderer((ClickableRenderer.RendererClickEvent event) -> {
+        grid.getColumn(DISABLEUSER_COLUMN).setRenderer(new ButtonRenderer((ClickableRenderer.RendererClickEvent event) -> {
             User u = VaadinSession.getCurrent().getAttribute(User.class);
+            if (event.getItemId() instanceof User) {
+                User selectedUser = (User) event.getItemId();
+                if (selectedUser.isDisabled()) {
+                    selectedUser.setDisabled(false);
+                    baseUserContainer.updateItem(selectedUser);
+                } else if (u.equals(selectedUser)) {
+                    Notification.show("You can't disable your own User!", Notification.Type.ERROR_MESSAGE);
+                } else {
+                    ConfirmDialog.show(UI.getCurrent(), "Do you want to disable this User?", (ConfirmDialog cd) -> {
+                        if (cd.isConfirmed()) {
+//                        grid.getContainerDataSource().removeItem(event.getItemId());
 
-            if (u.equals(event.getItemId())) {
-                Notification.show("You can't delete your own User!", Notification.Type.ERROR_MESSAGE);
-            } else {
-                ConfirmDialog.show(UI.getCurrent(), "Do you want to delete this User?", (ConfirmDialog cd) -> {
-                    if (cd.isConfirmed()) {
-                        grid.getContainerDataSource().removeItem(event.getItemId());
-                    }
-                });
+                            selectedUser.setDisabled(true);
+                            baseUserContainer.updateItem(selectedUser);
+                        }
+                    });
+                }
             }
         }));
 
@@ -140,7 +149,7 @@ public class UserManagementView extends VerticalLayout implements View {
 //        delSelectedButton.setSizeFull();
         grid.appendFooterRow();
         grid.getFooterRow(0).join(USERNAME_PROPERTY, NAME_PROPERTY, RESETPASSW_COLUMN).setComponent(newUserButton);
-        grid.getFooterRow(0).join(EMAIL_PROPERTY, PHONENR_PROPERTY, EDITUSER_COLUMN, DELETEUSER_COLUMN);
+        grid.getFooterRow(0).join(EMAIL_PROPERTY, PHONENR_PROPERTY, EDITUSER_COLUMN, DISABLEUSER_COLUMN);
 //        grid.getFooterRow(0).join(PHONENR_PROPERTY, EDITUSER_COLUMN, DELETEUSER_COLUMN).setComponent(delSelectedButton);
 
         grid.setSizeFull();
@@ -206,16 +215,26 @@ public class UserManagementView extends VerticalLayout implements View {
             }
         });
 
-        gpc.addGeneratedProperty(DELETEUSER_COLUMN, new PropertyValueGenerator<String>() {
+        gpc.addGeneratedProperty(DISABLEUSER_COLUMN, new PropertyValueGenerator<String>() {
             @Override
             public String getValue(Item item, Object itemId, Object propertyId) {
-                return "Delete User";
+                if ((Boolean) item.getItemProperty(DISABLED_PROPERTY).getValue()) {
+                    return "Enable User";
+                } else {
+                    return "Disable User";
+                }
             }
 
             @Override
             public Class<String> getType() {
                 return String.class;
             }
+
+            @Override
+            public SortOrder[] getSortProperties(SortOrder order) {
+                return new SortOrder[]{new SortOrder(DISABLED_PROPERTY, order.getDirection())};
+            }
+
         });
 
         return gpc;
@@ -274,6 +293,10 @@ public class UserManagementView extends VerticalLayout implements View {
     /**
      * PropertyId constant for {@link Container}
      */
+    public static final String DISABLED_PROPERTY = "disabled";
+    /**
+     * PropertyId constant for {@link Container}
+     */
     public static final String RESETPASSW_COLUMN = "resetPassword";
     /**
      * PropertyId constant for {@link Container}
@@ -282,7 +305,7 @@ public class UserManagementView extends VerticalLayout implements View {
     /**
      * PropertyId constant for {@link Container}
      */
-    public static final String DELETEUSER_COLUMN = "deleteUser";
+    public static final String DISABLEUSER_COLUMN = "disabledUser";
 
     private DaoDelegatingContainer<User> baseUserContainer;
 

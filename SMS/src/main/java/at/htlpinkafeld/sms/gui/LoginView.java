@@ -69,7 +69,7 @@ public class LoginView extends VerticalLayout implements View {
 
                 String hashedPassword = PermissionService.hashPassword(passwordTextF.getValue());
                 for (User user : userContainer.getItemIds()) {
-                    if (Objects.equals(user.getPassword(), hashedPassword)) {
+                    if (!user.isDisabled() && Objects.equals(user.getPassword(), hashedPassword)) {
                         loginFailed = false;
 
                         Notification.show("Login successfull", "Hello " + user.getName(), Notification.Type.TRAY_NOTIFICATION);

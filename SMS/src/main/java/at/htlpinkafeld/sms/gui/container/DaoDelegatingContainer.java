@@ -48,7 +48,6 @@ public class DaoDelegatingContainer<T extends IPojo> extends BeanItemContainer<T
         this.baseDao = baseDao;
     }
 
-
     @Override
     public BeanItem<T> addItemAt(int index, Object newItemId) throws IllegalArgumentException {
         throw new UnsupportedOperationException();
@@ -87,5 +86,6 @@ public class DaoDelegatingContainer<T extends IPojo> extends BeanItemContainer<T
 
     public void updateItem(T item) {
         baseDao.update(item);
+        fireItemSetChange();
     }
 }

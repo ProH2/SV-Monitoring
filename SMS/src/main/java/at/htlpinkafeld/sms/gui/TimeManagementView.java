@@ -306,7 +306,6 @@ public class TimeManagementView extends VerticalLayout implements View {
         });
         calendarToggleViewButton.setSizeFull();
 
-        //TODO also add Button to change between week and month view?
         calendarLeftButton.setSizeFull();
         calendarRightButton.setSizeFull();
 

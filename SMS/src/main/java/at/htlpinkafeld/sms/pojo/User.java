@@ -20,18 +20,21 @@ public class User implements Serializable, IPojo {
     private String name;
     private String email;
     private String phoneNr;
+    private boolean disabled;
 
     public User() {
+        disabled=false;
     }
 
     @Deprecated
-    public User(Integer userNr, String username, String password, String name, String email, String phoneNr) {
+    public User(Integer userNr, String username, String password, String name, String email, String phoneNr, boolean disabled) {
         this.userNr = userNr;
         this.username = username;
         this.password = password;
         this.name = name;
         this.email = email;
         this.phoneNr = phoneNr;
+        this.disabled = disabled;
     }
 
     public User(String username, String password, String name, String email, String phoneNr) {
@@ -40,6 +43,7 @@ public class User implements Serializable, IPojo {
         this.name = name;
         this.email = email;
         this.phoneNr = phoneNr;
+        disabled=false;
     }
 
     @Override
@@ -92,6 +96,14 @@ public class User implements Serializable, IPojo {
         this.phoneNr = phoneNr;
     }
 
+    public boolean isDisabled() {
+        return disabled;
+    }
+
+    public void setDisabled(boolean disabled) {
+        this.disabled = disabled;
+    }
+
     @Override
     public int hashCode() {
         int hash = 7;
@@ -119,8 +131,10 @@ public class User implements Serializable, IPojo {
 
     @Override
     public String toString() {
-        return "User{" + "userNr=" + userNr + ", username=" + username + ", password=" + password + ", name=" + name + ", email=" + email + ", phoneNr=" + phoneNr + '}';
+        return "User{" + "userNr=" + userNr + ", username=" + username + ", password=" + password + ", name=" + name + ", email=" + email + ", disabled=" + disabled + '}';
     }
+
+ 
 
 
 

@@ -140,21 +140,6 @@ public class ContainerFactory {
 
     }
 
-    /**
-     * Initializes UserContainer
-     */
-    private static void initUserContainer() {
-        //TODO create Container which also delegates to DAO
-        List<User> users = userdao.findAll();
-        System.out.println("hekki");
-        List<Duty> duties = dutydao.findAll();
-        System.out.println("helli");
-
-        userContainer = new BeanItemContainer<>(User.class, users);
-
-//        UserDao userDao = new UserDaoImpl();
-//        userContainer = new BeanItemContainer<>(User.class, userDao.findAll());
-    }
 
     /**
      * Initializes DutyEventProvider
@@ -224,9 +209,9 @@ public class ContainerFactory {
      * Hostgroups in a Hierarchical order
      */
     public static HostgroupHierarchical_Container createHostgroupHierarchical_Container() {
-        if (hostgroups == null) {
-            initHostgroupList();
-        }
+//        if (hostgroups == null) {
+//            initHostgroupList();
+//        }
         return new HostgroupHierarchical_Container(hostgroupdao);
     }
 
@@ -237,9 +222,9 @@ public class ContainerFactory {
      * @return {@link Container} which contains the Hostgroups
      */
     public static DaoDelegatingContainer<Hostgroup> createHostgroupContainer() {
-        if (hostgroups == null) {
-            initHostgroupList();
-        }
+//        if (hostgroups == null) {
+//            initHostgroupList();
+//        }
         return new DaoDelegatingContainer<>(Hostgroup.class, hostgroupdao);
     }
 
@@ -250,10 +235,6 @@ public class ContainerFactory {
      * @return {@link Container} which contains the Users
      */
     public static DaoDelegatingContainer<User> createIndexedUserContainer() {
-        if (userContainer == null) {
-            initUserContainer();
-        }
-
         return new DaoDelegatingContainer<>(User.class, userdao);
     }
 
@@ -264,9 +245,9 @@ public class ContainerFactory {
      * @return {@link CalendarEditableEventProvider} which contains the Duties
      */
     public static DutyEventProvider createDutyEventProvider() {
-        if (dutyEventProvider == null) {
-            initDutyEventProvider();
-        }
+//        if (dutyEventProvider == null) {
+//            initDutyEventProvider();
+//        }
 
         return dutyEventProvider;
     }
@@ -279,12 +260,12 @@ public class ContainerFactory {
      * @return Container with the corresponding Comments
      */
     public static BeanItemContainer<Comment> createHostCommentContainer(String hostname) {
-        BeanItemContainer<Comment> itemContainer = new BeanItemContainer<>(Comment.class);
-
-        for (int i = 0; i < 5; i++) {
-            //itemContainer.addBean(new Comment(LocalDateTime.now(), hostname, "Test Comment " + i + " at " + hostname));
-            itemContainer.addBean(new Comment("Testcomment", "Testcomment to" + hostname, 1, LocalDateTime.now()));
-        }
+//        BeanItemContainer<Comment> itemContainer = new BeanItemContainer<>(Comment.class);
+//
+//        for (int i = 0; i < 5; i++) {
+//            //itemContainer.addBean(new Comment(LocalDateTime.now(), hostname, "Test Comment " + i + " at " + hostname));
+//            itemContainer.addBean(new Comment("Testcomment", "Testcomment to" + hostname, 1, LocalDateTime.now()));
+//        }
         return new DaoDelegatingContainer<>(Comment.class, commentdao, commentdao.findByCommentTo(hostname));
     }
 
@@ -297,11 +278,11 @@ public class ContainerFactory {
      * @return Container with the corresponding Comments
      */
     public static BeanItemContainer<Comment> createServiceCommentContainer(String serviceUId) {
-        BeanItemContainer<Comment> itemContainer = new BeanItemContainer<>(Comment.class);
-
-        for (int i = 0; i < 5; i++) {
-            itemContainer.addBean(new Comment("Testcomment", "Testcomment to" + serviceUId, 1, LocalDateTime.now()));
-        }
+//        BeanItemContainer<Comment> itemContainer = new BeanItemContainer<>(Comment.class);
+//
+//        for (int i = 0; i < 5; i++) {
+//            itemContainer.addBean(new Comment("Testcomment", "Testcomment to" + serviceUId, 1, LocalDateTime.now()));
+//        }
         return new DaoDelegatingContainer<>(Comment.class, commentdao, commentdao.findByCommentTo(serviceUId));
     }
 

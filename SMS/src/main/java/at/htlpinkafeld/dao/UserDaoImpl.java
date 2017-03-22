@@ -63,7 +63,7 @@ public class UserDaoImpl implements UserDao {
     @Override
     public void insert(User user) {
         Map<String, Object> params = new HashMap<String, Object>();
-        String sql = "INSERT INTO users(userid, name, username, password, phonenr, email) VALUES (:userid, :name, :username, :password, :phonenr, :email)";
+        String sql = "INSERT INTO users(userid, name, username, password, phonenr, email, disabled) VALUES (:userid, :name, :username, :password, :phonenr, :email, :disabled)";
 
         params.put("userid", user.getId());
         params.put("name", user.getName());
@@ -71,6 +71,7 @@ public class UserDaoImpl implements UserDao {
         params.put("password", user.getPassword());
         params.put("phonenr", user.getPhoneNr());
         params.put("email", user.getEmail());
+        params.put("disabled", user.isDisabled());
 
         KeyHolder keyHolder = new GeneratedKeyHolder();
 
@@ -104,7 +105,7 @@ public class UserDaoImpl implements UserDao {
     @Override
     public void update(User o) {
         Map<String, Object> params = new HashMap<String, Object>();
-        String sql = "UPDATE users SET name=:name, username=:username, password=:password, phonenr=:phonenr, email=:email WHERE userid=:userid";
+        String sql = "UPDATE users SET name=:name, username=:username, password=:password, phonenr=:phonenr, email=:email, disabled=:disabled WHERE userid=:userid";
 
         params.put("userid", o.getId());
         params.put("name", o.getName());
@@ -112,6 +113,7 @@ public class UserDaoImpl implements UserDao {
         params.put("password", o.getPassword());
         params.put("phonenr", o.getPhoneNr());
         params.put("email", o.getEmail());
+        params.put("disabled", o.isDisabled());
 
         template.update(sql, params);
     }
@@ -126,6 +128,7 @@ public class UserDaoImpl implements UserDao {
             user.setEmail(rs.getString("email"));
             user.setPassword(rs.getString("password"));
             user.setPhoneNr(rs.getString("phonenr"));
+            user.setDisabled(rs.getBoolean("disabled"));
 
             return user;
         }

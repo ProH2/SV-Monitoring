@@ -4,7 +4,8 @@ CREATE TABLE users (
   username varchar(30) NOT NULL,
   password varchar(128) NOT NULL,
   phonenr varchar(25),
-  email  VARCHAR(50)
+  email  VARCHAR(50),
+  disabled BOOLEAN DEFAULT FALSE NOT NULL
 );
 
 
