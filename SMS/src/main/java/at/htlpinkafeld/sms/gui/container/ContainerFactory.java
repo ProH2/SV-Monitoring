@@ -83,10 +83,6 @@ public class ContainerFactory {
     private static void initHostMap() {
 
         hostMap = JSONService.getHOSTS();
-        userdao.insert(new User("Jens", "123", "jens", "jens@gmx.at", "0064"));
-        List<User> uList = userdao.findAll();
-        
-        System.out.println("hekki");
         if (hostMap == null) {
 
             List<Map.Entry<String, Host>> entries = new ArrayList<>();
