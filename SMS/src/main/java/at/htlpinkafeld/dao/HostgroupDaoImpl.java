@@ -5,6 +5,7 @@
  */
 package at.htlpinkafeld.dao;
 
+import at.htlpinkafeld.config.db.DataSourceManager;
 import at.htlpinkafeld.config.db.HsqlDataSource;
 import at.htlpinkafeld.sms.pojos.Hostgroup;
 import java.sql.ResultSet;
@@ -29,7 +30,10 @@ import org.springframework.jdbc.support.KeyHolder;
  */
 public class HostgroupDaoImpl implements HostgroupDao {
 
-    HsqlDataSource db = HsqlDataSource.getInstance();
+    /*HsqlDataSource db = HsqlDataSource.getInstance();
+    NamedParameterJdbcTemplate template = new NamedParameterJdbcTemplate(db.dataSource());*/
+    
+    DataSourceManager db = DataSourceManager.getInstance();
     NamedParameterJdbcTemplate template = new NamedParameterJdbcTemplate(db.dataSource());
 
     @Override

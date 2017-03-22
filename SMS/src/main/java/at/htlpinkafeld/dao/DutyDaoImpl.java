@@ -5,6 +5,7 @@
  */
 package at.htlpinkafeld.dao;
 
+import at.htlpinkafeld.config.db.DataSourceManager;
 import at.htlpinkafeld.config.db.HsqlDataSource;
 import at.htlpinkafeld.sms.pojo.Duty;
 import java.sql.Date;
@@ -35,7 +36,10 @@ import org.springframework.stereotype.Repository;
 public class DutyDaoImpl implements DutyDao {
 
     private static UserDao userdao = new UserDaoImpl();
-    HsqlDataSource db = HsqlDataSource.getInstance();
+    /*HsqlDataSource db = HsqlDataSource.getInstance();
+    NamedParameterJdbcTemplate template = new NamedParameterJdbcTemplate(db.dataSource());*/
+    
+    DataSourceManager db = DataSourceManager.getInstance();
     NamedParameterJdbcTemplate template = new NamedParameterJdbcTemplate(db.dataSource());
 
     @Override
@@ -131,6 +135,19 @@ public class DutyDaoImpl implements DutyDao {
         String sql = "SELECT * FROM duty WHERE starttime BETWEEN :starttime AND :endtime";
         params.put("starttime", startt);
         params.put("endtime", endt);
+
+        List<Duty> result = template.query(sql, params, new DutyMapper());
+        return result;
+    }
+    
+    @Override
+    public List<Duty> getDutiesInTime(LocalDateTime stime) {
+        Date time = new Date(stime.atZone(ZoneId.systemDefault()).toInstant().toEpochMilli());
+
+        Map<String, Object> params = new HashMap<String, Object>();
+
+        String sql = "SELECT * FROM duty WHERE :time BETWEEN starttime AND endtime";
+        params.put("time", time);
 
         List<Duty> result = template.query(sql, params, new DutyMapper());
         return result;

@@ -23,6 +23,8 @@ import java.util.logging.Logger;
 public class PropertyHolder {
 
     public static final String ALL_USERS_ARE_ADMIN_PROPERTY = "ALL_USERS_ARE_ADMIN";
+    public static final String HSQLDB_PROPERTY = "HSQLDB";
+    public static final String MYSQLDB_PROPERTY = "MYSQLDB";
 
     private static final PropertyHolder INSTANCE = new PropertyHolder();
 

@@ -5,6 +5,7 @@
  */
 package at.htlpinkafeld.dao;
 
+import at.htlpinkafeld.config.db.DataSourceManager;
 import at.htlpinkafeld.config.db.HsqlDataSource;
 import at.htlpinkafeld.sms.pojo.User;
 import java.sql.ResultSet;
@@ -24,7 +25,10 @@ import org.springframework.jdbc.support.KeyHolder;
  */
 public class UserDaoImpl implements UserDao {
 
-    HsqlDataSource db = HsqlDataSource.getInstance();
+    /*HsqlDataSource db = HsqlDataSource.getInstance();
+    NamedParameterJdbcTemplate template = new NamedParameterJdbcTemplate(db.dataSource());*/
+    
+    DataSourceManager db = DataSourceManager.getInstance();
     NamedParameterJdbcTemplate template = new NamedParameterJdbcTemplate(db.dataSource());
 
     @Override

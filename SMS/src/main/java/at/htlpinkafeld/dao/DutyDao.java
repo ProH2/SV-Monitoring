@@ -19,6 +19,9 @@ public interface DutyDao extends BaseDao<Duty>{
     List<Duty> getDutiesByRange(LocalDateTime startTime, LocalDateTime endTime);
     
     List<Duty> getDutiesByRange(Date starttime, Date endtime);
+    
+    List<Duty> getDutiesInTime(LocalDateTime stime);
+
 
     Duty findByDutyId(int dutyId);
 
