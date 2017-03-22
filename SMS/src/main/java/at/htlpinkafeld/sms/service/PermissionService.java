@@ -16,7 +16,11 @@ import org.apache.commons.codec.digest.DigestUtils;
  */
 public class PermissionService {
 
-    private static final boolean ALL_USERS_ARE_ADMIN = true;
+    private static final boolean ALL_USERS_ARE_ADMIN;
+
+    static {
+        ALL_USERS_ARE_ADMIN = Boolean.parseBoolean(PropertyHolder.getInstance().getProperty(PropertyHolder.ALL_USERS_ARE_ADMIN_PROPERTY));
+    }
 
     /**
      * static method which checks the {@link VaadinSession} for "currentUser"
@@ -27,7 +31,6 @@ public class PermissionService {
      * is not set
      */
     public static boolean isAdmin() throws NoUserLoggedInException {
-
         try {
             User currentUser = (User) VaadinSession.getCurrent().getAttribute(User.class);
             if (currentUser != null) {
