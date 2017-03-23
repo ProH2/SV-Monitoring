@@ -110,9 +110,9 @@ public class Host {
         //TODO long-Integer catch
         Object value = map.get("last_check");
         if (value instanceof Long) {
-            host.setLastChecked(LocalDateTime.ofEpochSecond((long) value, 0, ZoneOffset.UTC));
+            host.setLastChecked(new Timestamp((long) value).toLocalDateTime());
         } else if (value instanceof Integer) {
-            host.setLastChecked(LocalDateTime.ofEpochSecond((Integer) value, 0, ZoneOffset.UTC));
+            host.setLastChecked(new Timestamp((Integer) value).toLocalDateTime());
         }
         /*
         try {
