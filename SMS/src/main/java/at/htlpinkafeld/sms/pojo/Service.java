@@ -185,5 +185,10 @@ public class Service {
     public String toString() {
         return hostname + " " + information + " " + this.lastChecked + " " + duration + " " + status;
     }
+    
+    public boolean hasChanged(Service s) {
+        return !this.status.equals(s.status);
+    }
+
 
 }

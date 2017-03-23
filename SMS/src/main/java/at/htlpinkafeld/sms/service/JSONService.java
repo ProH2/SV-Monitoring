@@ -5,6 +5,8 @@
  */
 package at.htlpinkafeld.sms.service;
 
+import at.htlpinkafeld.sms.dao.LogDao;
+import at.htlpinkafeld.sms.dao.LogDaoImpl;
 import at.htlpinkafeld.sms.pojo.Host;
 import at.htlpinkafeld.sms.service.threads.HostAndServiceTimerTask;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -23,8 +25,11 @@ import java.util.Timer;
 import org.apache.commons.io.IOUtils;
 
 import at.htlpinkafeld.sms.gui.container.HashMapWithListeners;
+import at.htlpinkafeld.sms.pojo.Log;
 import at.htlpinkafeld.sms.pojo.Service;
 import java.net.URLEncoder;
+import java.sql.Timestamp;
+import java.time.LocalDateTime;
 
 //import org.apache.commons.io.IOUtils;
 /**
@@ -38,6 +43,7 @@ public class JSONService {
 
     private static HashMapWithListeners<String, Host> HOSTS = null;
     private static HashMapWithListeners<String, Service> SERVICES = null;
+    private static LogDao logdao = new LogDaoImpl();
 
     public static void refresh() {
         Timer timer = new Timer();
@@ -101,7 +107,12 @@ public class JSONService {
             //System.out.println(result);
             Host h = Host.createHostFromJson(result);
             hosts.add(h);
-            HOSTS.put(h.getHostname(), h);
+            
+            Host old = HOSTS.put(h.getHostname(), h);
+            if(old != null && old.statusChanged(h)){
+                EmailService.sendNotificationMailHost(h.getHostname(), old.getStatus(), h.getStatus(), h.getInformation());
+                logdao.insert(new Log(Timestamp.valueOf(LocalDateTime.now()), h.getHostname(), "Status changed from " + old.getStatus().toString() + " to " + h.getStatus().toString() + " Plugin Output: " + h.getInformation()));
+            }
         }
 
         for (String s : hostlist) {
@@ -153,7 +164,11 @@ public class JSONService {
                 Service s = getServiceDetails(host, o);
 //                System.out.println(i++ + " " + s + " " + s.getName());
                 if (s != null) {
-                    SERVICES.put(host + "/" + s.getName(), s);
+                    Service old = SERVICES.put(host + "/" + s.getName(), s);
+                    if(old != null && old.hasChanged(s)){
+                        EmailService.sendNotificationMailService(host + "/" + s.getName(), old.getStatus(), s.getStatus(), s.getInformation());
+                        logdao.insert(new Log(Timestamp.valueOf(LocalDateTime.now()), host + "/" + s.getName(), "Status changed from " + old.getStatus().toString() + " to " + s.getStatus().toString() + " Plugin Output: " + s.getInformation()));
+                    }
                 }
             }
         }
@@ -161,9 +176,9 @@ public class JSONService {
         SERVICES.fireMapChanged();
 
 //        System.out.println("SERVICES OUTPUT: size=" + SERVICES.keySet().size());
-        for (String s : SERVICES.keySet()) {
-            System.out.println(s + "\t" + SERVICES.get(s));
-        }
+//        for (String s : SERVICES.keySet()) {
+//            System.out.println(s + "\t" + SERVICES.get(s));
+//        }
 
         return hosts;
     }
