@@ -32,6 +32,7 @@ public final class MenuBarComponent extends CustomComponent {
     private final MenuBar.MenuItem host_service_ManagementMItem;
     private final MenuBar.MenuItem userManagementMItem;
     private final MenuBar.MenuItem timeManagementMItem;
+    private final MenuBar.MenuItem logMItem;
 
     /**
      * Constructor for MenuBarComponent
@@ -67,6 +68,13 @@ public final class MenuBarComponent extends CustomComponent {
             UI ui = UI.getCurrent();
             if (ui instanceof SMS_Main) {
                 ((SMS_Main) ui).navigateTo(TimeManagementView.VIEW_NAME);
+            }
+        });
+
+        logMItem = menuBar.addItem("Logs", (MenuBar.MenuItem selectedItem) -> {
+            UI ui = UI.getCurrent();
+            if (ui instanceof SMS_Main) {
+                ((SMS_Main) ui).navigateTo(LogView.VIEW_NAME);
             }
         });
 
@@ -108,6 +116,7 @@ public final class MenuBarComponent extends CustomComponent {
         host_service_ManagementMItem.setStyleName(null);
         userManagementMItem.setStyleName(null);
         timeManagementMItem.setStyleName(null);
+        logMItem.setStyleName(null);
 
         String uriFragment = UI.getCurrent().getPage().getUriFragment();
         if (uriFragment != null) {
@@ -123,6 +132,9 @@ public final class MenuBarComponent extends CustomComponent {
                     break;
                 case '!' + TimeManagementView.VIEW_NAME:
                     timeManagementMItem.setStyleName("current");
+                    break;
+                case '!' + LogView.VIEW_NAME:
+                    logMItem.setStyleName("current");
                     break;
                 default:
                     overviewMItem.setStyleName("current");

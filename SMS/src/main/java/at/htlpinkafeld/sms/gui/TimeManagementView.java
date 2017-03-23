@@ -60,6 +60,8 @@ public class TimeManagementView extends VerticalLayout implements View {
     private final Container.Indexed userContainer;
 
     private final DutyEventProvider dutyProvider;
+    
+    private final Calendar calendar;
 
     /**
      * Constructor for TimeManagementView
@@ -94,8 +96,10 @@ public class TimeManagementView extends VerticalLayout implements View {
 
         dutyProvider = ContainerFactory.createDutyEventProvider();
 
-        Calendar calendar = new Calendar(dutyProvider);
+        calendar = new Calendar(dutyProvider);
         calendar.setWidth((float) 100, Unit.PERCENTAGE);
+//        
+//        calendar.setContainerDataSource(userContainer, NAME_PROPERTY, NAME_PROPERTY, NAME_PROPERTY, NAME_PROPERTY, NAME_PROPERTY);
         //Reduce the height further because of visual glitches
         calendar.setHeight(layoutSize - 190, Unit.PIXELS);
 

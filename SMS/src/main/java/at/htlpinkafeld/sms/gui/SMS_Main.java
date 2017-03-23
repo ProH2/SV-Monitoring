@@ -3,6 +3,7 @@ package at.htlpinkafeld.sms.gui;
 import javax.servlet.annotation.WebServlet;
 
 import com.vaadin.annotations.Theme;
+import com.vaadin.annotations.Title;
 import com.vaadin.annotations.VaadinServletConfiguration;
 import com.vaadin.navigator.Navigator;
 import com.vaadin.server.VaadinRequest;
@@ -19,6 +20,7 @@ import com.vaadin.ui.UI;
  * initialize non-component functionality.
  */
 @Theme("mytheme")
+@Title("SVISS SMS")
 public class SMS_Main extends UI {
 
     private Navigator navigator;
@@ -41,6 +43,7 @@ public class SMS_Main extends UI {
         navigator.addView(UserManagementView.VIEW_NAME, UserManagementView.class);
         navigator.addView(TimeManagementView.VIEW_NAME, TimeManagementView.class);
         navigator.addView(Host_Service_ManagementView.VIEW_NAME, Host_Service_ManagementView.class);
+        navigator.addView(LogView.VIEW_NAME, LogView.class);
 
         setPollInterval(5000);//Poll every 5 seconds
         setResizeLazy(true);

@@ -157,7 +157,7 @@ public class DutyDaoImpl implements DutyDao {
     public List<Duty> getDutiesByRange(Date starttime, Date endtime) {
         Map<String, Object> params = new HashMap<String, Object>();
 
-        String sql = "SELECT * FROM duty WHERE starttime BETWEEN :starttime AND :endtime OR endtime BETWEEN :starttime AND :endtime OR starttime<:starttime AND endTime>=:endtime";
+        String sql = "SELECT * FROM duty WHERE starttime BETWEEN :starttime AND :endtime OR endtime BETWEEN :starttime AND :endtime OR starttime<:starttime AND endTime>=:endtime ORDER BY starttime";
         params.put("starttime", starttime);
         params.put("endtime", endtime);
 

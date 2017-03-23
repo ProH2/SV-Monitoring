@@ -24,11 +24,11 @@ import at.htlpinkafeld.sms.gui.overviewComponents.HostOverviewTabPanel;
 import at.htlpinkafeld.sms.gui.overviewComponents.HostPanel;
 import at.htlpinkafeld.sms.gui.overviewComponents.ServiceOverviewTabPanel;
 import at.htlpinkafeld.sms.gui.overviewComponents.ServicePanel;
-import at.htlpinkafeld.sms.pojo.Duty;
 import at.htlpinkafeld.sms.pojo.User;
 import at.htlpinkafeld.sms.pojo.Comment;
 import at.htlpinkafeld.sms.pojo.Host;
 import at.htlpinkafeld.sms.pojo.Hostgroup;
+import at.htlpinkafeld.sms.pojo.Log;
 import at.htlpinkafeld.sms.pojo.Service;
 import at.htlpinkafeld.sms.service.JSONService;
 import com.vaadin.data.Container;
@@ -140,7 +140,6 @@ public class ContainerFactory {
 
     }
 
-
     /**
      * Initializes DutyEventProvider
      */
@@ -236,6 +235,16 @@ public class ContainerFactory {
      */
     public static DaoDelegatingContainer<User> createIndexedUserContainer() {
         return new DaoDelegatingContainer<>(User.class, userdao);
+    }
+
+    /**
+     * Static Method to create the Container for the Log-{@link Grid} in
+     * {@link UserManagementView}
+     *
+     * @return {@link Container} which contains the Users
+     */
+    public static DaoDelegatingContainer<Log> createLogContainer() {
+        return new DaoDelegatingContainer<>(Log.class, logdao);
     }
 
     /**
