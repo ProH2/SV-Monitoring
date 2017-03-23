@@ -35,7 +35,7 @@ public class EmailService {
     private static DateTimeFormatter dateTimeFormatter;
     private static DutyDao dutydao;
 
-    private static final String SERVER_EMAILADDRESS = "sms@sviss.co.at";
+    private static final String SERVER_EMAILADDRESS = "zes@sviss.co.at";
 
     static {
         dateTimeFormatter = DateTimeFormatter.ofPattern("dd.MM.yyyy HH:mm");
