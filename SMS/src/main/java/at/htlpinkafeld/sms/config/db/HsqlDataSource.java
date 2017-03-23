@@ -1,4 +1,4 @@
-package at.htlpinkafeld.config.db;
+package at.htlpinkafeld.sms.config.db;
 
 import javax.sql.DataSource;
 import org.springframework.context.annotation.Bean;

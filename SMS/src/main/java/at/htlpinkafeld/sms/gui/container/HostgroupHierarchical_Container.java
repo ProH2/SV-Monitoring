@@ -5,8 +5,8 @@
  */
 package at.htlpinkafeld.sms.gui.container;
 
-import at.htlpinkafeld.dao.HostgroupDao;
-import at.htlpinkafeld.sms.pojos.Hostgroup;
+import at.htlpinkafeld.sms.dao.HostgroupDao;
+import at.htlpinkafeld.sms.pojo.Hostgroup;
 import com.vaadin.data.Container;
 import com.vaadin.data.Item;
 import com.vaadin.data.Property;

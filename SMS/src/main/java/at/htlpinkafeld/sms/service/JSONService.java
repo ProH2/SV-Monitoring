@@ -5,7 +5,7 @@
  */
 package at.htlpinkafeld.sms.service;
 
-import at.htlpinkafeld.sms.pojos.Host;
+import at.htlpinkafeld.sms.pojo.Host;
 import at.htlpinkafeld.sms.service.threads.HostAndServiceTimerTask;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.io.IOException;
@@ -23,7 +23,7 @@ import java.util.Timer;
 import org.apache.commons.io.IOUtils;
 
 import at.htlpinkafeld.sms.gui.container.HashMapWithListeners;
-import at.htlpinkafeld.sms.pojos.Service;
+import at.htlpinkafeld.sms.pojo.Service;
 import java.net.URLEncoder;
 
 //import org.apache.commons.io.IOUtils;

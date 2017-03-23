@@ -5,7 +5,7 @@
  */
 package at.htlpinkafeld.sms.gui.container;
 
-import at.htlpinkafeld.dao.BaseDao;
+import at.htlpinkafeld.sms.dao.BaseDao;
 import at.htlpinkafeld.sms.pojo.IPojo;
 import com.vaadin.data.util.BeanItem;
 import com.vaadin.data.util.BeanItemContainer;

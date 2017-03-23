@@ -7,7 +7,7 @@ package at.htlpinkafeld.sms.gui.window;
 
 import at.htlpinkafeld.sms.gui.container.ContainerFactory;
 import at.htlpinkafeld.sms.gui.container.HostgroupHierarchical_Container;
-import at.htlpinkafeld.sms.pojos.Hostgroup;
+import at.htlpinkafeld.sms.pojo.Hostgroup;
 import com.vaadin.data.Container;
 import com.vaadin.data.util.BeanContainer;
 import com.vaadin.data.util.BeanItem;

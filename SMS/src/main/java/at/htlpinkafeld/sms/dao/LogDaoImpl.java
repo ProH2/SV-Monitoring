@@ -3,11 +3,11 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package at.htlpinkafeld.dao;
+package at.htlpinkafeld.sms.dao;
 
-import at.htlpinkafeld.config.db.DataSourceManager;
-import at.htlpinkafeld.config.db.HsqlDataSource;
-import at.htlpinkafeld.sms.pojos.Log;
+import at.htlpinkafeld.sms.config.db.DataSourceManager;
+import at.htlpinkafeld.sms.config.db.HsqlDataSource;
+import at.htlpinkafeld.sms.pojo.Log;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.HashMap;

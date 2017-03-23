@@ -5,7 +5,7 @@
  */
 package at.htlpinkafeld.sms.service;
 
-import at.htlpinkafeld.sms.pojos.Host;
+import at.htlpinkafeld.sms.pojo.Host;
 import java.util.List;
 import org.vaadin.addons.lazyquerycontainer.AbstractBeanQuery;
 

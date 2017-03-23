@@ -3,10 +3,10 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package at.htlpinkafeld.dao;
+package at.htlpinkafeld.sms.dao;
 
-import at.htlpinkafeld.config.db.DataSourceManager;
-import at.htlpinkafeld.config.db.HsqlDataSource;
+import at.htlpinkafeld.sms.config.db.DataSourceManager;
+import at.htlpinkafeld.sms.config.db.HsqlDataSource;
 import at.htlpinkafeld.sms.pojo.Duty;
 import java.sql.Date;
 import java.sql.ResultSet;
@@ -38,7 +38,7 @@ public class DutyDaoImpl implements DutyDao {
     private static UserDao userdao = new UserDaoImpl();
     /*HsqlDataSource db = HsqlDataSource.getInstance();
     NamedParameterJdbcTemplate template = new NamedParameterJdbcTemplate(db.dataSource());*/
-    
+
     DataSourceManager db = DataSourceManager.getInstance();
     NamedParameterJdbcTemplate template = new NamedParameterJdbcTemplate(db.dataSource());
 
@@ -139,7 +139,7 @@ public class DutyDaoImpl implements DutyDao {
         List<Duty> result = template.query(sql, params, new DutyMapper());
         return result;
     }
-    
+
     @Override
     public List<Duty> getDutiesInTime(LocalDateTime stime) {
         Date time = new Date(stime.atZone(ZoneId.systemDefault()).toInstant().toEpochMilli());
@@ -157,7 +157,7 @@ public class DutyDaoImpl implements DutyDao {
     public List<Duty> getDutiesByRange(Date starttime, Date endtime) {
         Map<String, Object> params = new HashMap<String, Object>();
 
-        String sql = "SELECT * FROM duty WHERE starttime BETWEEN :starttime AND :endtime";
+        String sql = "SELECT * FROM duty WHERE starttime BETWEEN :starttime AND :endtime OR endtime BETWEEN :starttime AND :endtime OR starttime<:starttime AND endTime>=:endtime";
         params.put("starttime", starttime);
         params.put("endtime", endtime);
 

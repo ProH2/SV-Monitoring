@@ -3,10 +3,10 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package at.htlpinkafeld.dao;
+package at.htlpinkafeld.sms.dao;
 
-import at.htlpinkafeld.config.db.DataSourceManager;
-import at.htlpinkafeld.config.db.HsqlDataSource;
+import at.htlpinkafeld.sms.config.db.DataSourceManager;
+import at.htlpinkafeld.sms.config.db.HsqlDataSource;
 import at.htlpinkafeld.sms.pojo.User;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -36,7 +36,7 @@ public class UserDaoImpl implements UserDao {
         Map<String, Object> params = new HashMap<String, Object>();
         params.put("name", name);
 
-        String sql = "SELECT * FROM users WHERE pname=:pname";
+        String sql = "SELECT * FROM user WHERE PersName=:PersName";
         User result = template.queryForObject(sql, params, new UserMapper());
 
         return result;
@@ -47,7 +47,7 @@ public class UserDaoImpl implements UserDao {
         Map<String, Object> params = new HashMap<String, Object>();
         params.put("userid", userid);
 
-        String sql = "SELECT * FROM users WHERE userid=:userid";
+        String sql = "SELECT * FROM user WHERE usernr=:userid";
 
         User result = template.queryForObject(sql, params, new UserMapper());
 
@@ -57,7 +57,7 @@ public class UserDaoImpl implements UserDao {
     @Override
     public List<User> findAll() {
         Map<String, Object> params = new HashMap<>();
-        String sql = "SELECT * FROM users";
+        String sql = "SELECT * FROM user";
 
         List<User> result = template.query(sql, params, new UserDaoImpl.UserMapper());
 
@@ -67,7 +67,7 @@ public class UserDaoImpl implements UserDao {
     @Override
     public void insert(User user) {
         Map<String, Object> params = new HashMap<String, Object>();
-        String sql = "INSERT INTO users(userid, name, username, password, phonenr, email, disabled) VALUES (:userid, :name, :username, :password, :phonenr, :email, :disabled)";
+        String sql = "INSERT INTO user(usernr, persname, username, password, email, disabled) VALUES (:userid, :name, :username, :password, :email, :disabled)";
 
         params.put("userid", user.getId());
         params.put("name", user.getName());
@@ -98,7 +98,7 @@ public class UserDaoImpl implements UserDao {
     @Override
     public void delete(Integer userid) {
         Map<String, Object> params = new HashMap<String, Object>();
-        String sql = "DELETE FROM users WHERE userid = :userid";
+        String sql = "DELETE FROM user WHERE usernr = :userid";
 
         params.put("userid", userid);
         template.update(sql, params);
@@ -109,7 +109,7 @@ public class UserDaoImpl implements UserDao {
     @Override
     public void update(User o) {
         Map<String, Object> params = new HashMap<String, Object>();
-        String sql = "UPDATE users SET name=:name, username=:username, password=:password, phonenr=:phonenr, email=:email, disabled=:disabled WHERE userid=:userid";
+        String sql = "UPDATE user SET persname=:name, username=:username, password=:password, email=:email, disabled=:disabled WHERE usernr=:userid";
 
         params.put("userid", o.getId());
         params.put("name", o.getName());
@@ -126,12 +126,12 @@ public class UserDaoImpl implements UserDao {
 
         public User mapRow(ResultSet rs, int rowNum) throws SQLException {
             User user = new User();
-            user.setId(rs.getInt("userId"));
-            user.setName(rs.getString("name"));
+            user.setId(rs.getInt("userNr"));
+            user.setName(rs.getString("persname"));
             user.setUsername(rs.getString("username"));
             user.setEmail(rs.getString("email"));
             user.setPassword(rs.getString("password"));
-            user.setPhoneNr(rs.getString("phonenr"));
+//            user.setPhoneNr(rs.getString("phonenr"));
             user.setDisabled(rs.getBoolean("disabled"));
 
             return user;

@@ -60,7 +60,8 @@ public class UserManagementView extends VerticalLayout implements View {
         grid.removeColumn(USERNR_PROPERTY);
         grid.removeColumn(PASSWORD_PROPERTY);
         grid.removeColumn(DISABLED_PROPERTY);
-        grid.setColumnOrder(USERNAME_PROPERTY, NAME_PROPERTY, RESETPASSW_COLUMN, EMAIL_PROPERTY, PHONENR_PROPERTY, EDITUSER_COLUMN, DISABLEUSER_COLUMN);
+        grid.removeColumn(PHONENR_PROPERTY);
+        grid.setColumnOrder(USERNAME_PROPERTY, NAME_PROPERTY, RESETPASSW_COLUMN, EMAIL_PROPERTY, EDITUSER_COLUMN, DISABLEUSER_COLUMN);
 
 //        grid.setSelectionMode(SelectionMode.MULTI);
         grid.setEditorEnabled(true);
@@ -148,8 +149,9 @@ public class UserManagementView extends VerticalLayout implements View {
 //        head.setSizeUndefined(); 
 //        delSelectedButton.setSizeFull();
         grid.appendFooterRow();
-        grid.getFooterRow(0).join(USERNAME_PROPERTY, NAME_PROPERTY, RESETPASSW_COLUMN).setComponent(newUserButton);
-        grid.getFooterRow(0).join(EMAIL_PROPERTY, PHONENR_PROPERTY, EDITUSER_COLUMN, DISABLEUSER_COLUMN);
+//        grid.getFooterRow(0).join(USERNAME_PROPERTY, NAME_PROPERTY, RESETPASSW_COLUMN).setComponent(newUserButton);
+//        grid.getFooterRow(0).join(EMAIL_PROPERTY, EDITUSER_COLUMN, DISABLEUSER_COLUMN);
+
 //        grid.getFooterRow(0).join(PHONENR_PROPERTY, EDITUSER_COLUMN, DELETEUSER_COLUMN).setComponent(delSelectedButton);
 
         grid.setSizeFull();
@@ -262,7 +264,9 @@ public class UserManagementView extends VerticalLayout implements View {
         grid.getColumn(NAME_PROPERTY).setEditorField(textField);
 
         textField = new TextField();
-        textField.addValidator(new EmailValidator("The Email is invalid"));
+        textField.setRequired(true);
+        textField.setRequiredError("an Email is required!");
+        textField.addValidator(new EmailValidator("The Email is invalid!"));
         grid.getColumn(EMAIL_PROPERTY).setEditorField(textField);
     }
 

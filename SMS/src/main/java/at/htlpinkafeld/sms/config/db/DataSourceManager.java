@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package at.htlpinkafeld.config.db;
+package at.htlpinkafeld.sms.config.db;
 
 import at.htlpinkafeld.sms.service.PropertyHolder;
 import com.mysql.cj.jdbc.MysqlDataSource;
@@ -45,9 +45,9 @@ public class DataSourceManager {
             }
             
             if(mysql.equals("true")){
-                mysqlds.setURL("jdbc:mysql://localhost:3306/mydb?serverTimezone=UTC");
+                mysqlds.setURL("jdbc:mysql://localhost:3306/zes_sviss?serverTimezone=UTC");
                 mysqlds.setUser("root");
-                mysqlds.setPassword("root");
+                mysqlds.setPassword("Burgenland2016#");
             }
             
         }

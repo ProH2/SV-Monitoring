@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package at.htlpinkafeld.sms.pojos;
+package at.htlpinkafeld.sms.pojo;
 
 import java.sql.Timestamp;
 import java.time.Duration;

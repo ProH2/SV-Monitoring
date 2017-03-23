@@ -5,7 +5,7 @@
  */
 package at.htlpinkafeld.sms.service.threads;
 
-import at.htlpinkafeld.sms.pojos.Host;
+import at.htlpinkafeld.sms.pojo.Host;
 import at.htlpinkafeld.sms.service.JSONService;
 import java.util.List;
 import java.util.TimerTask;

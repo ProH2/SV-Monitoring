@@ -14,8 +14,8 @@ import at.htlpinkafeld.sms.gui.container.MapReferenceContainer;
 import at.htlpinkafeld.sms.gui.overviewComponents.HostPanel;
 import static at.htlpinkafeld.sms.gui.overviewComponents.HostPanel.getDurationString;
 import at.htlpinkafeld.sms.pojo.User;
-import at.htlpinkafeld.sms.pojos.Comment;
-import at.htlpinkafeld.sms.pojos.Host;
+import at.htlpinkafeld.sms.pojo.Comment;
+import at.htlpinkafeld.sms.pojo.Host;
 import at.htlpinkafeld.sms.service.NoUserLoggedInException;
 import at.htlpinkafeld.sms.service.PermissionService;
 import com.vaadin.data.fieldgroup.FieldGroup;
@@ -121,15 +121,15 @@ public class HostDetailWindow extends Window implements HashMapWithListeners.Map
 
                     @Override
                     public void postCommit(FieldGroup.CommitEvent commitEvent) throws FieldGroup.CommitException {
-                        ((DaoDelegatingContainer<Comment>) commentGrid.getContainerDataSource()).updateItem((Comment) commentGrid.getEditedItemId());
+                        Object item = commentGrid.getEditedItemId();
+                        if (item instanceof Comment) {
+                            ((DaoDelegatingContainer<Comment>) commentGrid.getContainerDataSource()).updateItem((Comment) item);
+                        }
                     }
                 });
 
-                Button removeCommentButton = new Button("Delete Comment", new Button.ClickListener() {
-                    @Override
-                    public void buttonClick(Button.ClickEvent event) {
-                        commentGrid.getContainerDataSource().removeItem(commentGrid.getSelectedRow());
-                    }
+                Button removeCommentButton = new Button("Delete Comment", (Button.ClickEvent event) -> {
+                    commentGrid.getContainerDataSource().removeItem(commentGrid.getSelectedRow());
                 });
                 Label spaceHolder = new Label("");
 

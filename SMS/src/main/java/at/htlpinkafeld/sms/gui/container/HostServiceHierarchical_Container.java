@@ -5,8 +5,8 @@
  */
 package at.htlpinkafeld.sms.gui.container;
 
-import at.htlpinkafeld.sms.pojos.Host;
-import at.htlpinkafeld.sms.pojos.Service;
+import at.htlpinkafeld.sms.pojo.Host;
+import at.htlpinkafeld.sms.pojo.Service;
 import com.vaadin.data.Container;
 import com.vaadin.data.Item;
 import com.vaadin.data.Property;

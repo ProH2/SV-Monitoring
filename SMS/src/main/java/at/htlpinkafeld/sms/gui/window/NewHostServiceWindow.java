@@ -7,8 +7,8 @@ package at.htlpinkafeld.sms.gui.window;
 
 import at.htlpinkafeld.sms.gui.Host_Service_ManagementView;
 import at.htlpinkafeld.sms.gui.container.HostServiceHierarchical_Container;
-import at.htlpinkafeld.sms.pojos.Host;
-import at.htlpinkafeld.sms.pojos.Service;
+import at.htlpinkafeld.sms.pojo.Host;
+import at.htlpinkafeld.sms.pojo.Service;
 import at.htlpinkafeld.sms.service.AddHostsAndServices_Service;
 import at.htlpinkafeld.sms.service.KeyParameterEnum;
 import at.htlpinkafeld.sms.service.LinuxServiceCommands;

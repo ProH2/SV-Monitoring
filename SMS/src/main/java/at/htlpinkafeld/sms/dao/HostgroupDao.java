@@ -3,9 +3,9 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package at.htlpinkafeld.dao;
+package at.htlpinkafeld.sms.dao;
 
-import at.htlpinkafeld.sms.pojos.Hostgroup;
+import at.htlpinkafeld.sms.pojo.Hostgroup;
 import java.util.List;
 
 /**

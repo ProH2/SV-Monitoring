@@ -5,8 +5,8 @@
  */
 package at.htlpinkafeld.sms.gui.container;
 
-import at.htlpinkafeld.dao.DutyDao;
-import at.htlpinkafeld.dao.DutyDaoImpl;
+import at.htlpinkafeld.sms.dao.DutyDao;
+import at.htlpinkafeld.sms.dao.DutyDaoImpl;
 import at.htlpinkafeld.sms.gui.TimeManagementView;
 import at.htlpinkafeld.sms.gui.util.TimeManagementCalendarEvent;
 import at.htlpinkafeld.sms.pojo.Duty;

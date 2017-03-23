@@ -5,12 +5,12 @@
  */
 package at.htlpinkafeld.sms.service;
 
-import at.htlpinkafeld.dao.DutyDao;
-import at.htlpinkafeld.dao.DutyDaoImpl;
+import at.htlpinkafeld.sms.dao.DutyDao;
+import at.htlpinkafeld.sms.dao.DutyDaoImpl;
 import at.htlpinkafeld.sms.pojo.Duty;
 import at.htlpinkafeld.sms.pojo.User;
-import at.htlpinkafeld.sms.pojos.Host;
-import at.htlpinkafeld.sms.pojos.Service;
+import at.htlpinkafeld.sms.pojo.Host;
+import at.htlpinkafeld.sms.pojo.Service;
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;

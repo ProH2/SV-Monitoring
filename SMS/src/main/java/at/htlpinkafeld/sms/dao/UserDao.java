@@ -1,4 +1,4 @@
-package at.htlpinkafeld.dao;
+package at.htlpinkafeld.sms.dao;
 
 import at.htlpinkafeld.sms.pojo.User;
 import java.util.List;

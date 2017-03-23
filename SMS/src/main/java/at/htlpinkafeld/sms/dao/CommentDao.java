@@ -3,9 +3,9 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package at.htlpinkafeld.dao;
+package at.htlpinkafeld.sms.dao;
 
-import at.htlpinkafeld.sms.pojos.Comment;
+import at.htlpinkafeld.sms.pojo.Comment;
 import java.time.LocalDateTime;
 import java.util.List;
 

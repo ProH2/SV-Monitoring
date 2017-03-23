@@ -3,11 +3,11 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package at.htlpinkafeld.dao;
+package at.htlpinkafeld.sms.dao;
 
-import at.htlpinkafeld.config.db.DataSourceManager;
-import at.htlpinkafeld.config.db.HsqlDataSource;
-import at.htlpinkafeld.sms.pojos.Hostgroup;
+import at.htlpinkafeld.sms.config.db.DataSourceManager;
+import at.htlpinkafeld.sms.config.db.HsqlDataSource;
+import at.htlpinkafeld.sms.pojo.Hostgroup;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -51,7 +51,7 @@ public class HostgroupDaoImpl implements HostgroupDao {
                 help = help + hostlist.get(i) + ";";
             }
 
-            String sql = "INSERT INTO hostgroup(hostgroupnr, name, hostlist) VALUES (:hostgroupnr, :name, :hostlist)";
+            String sql = "INSERT INTO hostgroup(HostgroupId, HostgroupName, AssignedHosts) VALUES (:hostgroupnr, :name, :hostlist)";
             params.put("hostgroupnr", hostgroupnr);
             params.put("name", name);
             params.put("hostlist", help);
@@ -79,7 +79,7 @@ public class HostgroupDaoImpl implements HostgroupDao {
     @Override
     public void delete(Integer hostgroupnr) {
         Map<String, Object> params = new HashMap<String, Object>();
-        String sql = "DELETE FROM hostgroup WHERE hostgroupnr = :hostgroupnr";
+        String sql = "DELETE FROM hostgroup WHERE HostgroupId = :hostgroupnr";
 
         params.put("hostgroupnr", hostgroupnr);
         template.update(sql, params);
@@ -90,7 +90,7 @@ public class HostgroupDaoImpl implements HostgroupDao {
         Map<String, Object> params = new HashMap<String, Object>();
         params.put("hostgroupnr", hostgroupnr);
 
-        String sql = "SELECT * FROM hostgroup WHERE hostgroupnr=:hostgroupnr";
+        String sql = "SELECT * FROM hostgroup WHERE HostgroupId=:hostgroupnr";
 
         Hostgroup result = template.queryForObject(sql, params, new HostgroupMapper());
 
@@ -128,7 +128,7 @@ public class HostgroupDaoImpl implements HostgroupDao {
     public void update(Hostgroup o) {
         if (o != null) {
             Map<String, Object> params = new HashMap<String, Object>();
-            String sql = "UPDATE hostgroup SET name=:name, hostlist=:hostlist WHERE hostgroupnr=:hostgroupnr";
+            String sql = "UPDATE hostgroup SET HostgroupName=:name, AssignedHosts=:hostlist WHERE HostgroupId=:hostgroupnr";
 
             Integer hostgroupnr = o.getId();
             String name = o.getName();
@@ -140,7 +140,7 @@ public class HostgroupDaoImpl implements HostgroupDao {
                 help = help + hostlist.get(i) + ";";
             }
 
-            params.put("hostgroupnr", hostgroupnr);
+            params.put("hostgroupid", hostgroupnr);
             params.put("name", name);
             params.put("hostlist", help);
 
@@ -152,9 +152,9 @@ public class HostgroupDaoImpl implements HostgroupDao {
 
         public Hostgroup mapRow(ResultSet rs, int rowNum) throws SQLException {
             Hostgroup hostgroup = new Hostgroup();
-            hostgroup.setId(rs.getInt("hostgroupnr"));
-            hostgroup.setName(rs.getString("name"));
-            hostgroup.setHelplist(rs.getString("hostlist"));
+            hostgroup.setId(rs.getInt("HostgroupId"));
+            hostgroup.setName(rs.getString("HostgroupName"));
+            hostgroup.setHelplist(rs.getString("AssignedHosts"));
             hostgroup.setHostlist(new LinkedList<>(Arrays.asList(hostgroup.getHelplist().split(";"))));
             return hostgroup;
         }

@@ -5,16 +5,16 @@
  */
 package at.htlpinkafeld.sms.gui.container;
 
-import at.htlpinkafeld.dao.CommentDao;
-import at.htlpinkafeld.dao.CommentDaoImpl;
-import at.htlpinkafeld.dao.DutyDao;
-import at.htlpinkafeld.dao.DutyDaoImpl;
-import at.htlpinkafeld.dao.HostgroupDao;
-import at.htlpinkafeld.dao.HostgroupDaoImpl;
-import at.htlpinkafeld.dao.LogDao;
-import at.htlpinkafeld.dao.LogDaoImpl;
-import at.htlpinkafeld.dao.UserDao;
-import at.htlpinkafeld.dao.UserDaoImpl;
+import at.htlpinkafeld.sms.dao.CommentDao;
+import at.htlpinkafeld.sms.dao.CommentDaoImpl;
+import at.htlpinkafeld.sms.dao.DutyDao;
+import at.htlpinkafeld.sms.dao.DutyDaoImpl;
+import at.htlpinkafeld.sms.dao.HostgroupDao;
+import at.htlpinkafeld.sms.dao.HostgroupDaoImpl;
+import at.htlpinkafeld.sms.dao.LogDao;
+import at.htlpinkafeld.sms.dao.LogDaoImpl;
+import at.htlpinkafeld.sms.dao.UserDao;
+import at.htlpinkafeld.sms.dao.UserDaoImpl;
 import at.htlpinkafeld.sms.gui.Host_Service_ManagementView;
 import at.htlpinkafeld.sms.gui.OverviewView;
 import at.htlpinkafeld.sms.gui.TimeManagementView;
@@ -26,10 +26,10 @@ import at.htlpinkafeld.sms.gui.overviewComponents.ServiceOverviewTabPanel;
 import at.htlpinkafeld.sms.gui.overviewComponents.ServicePanel;
 import at.htlpinkafeld.sms.pojo.Duty;
 import at.htlpinkafeld.sms.pojo.User;
-import at.htlpinkafeld.sms.pojos.Comment;
-import at.htlpinkafeld.sms.pojos.Host;
-import at.htlpinkafeld.sms.pojos.Hostgroup;
-import at.htlpinkafeld.sms.pojos.Service;
+import at.htlpinkafeld.sms.pojo.Comment;
+import at.htlpinkafeld.sms.pojo.Host;
+import at.htlpinkafeld.sms.pojo.Hostgroup;
+import at.htlpinkafeld.sms.pojo.Service;
 import at.htlpinkafeld.sms.service.JSONService;
 import com.vaadin.data.Container;
 import com.vaadin.data.util.BeanItemContainer;
@@ -245,9 +245,9 @@ public class ContainerFactory {
      * @return {@link CalendarEditableEventProvider} which contains the Duties
      */
     public static DutyEventProvider createDutyEventProvider() {
-//        if (dutyEventProvider == null) {
-//            initDutyEventProvider();
-//        }
+        if (dutyEventProvider == null) {
+            initDutyEventProvider();
+        }
 
         return dutyEventProvider;
     }

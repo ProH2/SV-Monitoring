@@ -8,7 +8,7 @@ package at.htlpinkafeld.sms.gui.overviewComponents;
 import at.htlpinkafeld.sms.gui.window.ServiceDetailWindow;
 import at.htlpinkafeld.sms.gui.OverviewView;
 import at.htlpinkafeld.sms.gui.container.MapReferenceContainer;
-import at.htlpinkafeld.sms.pojos.Service;
+import at.htlpinkafeld.sms.pojo.Service;
 import com.vaadin.data.Container;
 import com.vaadin.data.util.BeanItem;
 import com.vaadin.event.LayoutEvents;
