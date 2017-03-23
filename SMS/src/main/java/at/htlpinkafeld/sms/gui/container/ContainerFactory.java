@@ -83,7 +83,7 @@ public class ContainerFactory {
     private static void initHostMap() {
 
         hostMap = JSONService.getHOSTS();
-        if (hostMap == null) {
+        if (hostMap == null || hostMap.isEmpty()) {
 
             List<Map.Entry<String, Host>> entries = new ArrayList<>();
 
@@ -107,7 +107,7 @@ public class ContainerFactory {
      */
     private static void initServiceMap() {
         serviceMap = JSONService.getSERVICES();
-        if (serviceMap == null) {
+        if (serviceMap == null || serviceMap.isEmpty()) {
             List<Map.Entry<String, Service>> entries = new ArrayList<>();
             for (int i = 1; i <= 100; i++) {
                 Service s = new Service(i % 10, 0, "Service " + i, (Service.Servicestatus) OverviewView.getRandomEnum(Service.Servicestatus.values()), LocalDateTime.now(), Duration.ofMinutes(10), 0, "Test informationTest informationTest tionTest informationTest informationonTest informationTest information");

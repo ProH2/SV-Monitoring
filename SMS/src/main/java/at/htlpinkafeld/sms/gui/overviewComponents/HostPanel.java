@@ -123,10 +123,15 @@ public class HostPanel extends Panel implements HashMapWithListeners.MapChangeLi
     }
 
     public static String getDurationString(Duration duration) {
-        if (duration.toHours() == 0) {
-            return "m: " + duration.toMinutes() + "  s: " + (duration.toMillis() / 1000) % 60;
+        if (duration.toDays() == 0) {
+            if (duration.toHours() == 0) {
+                return "m: " + duration.toMinutes() + " s: " + (duration.toMillis() / 1000) % 60;
+            } else {
+                return "h: " + duration.toHours() + " m: " + duration.toMinutes() % 60;
+            }
         } else {
-            return "h: " + duration.toHours() + "m: " + duration.toMinutes() % 60;
+            return "d: " + duration.toDays() + " h: " + duration.toHours() % 24;
+
         }
     }
 

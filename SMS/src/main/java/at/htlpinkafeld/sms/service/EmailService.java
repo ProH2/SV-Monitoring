@@ -97,36 +97,32 @@ public class EmailService {
         }
     }
 
-
-    
-        public static void sendNotificationMailHost(String hostname, Host.Hoststatus oldstatus, Host.Hoststatus newstatus, String pluginOutput) {
+    public static void sendNotificationMailHost(String hostname, Host.Hoststatus oldstatus, Host.Hoststatus newstatus, String pluginOutput) {
         String subject;
         String body;
         List<Duty> dList = dutydao.getDutiesInTime(LocalDateTime.now());
         List<User> uList = new ArrayList<>();
-        
-        for(int i=0; i<dList.size(); i++){
+
+        for (int i = 0; i < dList.size(); i++) {
             uList.add(dList.get(i).getUser());
         }
-        
-        
+
         subject = hostname + "wechselte von " + oldstatus + " zu " + newstatus + "!";
         body = LocalDateTime.now().format(dateTimeFormatter) + pluginOutput;
 
         sendEmail(subject, body, null, uList);
     }
-        
+
     public static void sendNotificationMailService(String servicename, Service.Servicestatus oldstatus, Service.Servicestatus newstatus, String pluginOutput) {
         String subject;
         String body;
         List<Duty> dList = dutydao.getDutiesInTime(LocalDateTime.now());
         List<User> uList = new ArrayList<>();
-        
-        for(int i=0; i<dList.size(); i++){
+
+        for (int i = 0; i < dList.size(); i++) {
             uList.add(dList.get(i).getUser());
         }
-        
-        
+
         subject = servicename + "wechselte von " + oldstatus + " zu " + newstatus + "!";
         body = LocalDateTime.now().format(dateTimeFormatter) + pluginOutput;
 
@@ -146,5 +142,4 @@ public class EmailService {
         sendEmail(subject, body, null, userL);
     }
 
-    
 }

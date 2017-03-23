@@ -29,6 +29,7 @@ import com.vaadin.ui.Button;
 import com.vaadin.ui.Field;
 import com.vaadin.ui.Grid;
 import com.vaadin.ui.Notification;
+import com.vaadin.ui.TabSheet;
 import com.vaadin.ui.TextField;
 import com.vaadin.ui.UI;
 import com.vaadin.ui.VerticalLayout;
@@ -153,17 +154,20 @@ public class UserManagementView extends VerticalLayout implements View {
 //        grid.getFooterRow(0).join(EMAIL_PROPERTY, EDITUSER_COLUMN, DISABLEUSER_COLUMN);
 
 //        grid.getFooterRow(0).join(PHONENR_PROPERTY, EDITUSER_COLUMN, DELETEUSER_COLUMN).setComponent(delSelectedButton);
-
         grid.setSizeFull();
 
 //        innerLayout.addComponent(head);
         innerLayout.addComponent(grid);
 
         innerLayout.setSizeFull();
+        innerLayout.setHeight(UI.getCurrent().getPage().getBrowserWindowHeight() - 38 *2, Unit.PIXELS);
 
-        super.addComponent(innerLayout);
+        TabSheet mainTab = new TabSheet();
+        mainTab.addTab(innerLayout, "Users");
 
-        super.setComponentAlignment(innerLayout, Alignment.MIDDLE_CENTER);
+        super.addComponent(mainTab);
+
+        super.setComponentAlignment(mainTab, Alignment.MIDDLE_CENTER);
     }
 
     @Override
