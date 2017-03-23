@@ -3,7 +3,7 @@
 	      http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd"
 	version="2.5">
 
-	<display-name>SMS_HSQL</display-name>
+	<display-name>SMS - SVISS Monitoring</display-name>
 
     
 </web-app>

@@ -38,7 +38,11 @@ import java.time.LocalDateTime;
  */
 public class JSONService {
 
-    public static String NAGIOS = "http://192.168.23.131";
+    //Local auf Rechner
+    //public static String NAGIOS = "http://192.168.23.131";
+    //für SVISS-Server
+    public static String NAGIOS = "http://192.168.14.111";
+    
     private static List<Host> hosts = null;
 
     private static HashMapWithListeners<String, Host> HOSTS = null;
