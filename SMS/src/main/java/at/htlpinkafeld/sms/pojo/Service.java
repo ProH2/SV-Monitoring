@@ -143,29 +143,33 @@ public class Service {
     public static Service createServiceFromJson(HashMap<String, Object> map, String hostname) {
 //        System.out.println(map);
 
-        Service service = new Service();
-        service.setHostname(hostname);
-        service.setName((String) map.get("description"));
-        service.setInformation((String) map.get("plugin_output"));
+        if (map != null) {
+
+            Service service = new Service();
+            service.setHostname(hostname);
+            service.setName((String) map.get("description"));
+            service.setInformation((String) map.get("plugin_output"));
 //        System.out.println(map.get("last_check"));
-        service.setLastChecked(LocalDateTime.ofEpochSecond((long) map.get("last_check"), 0, ZoneOffset.UTC));
+            service.setLastChecked(LocalDateTime.ofEpochSecond((long) map.get("last_check"), 0, ZoneOffset.UTC));
 
-        Timestamp stamp = new Timestamp((long) map.get("last_state_change"));
-        LocalDateTime last_state_change = stamp.toLocalDateTime();
-        //System.out.println(map.get("last_state_change"));
+            Timestamp stamp = new Timestamp((long) map.get("last_state_change"));
+            LocalDateTime last_state_change = stamp.toLocalDateTime();
+            //System.out.println(map.get("last_state_change"));
 
-        LocalDateTime now = LocalDateTime.now();
-        service.setDuration(Duration.between(last_state_change, now));
+            LocalDateTime now = LocalDateTime.now();
+            service.setDuration(Duration.between(last_state_change, now));
 
-        switch ((Integer) map.get("status")) {
-            case 2:
-                service.setStatus(Service.Servicestatus.OK);
-                break;
-            default:
-                service.setStatus(Service.Servicestatus.UNKNOWN);
+            switch ((Integer) map.get("status")) {
+                case 2:
+                    service.setStatus(Service.Servicestatus.OK);
+                    break;
+                default:
+                    service.setStatus(Service.Servicestatus.UNKNOWN);
+            }
+
+            return service;
         }
-
-        return service;
+        return null;
     }
 
     @Override

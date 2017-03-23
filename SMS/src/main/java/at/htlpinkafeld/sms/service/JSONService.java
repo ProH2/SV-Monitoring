@@ -152,7 +152,9 @@ public class JSONService {
 //                System.out.println("serviceputs: " + host + " " + o);
                 Service s = getServiceDetails(host, o);
 //                System.out.println(i++ + " " + s + " " + s.getName());
-                SERVICES.put(host + "/" + s.getName(), s);
+                if (s != null) {
+                    SERVICES.put(host + "/" + s.getName(), s);
+                }
             }
         }
 
@@ -167,7 +169,7 @@ public class JSONService {
     }
 
     public static Service getServiceDetails(String host, String service) throws IOException {
-        service = service.replace(" ", "+");
+        //service = service.replace(" ", "+");
 
 //         System.out.println("h+s:" + host + " " + service);
         InputStream in = new URL(NAGIOS + "/nagios/cgi-bin/statusjson.cgi?query=service&hostname=" + host + "&servicedescription=" + service).openStream();
