@@ -160,8 +160,17 @@ public class Service {
             service.setDuration(Duration.between(last_state_change, now));
 
             switch ((Integer) map.get("status")) {
+                case 1:
+                    service.setStatus(Servicestatus.PENDING);
+                    break;
                 case 2:
                     service.setStatus(Service.Servicestatus.OK);
+                    break;
+                case 4:
+                    service.setStatus(Service.Servicestatus.WARNING);
+                    break;
+                case 16:
+                    service.setStatus(Service.Servicestatus.CRITICAL);
                     break;
                 default:
                     service.setStatus(Service.Servicestatus.UNKNOWN);

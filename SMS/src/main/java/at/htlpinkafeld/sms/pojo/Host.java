@@ -130,11 +130,17 @@ public class Host {
         host.setDuration(Duration.between(last_state_change, now));
 
         switch ((Integer) map.get("status")) {
+            case 1:
+                host.setStatus(Hoststatus.PENDING);
+                break;
             case 2:
                 host.setStatus(Hoststatus.UP);
                 break;
-            default:
+            case 16:
                 host.setStatus(Hoststatus.DOWN);
+                break;
+            default:
+                host.setStatus(Hoststatus.UNREACHABLE);
         }
 
         return host;
