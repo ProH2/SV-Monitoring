@@ -135,7 +135,7 @@ public class NewHostServiceWindow extends Window {
                 if (host == null) {
                     destinationTextField.validate();
 
-                    AddHostsAndServices_Service.addHost(nameTextField.getValue(), destinationTextField.getValue());
+                    AddHostsAndServices_Service.addHost((String)this.osSelect.getValue(), nameTextField.getValue(), destinationTextField.getValue());
                 } else {
                     warningLimit.validate();
                     criticalLimit.validate();
@@ -145,7 +145,7 @@ public class NewHostServiceWindow extends Window {
                     parameterMap.put(KeyParameterEnum.WARNING, warningLimit.getValue());
                     parameterMap.put(KeyParameterEnum.CRITICAL, criticalLimit.getValue());
 
-                    AddHostsAndServices_Service.addService(host.getHostname(), (ServiceCommandsInterface) serivceTypeSelect.getValue(), parameterMap, nameTextField.getValue().trim());
+                    AddHostsAndServices_Service.addService((String)this.osSelect.getValue() , host.getHostname(), (ServiceCommandsInterface) serivceTypeSelect.getValue(), parameterMap, nameTextField.getValue().trim());
                 }
                 close();
             } catch (Validator.InvalidValueException e) {

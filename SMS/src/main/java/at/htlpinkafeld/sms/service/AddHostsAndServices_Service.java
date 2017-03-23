@@ -27,7 +27,7 @@ public class AddHostsAndServices_Service {
      */
     private static String path = "/usr/local/nagios/etc/";
 
-    public static void addHost(String name, String ip) {
+    public static void addHost(String os, String name, String ip) {
 
         File f = new File(path + "hosts.cfg");
         if (f.exists() && !f.isDirectory()) {
@@ -39,7 +39,11 @@ public class AddHostsAndServices_Service {
                 PrintWriter out = new PrintWriter(bw)) {
 
             out.append("define host{\r\n");
-            out.append("use                             linux-box\r\n");
+            if (os.equals("Windows")) {
+                out.append("use                         windows-server");
+            } else if (os.equals("Linux")) {
+                out.append("use                             linux-box\r\n");
+            }
             out.append("host_name                       " + name + "\r\n");
             out.append("alias                           " + name + " alias\r\n");
             out.append("address                         " + ip + "\r\n");
@@ -57,7 +61,7 @@ public class AddHostsAndServices_Service {
     check_ssh
     check_ftp    
      */
-    public static void addService(String hostname, ServiceCommandsInterface command, Map<KeyParameterEnum, String> parameterMap, String servicename) {
+    public static void addService(String os, String hostname, ServiceCommandsInterface command, Map<KeyParameterEnum, String> parameterMap, String servicename) {
 
         try (FileWriter fw = new FileWriter(path + "services.cfg", true);
                 BufferedWriter bw = new BufferedWriter(fw);
