@@ -7,15 +7,14 @@ package at.htlpinkafeld.sms.gui.window;
 
 import at.htlpinkafeld.sms.gui.container.DaoDelegatingContainer;
 import at.htlpinkafeld.sms.pojo.User;
+import at.htlpinkafeld.sms.service.EmailService;
 import at.htlpinkafeld.sms.service.PermissionService;
 import at.htlpinkafeld.sms.service.RandomString;
-import com.vaadin.data.Container;
 import com.vaadin.data.validator.StringLengthValidator;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.FormLayout;
 import com.vaadin.ui.TextField;
 import com.vaadin.ui.Window;
-import org.apache.commons.codec.digest.DigestUtils;
 
 /**
  * Window which is used to reset/set the password of a user
@@ -56,6 +55,7 @@ public class ResetPasswordWindow extends Window {
                 ((User) objectId).setPassword(PermissionService.hashPassword(textField.getValue()));
                 userContainer.updateItem((User) objectId);
 
+                EmailService.sendUserNewPasswordEmail(textField.getValue(), (User) objectId);
                 super.close();
             }
         }));
