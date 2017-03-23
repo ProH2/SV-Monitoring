@@ -29,6 +29,14 @@ public class Log implements IPojo{
     public Log() {
     }
 
+    public Log(Timestamp timestamp, String logCause, String logEntry) {
+        this.timestamp = timestamp;
+        this.logCause = logCause;
+        this.logEntry = logEntry;
+    }
+    
+    
+
     @Override
     public Integer getId() {
         return logId;
