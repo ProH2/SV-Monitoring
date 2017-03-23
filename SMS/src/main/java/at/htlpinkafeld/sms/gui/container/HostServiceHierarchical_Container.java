@@ -44,7 +44,7 @@ public class HostServiceHierarchical_Container extends AbstractContainer impleme
     /**
      * Collection which contains the containerPropertyIds
      */
-    private static final Collection containerPropertyIds = Arrays.asList(new String[]{"Name", "Host-IP", "Status"});
+    private static final Collection containerPropertyIds = Arrays.asList(new String[]{"Name", "Information", "Status"});
 
     /**
      * Constructor for the {@link HostServiceHierarchical_Container}, which uses
@@ -99,7 +99,7 @@ public class HostServiceHierarchical_Container extends AbstractContainer impleme
                 switch (String.valueOf(propertyId)) {
                     case "Name":
                         return new ObjectProperty(((Host) item).getHostname());
-                    case "Host-IP":
+                    case "Information":
                         //TODO change to IP/Host
                         return new ObjectProperty(((Host) item).getInformation());
                     case "Status":
@@ -110,7 +110,7 @@ public class HostServiceHierarchical_Container extends AbstractContainer impleme
                 switch (String.valueOf(propertyId)) {
                     case "Name":
                         return new ObjectProperty(((Service) item).getName());
-                    case "Host-IP":
+                    case "Information":
                         return new ObjectProperty(((Service) item).getInformation());
                     case "Status":
                         return new ObjectProperty(((Service) item).getStatus().name());
