@@ -42,7 +42,7 @@ public class JSONService {
     //public static String NAGIOS = "http://192.168.23.131";
     //für SVISS-Server
     public static String NAGIOS = "http://192.168.14.111";
-    
+
     private static List<Host> hosts = null;
 
     private static HashMapWithListeners<String, Host> HOSTS = null;
@@ -55,134 +55,137 @@ public class JSONService {
     }
 
     public static List<Host> getHostsFromNagios() throws IOException {
-
-        if (HOSTS == null) {
-            HOSTS = new HashMapWithListeners<>();
-        }
-        if (SERVICES == null) {
-            SERVICES = new HashMapWithListeners<>();
-        }
-
-        hosts = new ArrayList<>();
-        String url;
-
-        Authenticator.setDefault(new Authenticator() {
-            @Override
-            protected PasswordAuthentication getPasswordAuthentication() {
-                return new PasswordAuthentication("nagiosadmin", "admin".toCharArray());
+        try {
+            if (HOSTS == null) {
+                HOSTS = new HashMapWithListeners<>();
             }
-        });
-        InputStream in = new URL(NAGIOS + "/nagios/cgi-bin/statusjson.cgi?query=hostlist").openStream();
-        String source = IOUtils.toString(in);
-        HashMap<String, Object> result = new ObjectMapper().readValue(source, HashMap.class);
-        IOUtils.closeQuietly(in);
+            if (SERVICES == null) {
+                SERVICES = new HashMapWithListeners<>();
+            }
 
-        HashMap<String, Object> hostmap = (HashMap<String, Object>) ((HashMap) result.get("data")).get("hostlist");
-        //System.out.println(hostmap);
+            hosts = new ArrayList<>();
+            String url;
 
-        List<String> hostlist = new ArrayList<>();
-        hostlist.addAll(hostmap.keySet());
-        //System.out.println(hostlist);
-        HashMap<String, List> map = new HashMap<>();
+            Authenticator.setDefault(new Authenticator() {
+                @Override
+                protected PasswordAuthentication getPasswordAuthentication() {
+                    return new PasswordAuthentication("nagiosadmin", "admin".toCharArray());
+                }
+            });
+            InputStream in = new URL(NAGIOS + "/nagios/cgi-bin/statusjson.cgi?query=hostlist").openStream();
+            String source = IOUtils.toString(in);
+            HashMap<String, Object> result = new ObjectMapper().readValue(source, HashMap.class);
+            IOUtils.closeQuietly(in);
 
-        //Ausgabe
-        Iterator entries;
-        entries = hostmap.entrySet().iterator();
-        while (entries.hasNext()) {
-            Map.Entry entry = (Map.Entry) entries.next();
-            String key = (String) entry.getKey();
-            Integer value = (Integer) entry.getValue();
+            HashMap<String, Object> hostmap = (HashMap<String, Object>) ((HashMap) result.get("data")).get("hostlist");
+            //System.out.println(hostmap);
+
+            List<String> hostlist = new ArrayList<>();
+            hostlist.addAll(hostmap.keySet());
+            //System.out.println(hostlist);
+            HashMap<String, List> map = new HashMap<>();
+
+            //Ausgabe
+            Iterator entries;
+            entries = hostmap.entrySet().iterator();
+            while (entries.hasNext()) {
+                Map.Entry entry = (Map.Entry) entries.next();
+                String key = (String) entry.getKey();
+                Integer value = (Integer) entry.getValue();
 //            System.out.println("Key = " + key + ", Value = " + value);
 
-            //System.out.println("url + key= " + key);
+                //System.out.println("url + key= " + key);
 //            key.replace("     ", " ");
 //            if (key.contains("host-test")) {
 //                key = "host-test+++++2017%2F02%2F10+13-28-04";
 //            }
-            key = URLEncoder.encode(key, "UTF-8");
-            //System.out.println("key2= " + key);
-            url = "http://192.168.23.131/nagios/cgi-bin/statusjson.cgi?query=host&hostname=" + key;
-            in = new URL(url).openStream();
-            source = IOUtils.toString(in);
-            result = new ObjectMapper().readValue(source, HashMap.class);
-            IOUtils.closeQuietly(in);
+                key = URLEncoder.encode(key, "UTF-8");
+                //System.out.println("key2= " + key);
+                url = NAGIOS + "/nagios/cgi-bin/statusjson.cgi?query=host&hostname=" + key;
+                in = new URL(url).openStream();
+                source = IOUtils.toString(in);
+                result = new ObjectMapper().readValue(source, HashMap.class);
+                IOUtils.closeQuietly(in);
 //            System.out.println(result);
-            result = (HashMap<String, Object>) ((HashMap) result.get("data")).get("host");
-            //System.out.println(result);
-            Host h = Host.createHostFromJson(result);
-            hosts.add(h);
-            
-            Host old = HOSTS.put(h.getHostname(), h);
-            if(old != null && old.statusChanged(h)){
-                EmailService.sendNotificationMailHost(h.getHostname(), old.getStatus(), h.getStatus(), h.getInformation());
-                logdao.insert(new Log(LocalDateTime.now(), h.getHostname(), "Status changed from " + old.getStatus().toString() + " to " + h.getStatus().toString() + " Plugin Output: " + h.getInformation()));
-            }
-        }
+                result = (HashMap<String, Object>) ((HashMap) result.get("data")).get("host");
+                //System.out.println(result);
+                Host h = Host.createHostFromJson(result);
+                hosts.add(h);
 
-        for (String s : hostlist) {
-            //System.out.println(s);
-            String temp = s;
-            //            key.replace("     ", " ");
+                Host old = HOSTS.put(h.getHostname(), h);
+                if (old != null && old.statusChanged(h)) {
+                    EmailService.sendNotificationMailHost(h.getHostname(), old.getStatus(), h.getStatus(), h.getInformation());
+                    logdao.insert(new Log(LocalDateTime.now(), h.getHostname(), "Status changed from " + old.getStatus().toString() + " to " + h.getStatus().toString() + " Plugin Output: " + h.getInformation()));
+                }
+            }
+
+            for (String s : hostlist) {
+                //System.out.println(s);
+                String temp = s;
+                //            key.replace("     ", " ");
 //            if (key.contains("host-test")) {
 //                key = "host-test+++++2017%2F02%2F10+13-28-04";
 //            }
-            s = URLEncoder.encode(s, "UTF-8");
-            url = NAGIOS + "/nagios/cgi-bin/statusjson.cgi?query=servicelist&hostname=" + s;
-            in = new URL(url).openStream();
-            source = IOUtils.toString(in);
-            result = new ObjectMapper().readValue(source, HashMap.class);
-            IOUtils.closeQuietly(in);
+                s = URLEncoder.encode(s, "UTF-8");
+                url = NAGIOS + "/nagios/cgi-bin/statusjson.cgi?query=servicelist&hostname=" + s;
+                in = new URL(url).openStream();
+                source = IOUtils.toString(in);
+                result = new ObjectMapper().readValue(source, HashMap.class);
+                IOUtils.closeQuietly(in);
 
-            //System.out.println("1: " + result);
-            //System.out.println("2: " + (result = (HashMap<String, Object>) result.get("data")));
-            //System.out.println("3: " + (result = (HashMap<String, Object>) result.get("servicelist")));
-            //System.out.println("4: " + (result = (HashMap<String, Object>) result.get(temp)));
-            //HashMap<String, Object> servicemap = (HashMap<String, Object>) ((HashMap) (((HashMap) result.get("data")).get("servicelist"))).get(s);
-            result = (HashMap<String, Object>) result.get("data");
-            result = (HashMap<String, Object>) result.get("servicelist");
-            result = (HashMap<String, Object>) result.get(temp);
+                //System.out.println("1: " + result);
+                //System.out.println("2: " + (result = (HashMap<String, Object>) result.get("data")));
+                //System.out.println("3: " + (result = (HashMap<String, Object>) result.get("servicelist")));
+                //System.out.println("4: " + (result = (HashMap<String, Object>) result.get(temp)));
+                //HashMap<String, Object> servicemap = (HashMap<String, Object>) ((HashMap) (((HashMap) result.get("data")).get("servicelist"))).get(s);
+                result = (HashMap<String, Object>) result.get("data");
+                result = (HashMap<String, Object>) result.get("servicelist");
+                result = (HashMap<String, Object>) result.get(temp);
 
-            entries = result.entrySet().iterator();
-            while (entries.hasNext()) {
-                Map.Entry entry = (Map.Entry) entries.next();
-                String key = (String) entry.getKey();
-                //Integer value = (Integer) entry.getValue();
+                entries = result.entrySet().iterator();
+                while (entries.hasNext()) {
+                    Map.Entry entry = (Map.Entry) entries.next();
+                    String key = (String) entry.getKey();
+                    //Integer value = (Integer) entry.getValue();
 //                System.out.println("Key = " + key + ", Value = " + value);
 //                System.out.println("key: " + key);
-                //JSONService.getServiceDetails(s, key);
-            }
-            List<String> list = new ArrayList<>();
-            list.addAll(result.keySet());
-            map.put(s, list);
+                    //JSONService.getServiceDetails(s, key);
+                }
+                List<String> list = new ArrayList<>();
+                list.addAll(result.keySet());
+                map.put(s, list);
 //
-        }
+            }
 
 //        System.out.println("map: " + map);
-        int i = 0;
-        for (String host : map.keySet()) {
-            List<String> olist = (List<String>) map.get(host);
+            int i = 0;
+            for (String host : map.keySet()) {
+                List<String> olist = (List<String>) map.get(host);
 //            System.out.println("olist: " + olist);
 
-            for (String o : olist) {
+                for (String o : olist) {
 //                System.out.println("serviceputs: " + host + " " + o);
-                Service s = getServiceDetails(host, o);
+                    Service s = getServiceDetails(host, o);
 //                System.out.println(i++ + " " + s + " " + s.getName());
-                if (s != null) {
-                    Service old = SERVICES.put(host + "/" + s.getName(), s);
-                    if(old != null && old.hasChanged(s)){
-                        EmailService.sendNotificationMailService(host + "/" + s.getName(), old.getStatus(), s.getStatus(), s.getInformation());
-                        logdao.insert(new Log(LocalDateTime.now(), host + "/" + s.getName(), "Status changed from " + old.getStatus().toString() + " to " + s.getStatus().toString() + " Plugin Output: " + s.getInformation()));
+                    if (s != null) {
+                        Service old = SERVICES.put(host + "/" + s.getName(), s);
+                        if (old != null && old.hasChanged(s)) {
+                            EmailService.sendNotificationMailService(host + "/" + s.getName(), old.getStatus(), s.getStatus(), s.getInformation());
+                            logdao.insert(new Log(LocalDateTime.now(), host + "/" + s.getName(), "Status changed from " + old.getStatus().toString() + " to " + s.getStatus().toString() + " Plugin Output: " + s.getInformation()));
+                        }
                     }
                 }
             }
-        }
 
-        SERVICES.fireMapChanged();
+            SERVICES.fireMapChanged();
 
 //        System.out.println("SERVICES OUTPUT: size=" + SERVICES.keySet().size());
 //        for (String s : SERVICES.keySet()) {
 //            System.out.println(s + "\t" + SERVICES.get(s));
 //        }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 
         return hosts;
     }

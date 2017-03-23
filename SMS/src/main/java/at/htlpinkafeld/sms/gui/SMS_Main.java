@@ -76,15 +76,4 @@ public class SMS_Main extends UI {
         return mbc;
     }
 
-    @WebServlet(urlPatterns = "/*", name = "MyUIServlet", asyncSupported = true)
-    @VaadinServletConfiguration(ui = SMS_Main.class, productionMode = false, resourceCacheTime = 10, widgetset = "at.htlpinkafeld.sms.gui.AppWidgetSet")
-    public static class MyUIServlet extends VaadinServlet {
-
-        @Override
-        protected void servletInitialized() throws ServletException {
-            super.servletInitialized();
-            JSONService.refresh();
-        }
-
-    }
 }

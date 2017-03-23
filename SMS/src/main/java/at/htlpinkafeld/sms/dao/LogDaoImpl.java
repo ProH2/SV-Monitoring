@@ -38,7 +38,7 @@ public class LogDaoImpl implements LogDao {
     public void insert(Log log) {
         Map<String, Object> params = new HashMap<String, Object>();
 
-        String sql = "INSERT INTO log(logid, timestamp, logcause, logentry) VALUES (:logid, :timestamp, :logcause, :logentry)";
+        String sql = "INSERT INTO Log(logid, timestamp, logcause, logentry) VALUES (:logid, :timestamp, :logcause, :logentry)";
 
         params.put("logid", log.getId());
         params.put("timestamp", Timestamp.valueOf(log.getTimestamp()));
@@ -65,7 +65,7 @@ public class LogDaoImpl implements LogDao {
     @Override
     public void delete(Integer logid) {
         Map<String, Object> params = new HashMap<String, Object>();
-        String sql = "DELETE FROM log WHERE logid = :logid";
+        String sql = "DELETE FROM Log WHERE logid = :logid";
 
         params.put("logid", logid);
         template.update(sql, params);
@@ -81,7 +81,7 @@ public class LogDaoImpl implements LogDao {
     @Override
     public List<Log> findAll() {
         Map<String, Object> params = new HashMap<>();
-        String sql = "SELECT * FROM log";
+        String sql = "SELECT * FROM Log";
 
         List<Log> result = template.query(sql, params, new LogDaoImpl.LogMapper());
 
@@ -91,7 +91,7 @@ public class LogDaoImpl implements LogDao {
     @Override
     public void update(Log o) {
         Map<String, Object> params = new HashMap<String, Object>();
-        String sql = "UPDATE log SET timestamp=:timestamp, logcause=:logcause, logentry=:logentry WHERE logid=:logid";
+        String sql = "UPDATE Log SET timestamp=:timestamp, logcause=:logcause, logentry=:logentry WHERE logid=:logid";
 
         params.put("logid", o.getId());
         params.put("timestamp", Timestamp.valueOf(o.getTimestamp()));

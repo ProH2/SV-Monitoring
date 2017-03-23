@@ -10,6 +10,8 @@ import at.htlpinkafeld.sms.gui.OverviewView;
 import at.htlpinkafeld.sms.gui.container.MapReferenceContainer;
 import at.htlpinkafeld.sms.pojo.Service;
 import com.vaadin.data.Container;
+import com.vaadin.data.Container.Filter;
+import com.vaadin.data.Item;
 import com.vaadin.data.util.BeanItem;
 import com.vaadin.event.LayoutEvents;
 import com.vaadin.event.MouseEvents;
@@ -28,6 +30,7 @@ import com.vaadin.ui.VerticalLayout;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Set;
 import org.vaadin.addons.stackpanel.StackPanel;
@@ -76,8 +79,12 @@ public class ServiceOverviewTabPanel extends Panel implements OverviewTabPanel, 
         filterMap.put("Service", "name");
 
         SearchComponent searchComponent = new SearchComponent(filterMap, container);
-        parentVerticalLayout.addComponent(searchComponent);
-        parentVerticalLayout.setComponentAlignment(searchComponent, Alignment.MIDDLE_RIGHT);
+
+        StatusFilterComponent statusFilterComponent = new StatusFilterComponent(StatusFilterComponent.createServiceStatusFilterMap(), container);
+        HorizontalLayout filterL = new HorizontalLayout(statusFilterComponent, searchComponent);
+        filterL.setSizeFull();
+        parentVerticalLayout.addComponent(filterL);
+//        parentVerticalLayout.setComponentAlignment(searchComponent, Alignment.MIDDLE_RIGHT);
 
         serviceVerticalLayout = new VerticalLayout();
         serviceVerticalLayout.setSizeFull();

@@ -51,7 +51,7 @@ public class HostgroupDaoImpl implements HostgroupDao {
                 help = help + hostlist.get(i) + ";";
             }
 
-            String sql = "INSERT INTO hostgroup(HostgroupId, HostgroupName, AssignedHosts) VALUES (:hostgroupnr, :name, :hostlist)";
+            String sql = "INSERT INTO Hostgroup(HostgroupId, HostgroupName, AssignedHosts) VALUES (:hostgroupnr, :name, :hostlist)";
             params.put("hostgroupnr", hostgroupnr);
             params.put("name", name);
             params.put("hostlist", help);
@@ -78,7 +78,7 @@ public class HostgroupDaoImpl implements HostgroupDao {
     @Override
     public void delete(Integer hostgroupnr) {
         Map<String, Object> params = new HashMap<String, Object>();
-        String sql = "DELETE FROM hostgroup WHERE HostgroupId = :hostgroupnr";
+        String sql = "DELETE FROM Hostgroup WHERE HostgroupId = :hostgroupnr";
 
         params.put("hostgroupnr", hostgroupnr);
         template.update(sql, params);
@@ -89,7 +89,7 @@ public class HostgroupDaoImpl implements HostgroupDao {
         Map<String, Object> params = new HashMap<String, Object>();
         params.put("hostgroupnr", hostgroupnr);
 
-        String sql = "SELECT * FROM hostgroup WHERE HostgroupId=:hostgroupnr";
+        String sql = "SELECT * FROM Hostgroup WHERE HostgroupId=:hostgroupnr";
 
         Hostgroup result = template.queryForObject(sql, params, new HostgroupMapper());
 
@@ -99,7 +99,7 @@ public class HostgroupDaoImpl implements HostgroupDao {
     @Override
     public List<Hostgroup> findAll() {
         Map<String, Object> params = new HashMap<>();
-        String sql = "SELECT * FROM hostgroup";
+        String sql = "SELECT * FROM Hostgroup";
 
         List<Hostgroup> result = template.query(sql, params, new HostgroupDaoImpl.HostgroupMapper());
 
@@ -127,7 +127,7 @@ public class HostgroupDaoImpl implements HostgroupDao {
     public void update(Hostgroup o) {
         if (o != null) {
             Map<String, Object> params = new HashMap<String, Object>();
-            String sql = "UPDATE hostgroup SET HostgroupName=:name, AssignedHosts=:hostlist WHERE HostgroupId=:hostgroupnr";
+            String sql = "UPDATE Hostgroup SET HostgroupName=:name, AssignedHosts=:hostlist WHERE HostgroupId=:hostgroupnr";
 
             Integer hostgroupnr = o.getId();
             String name = o.getName();

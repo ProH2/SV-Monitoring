@@ -13,7 +13,7 @@ USE `zes_sviss`;
 
 
 -- -----------------------------------------------------
--- Table `mydb`.`Comment`
+-- Table `zes_sviss`.`Comment`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `Comment` (
   `CommentId` INT AUTO_INCREMENT,
@@ -32,7 +32,7 @@ ENGINE = InnoDB;
 
 
 -- -----------------------------------------------------
--- Table `mydb`.`Duty`
+-- Table `zes_sviss`.`Duty`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `Duty` (
   `DutyId` INT AUTO_INCREMENT,
@@ -50,7 +50,7 @@ ENGINE = InnoDB;
 
 
 -- -----------------------------------------------------
--- Table `mydb`.`Hostgroup`
+-- Table `zes_sviss`.`Hostgroup`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `Hostgroup` (
   `HostgroupId` INT AUTO_INCREMENT,
@@ -62,7 +62,7 @@ ENGINE = InnoDB;
 
 
 -- -----------------------------------------------------
--- Table `mydb`.`Log`
+-- Table `zes_sviss`.`Log`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `Log` (
   `LogId` INT AUTO_INCREMENT,
@@ -72,7 +72,3 @@ CREATE TABLE IF NOT EXISTS `Log` (
   PRIMARY KEY (`LogId`))
 ENGINE = InnoDB;
 
-
-SET SQL_MODE=@OLD_SQL_MODE;
-SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS;
-SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS;

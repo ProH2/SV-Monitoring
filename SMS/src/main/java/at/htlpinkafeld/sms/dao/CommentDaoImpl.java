@@ -40,7 +40,7 @@ public class CommentDaoImpl implements CommentDao {
     @Override
     public void insert(Comment comment) {
         Map<String, Object> params = new HashMap<String, Object>();
-        String sql = "INSERT INTO comment(commentid, comment, commentto, author, lastchanged) VALUES (:commentid, :comment, :commentto, :author, :lastchanged)";
+        String sql = "INSERT INTO Comment(commentid, comment, commentto, author, lastchanged) VALUES (:commentid, :comment, :commentto, :author, :lastchanged)";
 
         params.put("commentid", comment.getId());
         params.put("comment", comment.getComment());
@@ -68,7 +68,7 @@ public class CommentDaoImpl implements CommentDao {
     @Override
     public void delete(Integer commentid) {
         Map<String, Object> params = new HashMap<String, Object>();
-        String sql = "DELETE FROM comment WHERE commentid = :commentid";
+        String sql = "DELETE FROM Comment WHERE commentid = :commentid";
 
         params.put("commentid", commentid);
         template.update(sql, params);
@@ -82,7 +82,7 @@ public class CommentDaoImpl implements CommentDao {
 
         Map<String, Object> params = new HashMap<String, Object>();
 
-        String sql = "SELECT * FROM comment WHERE lastchanged BETWEEN :time1 AND :time2";
+        String sql = "SELECT * FROM Comment WHERE lastchanged BETWEEN :time1 AND :time2";
         params.put("time1", startt);
         params.put("time2", endt);
 
@@ -95,7 +95,7 @@ public class CommentDaoImpl implements CommentDao {
         Map<String, Object> params = new HashMap<String, Object>();
         params.put("commentid", commentid);
 
-        String sql = "SELECT * FROM comment WHERE commentid=:commentid";
+        String sql = "SELECT * FROM Comment WHERE commentid=:commentid";
 
         Comment result = template.queryForObject(sql, params, new CommentMapper());
 
@@ -107,7 +107,7 @@ public class CommentDaoImpl implements CommentDao {
         Map<String, Object> params = new HashMap<String, Object>();
         params.put("author", userid);
 
-        String sql = "SELECT * FROM comment WHERE author=:author";
+        String sql = "SELECT * FROM Comment WHERE author=:author";
 
         List<Comment> result = template.query(sql, params, new CommentDaoImpl.CommentMapper());
 
@@ -117,7 +117,7 @@ public class CommentDaoImpl implements CommentDao {
     @Override
     public List<Comment> findAll() {
         Map<String, Object> params = new HashMap<>();
-        String sql = "SELECT * FROM comment";
+        String sql = "SELECT * FROM Comment";
 
         List<Comment> result = template.query(sql, params, new CommentDaoImpl.CommentMapper());
 
@@ -127,7 +127,7 @@ public class CommentDaoImpl implements CommentDao {
     @Override
     public void update(Comment o) {
         Map<String, Object> params = new HashMap<String, Object>();
-        String sql = "UPDATE comment SET comment=:comment, commentto=:commentto, author=:author, lastchanged=:lastchanged WHERE commentid=:commentid";
+        String sql = "UPDATE Comment SET comment=:comment, commentto=:commentto, author=:author, lastchanged=:lastchanged WHERE commentid=:commentid";
 
         params.put("commentid", o.getId());
         params.put("comment", o.getComment());
@@ -143,7 +143,7 @@ public class CommentDaoImpl implements CommentDao {
         Map<String, Object> params = new HashMap<String, Object>();
         params.put("commentto", commentTo);
 
-        String sql = "SELECT * FROM comment WHERE commentto=:commentto";
+        String sql = "SELECT * FROM Comment WHERE commentto=:commentto";
 
         List<Comment> result = template.query(sql, params, new CommentDaoImpl.CommentMapper());
 

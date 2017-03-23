@@ -15,6 +15,7 @@ import com.vaadin.event.MouseEvents;
 import com.vaadin.server.ClientConnector.DetachListener;
 import com.vaadin.ui.Alignment;
 import com.vaadin.ui.Component;
+import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Panel;
 import com.vaadin.ui.TabSheet;
 import com.vaadin.ui.UI;
@@ -62,8 +63,11 @@ public class HostOverviewTabPanel extends Panel implements OverviewTabPanel, Det
         filterMap.put("Host", "hostname");
 
         SearchComponent searchComponent = new SearchComponent(filterMap, container);
-        parentVerticalLayout.addComponent(searchComponent);
-        parentVerticalLayout.setComponentAlignment(searchComponent, Alignment.MIDDLE_RIGHT);
+        StatusFilterComponent statusFilterComponent = new StatusFilterComponent(StatusFilterComponent.createHostStatusFilterMap(), container);
+
+        HorizontalLayout filterL=new HorizontalLayout(statusFilterComponent, searchComponent);
+        filterL.setSizeFull();
+        parentVerticalLayout.addComponent(filterL);
 
         this.gridLayout = new AutoResizingGridLayout(COMPONENT_WIDTH);
         parentVerticalLayout.addComponent(gridLayout);

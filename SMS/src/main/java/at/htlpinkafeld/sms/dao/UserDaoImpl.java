@@ -36,7 +36,7 @@ public class UserDaoImpl implements UserDao {
         Map<String, Object> params = new HashMap<String, Object>();
         params.put("name", name);
 
-        String sql = "SELECT * FROM user WHERE PersName=:PersName";
+        String sql = "SELECT * FROM User WHERE PersName=:PersName";
         User result = template.queryForObject(sql, params, new UserMapper());
 
         return result;
@@ -47,7 +47,7 @@ public class UserDaoImpl implements UserDao {
         Map<String, Object> params = new HashMap<String, Object>();
         params.put("userid", userid);
 
-        String sql = "SELECT * FROM user WHERE usernr=:userid";
+        String sql = "SELECT * FROM User WHERE usernr=:userid";
 
         User result = template.queryForObject(sql, params, new UserMapper());
 
@@ -57,7 +57,7 @@ public class UserDaoImpl implements UserDao {
     @Override
     public List<User> findAll() {
         Map<String, Object> params = new HashMap<>();
-        String sql = "SELECT * FROM user";
+        String sql = "SELECT * FROM User";
 
         List<User> result = template.query(sql, params, new UserDaoImpl.UserMapper());
 
@@ -67,7 +67,7 @@ public class UserDaoImpl implements UserDao {
     @Override
     public void insert(User user) {
         Map<String, Object> params = new HashMap<String, Object>();
-        String sql = "INSERT INTO user(usernr, persname, username, password, email, disabled) VALUES (:userid, :name, :username, :password, :email, :disabled)";
+        String sql = "INSERT INTO User(usernr, persname, username, password, email, disabled) VALUES (:userid, :name, :username, :password, :email, :disabled)";
 
         params.put("userid", user.getId());
         params.put("name", user.getName());
@@ -97,7 +97,7 @@ public class UserDaoImpl implements UserDao {
     @Override
     public void delete(Integer userid) {
         Map<String, Object> params = new HashMap<String, Object>();
-        String sql = "DELETE FROM user WHERE usernr = :userid";
+        String sql = "DELETE FROM User WHERE usernr = :userid";
 
         params.put("userid", userid);
         template.update(sql, params);
@@ -107,7 +107,7 @@ public class UserDaoImpl implements UserDao {
     @Override
     public void update(User o) {
         Map<String, Object> params = new HashMap<String, Object>();
-        String sql = "UPDATE user SET persname=:name, username=:username, password=:password, email=:email, disabled=:disabled WHERE usernr=:userid";
+        String sql = "UPDATE User SET persname=:name, username=:username, password=:password, email=:email, disabled=:disabled WHERE usernr=:userid";
 
         params.put("userid", o.getId());
         params.put("name", o.getName());

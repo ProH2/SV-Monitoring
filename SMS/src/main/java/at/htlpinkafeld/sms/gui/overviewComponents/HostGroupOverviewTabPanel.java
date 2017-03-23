@@ -78,8 +78,11 @@ public class HostGroupOverviewTabPanel extends Panel implements OverviewTabPanel
         hostgroupContainer.addItemSetChangeListener((event) -> {
             refreshLayout();
         });
-        parentVerticalLayout.addComponent(searchComponent);
-        parentVerticalLayout.setComponentAlignment(searchComponent, Alignment.MIDDLE_RIGHT);
+        StatusFilterComponent statusFilterComponent = new StatusFilterComponent(StatusFilterComponent.createHostStatusFilterMap(), hostgroupContainer);
+
+        HorizontalLayout filterL = new HorizontalLayout(statusFilterComponent, searchComponent);
+        filterL.setSizeFull();
+        parentVerticalLayout.addComponent(filterL);
 
         hostGroupVerticalLayout = new VerticalLayout();
         hostGroupVerticalLayout.setSizeFull();

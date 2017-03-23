@@ -6,20 +6,15 @@
 package at.htlpinkafeld.sms.dao;
 
 import at.htlpinkafeld.sms.config.db.DataSourceManager;
-import at.htlpinkafeld.sms.config.db.HsqlDataSource;
 import at.htlpinkafeld.sms.pojo.Duty;
 import java.sql.Date;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
-import java.time.ZoneOffset;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.AbstractSqlParameterSource;
@@ -47,7 +42,7 @@ public class DutyDaoImpl implements DutyDao {
         Map<String, Object> params = new HashMap<String, Object>();
         params.put("dutyid", dutyid);
 
-        String sql = "SELECT * FROM duty WHERE dutyid=:dutyid";
+        String sql = "SELECT * FROM Duty WHERE dutyid=:dutyid";
 
         Duty result = template.queryForObject(sql, params, new DutyMapper());
 
@@ -57,7 +52,7 @@ public class DutyDaoImpl implements DutyDao {
     @Override
     public List<Duty> findAll() {
         Map<String, Object> params = new HashMap<String, Object>();
-        String sql = "SELECT * FROM duty";
+        String sql = "SELECT * FROM Duty";
 
         List<Duty> result = template.query(sql, params, new DutyMapper());
         return result;
@@ -68,7 +63,7 @@ public class DutyDaoImpl implements DutyDao {
         Map<String, Object> params = new HashMap<String, Object>();
         params.put("userid", userid);
 
-        String sql = "SELECT * FROM duty WHERE userid:=userid";
+        String sql = "SELECT * FROM Duty WHERE userid:=userid";
 
         List<Duty> result = template.query(sql, params, new DutyMapper());
         return result;
@@ -90,7 +85,7 @@ public class DutyDaoImpl implements DutyDao {
     @Override
     public void insert(Duty duty) {
         Map<String, Object> params = new HashMap<String, Object>();
-        String sql = "INSERT INTO duty(dutyid, userid, starttime, endtime) VALUES (:dutyid, :userid, :starttime, :endtime)";
+        String sql = "INSERT INTO Duty(dutyid, userid, starttime, endtime) VALUES (:dutyid, :userid, :starttime, :endtime)";
 
         params.put("dutyid", duty.getId());
         params.put("userid", duty.getUser().getId());
@@ -117,7 +112,7 @@ public class DutyDaoImpl implements DutyDao {
     @Override
     public void delete(Integer dutyid) {
         Map<String, Object> params = new HashMap<String, Object>();
-        String sql = "DELETE FROM duty WHERE dutyid = :dutyid";
+        String sql = "DELETE FROM Duty WHERE dutyid = :dutyid";
 
         params.put("dutyid", dutyid);
         template.update(sql, params);
@@ -130,7 +125,7 @@ public class DutyDaoImpl implements DutyDao {
 
         Map<String, Object> params = new HashMap<String, Object>();
 
-        String sql = "SELECT * FROM duty WHERE starttime BETWEEN :starttime AND :endtime";
+        String sql = "SELECT * FROM Duty WHERE starttime BETWEEN :starttime AND :endtime";
         params.put("starttime", startt);
         params.put("endtime", endt);
 
@@ -144,7 +139,7 @@ public class DutyDaoImpl implements DutyDao {
 
         Map<String, Object> params = new HashMap<String, Object>();
 
-        String sql = "SELECT * FROM duty WHERE :time BETWEEN starttime AND endtime";
+        String sql = "SELECT * FROM Duty WHERE :time BETWEEN starttime AND endtime";
         params.put("time", time);
 
         List<Duty> result = template.query(sql, params, new DutyMapper());
@@ -155,7 +150,7 @@ public class DutyDaoImpl implements DutyDao {
     public List<Duty> getDutiesByRange(Date starttime, Date endtime) {
         Map<String, Object> params = new HashMap<String, Object>();
 
-        String sql = "SELECT * FROM duty WHERE starttime BETWEEN :starttime AND :endtime OR endtime BETWEEN :starttime AND :endtime OR starttime<:starttime AND endTime>=:endtime ORDER BY starttime";
+        String sql = "SELECT * FROM Duty WHERE starttime BETWEEN :starttime AND :endtime OR endtime BETWEEN :starttime AND :endtime OR starttime<:starttime AND endTime>=:endtime ORDER BY starttime";
         params.put("starttime", starttime);
         params.put("endtime", endtime);
 
@@ -166,7 +161,7 @@ public class DutyDaoImpl implements DutyDao {
     @Override
     public void update(Duty o) {
         Map<String, Object> params = new HashMap<String, Object>();
-        String sql = "UPDATE duty SET userid=:userid, starttime=:starttime, endtime=:endtime WHERE dutyid=:dutyid";
+        String sql = "UPDATE Duty SET userid=:userid, starttime=:starttime, endtime=:endtime WHERE dutyid=:dutyid";
 
         params.put("dutyid", o.getId());
         params.put("userid", o.getUser().getId());

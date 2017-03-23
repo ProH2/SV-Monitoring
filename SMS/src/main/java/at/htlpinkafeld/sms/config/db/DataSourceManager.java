@@ -6,13 +6,8 @@
 package at.htlpinkafeld.sms.config.db;
 
 import at.htlpinkafeld.sms.service.PropertyHolder;
-import com.mysql.cj.jdbc.MysqlDataSource;
-import java.sql.DriverManager;
+import com.mysql.jdbc.jdbc2.optional.MysqlDataSource;
 import javax.sql.DataSource;
-import org.springframework.context.annotation.Bean;
-
-import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Profile;
 import org.springframework.jdbc.datasource.embedded.EmbeddedDatabase;
 import org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseBuilder;
 import org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseType;
@@ -45,7 +40,7 @@ public class DataSourceManager {
             }
             
             if(mysql.equals("true")){
-                mysqlds.setURL("jdbc:mysql://localhost:3306/zes_sviss?serverTimezone=UTC");
+                mysqlds.setURL("jdbc:mysql://localhost:3306/ZES_SVISS?serverTimezone=UTC");
                 mysqlds.setUser("root");
                 mysqlds.setPassword("Burgenland2016#");
             }
