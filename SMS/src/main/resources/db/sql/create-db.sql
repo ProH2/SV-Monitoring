@@ -1,6 +1,6 @@
-CREATE TABLE users (
-  userid INTEGER IDENTITY PRIMARY KEY,
-  name VARCHAR(30) NOT NULL,
+CREATE TABLE user (
+  usernr INTEGER IDENTITY PRIMARY KEY,
+  persname VARCHAR(30) NOT NULL,
   username varchar(30) NOT NULL,
   password varchar(128) NOT NULL,
   phonenr varchar(25),
@@ -15,7 +15,7 @@ CREATE TABLE duty(
     starttime TIMESTAMP NOT NULL,
     endtime TIMESTAMP NOT NULL,
 
-    FOREIGN KEY (userid) REFERENCES users(userid) on delete cascade
+    FOREIGN KEY (userid) REFERENCES user(usernr) on delete cascade
 );
 
 
@@ -26,14 +26,14 @@ CREATE TABLE comment(
     author INTEGER NOT NULL,
     lastchanged TIMESTAMP NOT NULL,
 
-    FOREIGN KEY (author) REFERENCES users(userid) on delete cascade
+    FOREIGN KEY (author) REFERENCES user(usernr) on delete cascade
 );
 
 
 CREATE TABLE hostgroup(
-    hostgroupnr INTEGER IDENTITY PRIMARY KEY,
-    name varchar(45) NOT NULL,
-    hostlist varchar(2000) NOT NULL
+    HostgroupId INTEGER IDENTITY PRIMARY KEY,
+    HostgroupName varchar(45) NOT NULL,
+    AssignedHosts varchar(2000) NOT NULL
 );
 
 

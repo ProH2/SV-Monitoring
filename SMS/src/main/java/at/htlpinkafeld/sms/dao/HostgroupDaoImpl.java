@@ -140,7 +140,7 @@ public class HostgroupDaoImpl implements HostgroupDao {
                 help = help + hostlist.get(i) + ";";
             }
 
-            params.put("hostgroupid", hostgroupnr);
+            params.put("hostgroupnr", hostgroupnr);
             params.put("name", name);
             params.put("hostlist", help);
 
