@@ -88,14 +88,14 @@ public class LoginView extends VerticalLayout implements View {
         formLayout.addComponent(loginButton);
 
         //Thread-Testing Button
-        Button refreshButton = new Button("Refresh", new Button.ClickListener() {
-            @Override
-            public void buttonClick(Button.ClickEvent event) {
-                JSONService.refresh();
-            }
-        });
+//        Button refreshButton = new Button("Refresh", new Button.ClickListener() {
+//            @Override
+//            public void buttonClick(Button.ClickEvent event) {
+//                JSONService.refresh();
+//            }
+//        });
 
-        formLayout.addComponent(refreshButton);
+//        formLayout.addComponent(refreshButton);
 
         formLayout.setSizeUndefined();
 

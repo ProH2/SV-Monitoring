@@ -86,7 +86,6 @@ public class DutyDaoImpl implements DutyDao {
         params.put("notifyart", notifyart);
 
         template.update(sql, params);
-        System.out.println("Inserted Duty");
     }*/
     @Override
     public void insert(Duty duty) {
@@ -113,7 +112,6 @@ public class DutyDaoImpl implements DutyDao {
 
         }, keyHolder);
         duty.setId(keyHolder.getKey().intValue());
-        System.out.println("Inserted Duty");
     }
 
     @Override

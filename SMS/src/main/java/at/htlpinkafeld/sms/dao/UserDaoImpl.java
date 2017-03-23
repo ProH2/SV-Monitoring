@@ -92,7 +92,6 @@ public class UserDaoImpl implements UserDao {
 
         }, keyHolder);
         user.setId(keyHolder.getKey().intValue());
-        System.out.println("Inserted User");
     }
 
     @Override
@@ -103,7 +102,6 @@ public class UserDaoImpl implements UserDao {
         params.put("userid", userid);
         template.update(sql, params);
 
-        System.out.println("Deleted Record with EMPID = " + userid);
     }
 
     @Override

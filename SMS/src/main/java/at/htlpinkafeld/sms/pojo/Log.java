@@ -5,8 +5,8 @@
  */
 package at.htlpinkafeld.sms.pojo;
 
-import at.htlpinkafeld.sms.pojo.IPojo;
 import java.sql.Timestamp;
+import java.time.LocalDateTime;
 
 /**
  *
@@ -14,12 +14,12 @@ import java.sql.Timestamp;
  */
 public class Log implements IPojo{
     private Integer logId;
-    private Timestamp timestamp;
+    private LocalDateTime timestamp;
     private String logCause;
     private String logEntry;
     
 
-    public Log(Integer logId, Timestamp timestamp, String logCause, String logEntry) {
+    public Log(Integer logId, LocalDateTime timestamp, String logCause, String logEntry) {
         this.logId = logId;
         this.timestamp = timestamp;
         this.logCause = logCause;
@@ -29,7 +29,7 @@ public class Log implements IPojo{
     public Log() {
     }
 
-    public Log(Timestamp timestamp, String logCause, String logEntry) {
+    public Log(LocalDateTime timestamp, String logCause, String logEntry) {
         this.timestamp = timestamp;
         this.logCause = logCause;
         this.logEntry = logEntry;
@@ -47,11 +47,11 @@ public class Log implements IPojo{
         this.logId = logId;
     }
 
-    public Timestamp getTimestamp() {
+    public LocalDateTime getTimestamp() {
         return timestamp;
     }
 
-    public void setTimestamp(Timestamp timestamp) {
+    public void setTimestamp(LocalDateTime timestamp) {
         this.timestamp = timestamp;
     }
 

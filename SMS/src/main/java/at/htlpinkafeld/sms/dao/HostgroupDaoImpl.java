@@ -72,7 +72,6 @@ public class HostgroupDaoImpl implements HostgroupDao {
             }, keyHolder);
             hostgroup.setId(keyHolder.getKey().intValue());
 
-            System.out.println("Inserted Hostgroup");
         }
     }
 

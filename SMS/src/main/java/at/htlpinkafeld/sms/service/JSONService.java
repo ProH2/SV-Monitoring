@@ -111,7 +111,7 @@ public class JSONService {
             Host old = HOSTS.put(h.getHostname(), h);
             if(old != null && old.statusChanged(h)){
                 EmailService.sendNotificationMailHost(h.getHostname(), old.getStatus(), h.getStatus(), h.getInformation());
-                logdao.insert(new Log(Timestamp.valueOf(LocalDateTime.now()), h.getHostname(), "Status changed from " + old.getStatus().toString() + " to " + h.getStatus().toString() + " Plugin Output: " + h.getInformation()));
+                logdao.insert(new Log(LocalDateTime.now(), h.getHostname(), "Status changed from " + old.getStatus().toString() + " to " + h.getStatus().toString() + " Plugin Output: " + h.getInformation()));
             }
         }
 
@@ -167,7 +167,7 @@ public class JSONService {
                     Service old = SERVICES.put(host + "/" + s.getName(), s);
                     if(old != null && old.hasChanged(s)){
                         EmailService.sendNotificationMailService(host + "/" + s.getName(), old.getStatus(), s.getStatus(), s.getInformation());
-                        logdao.insert(new Log(Timestamp.valueOf(LocalDateTime.now()), host + "/" + s.getName(), "Status changed from " + old.getStatus().toString() + " to " + s.getStatus().toString() + " Plugin Output: " + s.getInformation()));
+                        logdao.insert(new Log(LocalDateTime.now(), host + "/" + s.getName(), "Status changed from " + old.getStatus().toString() + " to " + s.getStatus().toString() + " Plugin Output: " + s.getInformation()));
                     }
                 }
             }

@@ -63,7 +63,6 @@ public class CommentDaoImpl implements CommentDao {
 
         }, keyHolder);
         comment.setId(keyHolder.getKey().intValue());
-        System.out.println("Inserted Comment");
     }
 
     @Override
