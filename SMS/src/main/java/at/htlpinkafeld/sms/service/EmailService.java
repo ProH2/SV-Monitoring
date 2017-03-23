@@ -35,7 +35,7 @@ public class EmailService {
     private static DateTimeFormatter dateTimeFormatter;
     private static DutyDao dutydao;
 
-    private static final String SERVER_EMAILADDRESS = "zes@sviss.co.at";
+    private static final String SERVER_EMAILADDRESS = "sms@sviss.co.at";
 
     static {
         dateTimeFormatter = DateTimeFormatter.ofPattern("dd.MM.yyyy HH:mm");
@@ -44,7 +44,7 @@ public class EmailService {
 
     private static void sendEmail(String subject, String body, User from, List<User> to) {
         String host = "smtp.world4you.com";
-//        String host = "localhost";
+        //String host = "localhost";
 
         // Get system properties
         Properties properties = System.getProperties();
