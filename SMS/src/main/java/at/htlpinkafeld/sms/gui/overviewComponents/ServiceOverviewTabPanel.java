@@ -82,6 +82,8 @@ public class ServiceOverviewTabPanel extends Panel implements OverviewTabPanel, 
 
         StatusFilterComponent statusFilterComponent = new StatusFilterComponent(StatusFilterComponent.createServiceStatusFilterMap(), container);
         HorizontalLayout filterL = new HorizontalLayout(statusFilterComponent, searchComponent);
+        filterL.setComponentAlignment(searchComponent, Alignment.MIDDLE_RIGHT);
+        filterL.setComponentAlignment(statusFilterComponent, Alignment.MIDDLE_LEFT);
         filterL.setSizeFull();
         parentVerticalLayout.addComponent(filterL);
 //        parentVerticalLayout.setComponentAlignment(searchComponent, Alignment.MIDDLE_RIGHT);

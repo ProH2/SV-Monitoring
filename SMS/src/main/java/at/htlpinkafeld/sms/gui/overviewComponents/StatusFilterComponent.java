@@ -13,6 +13,7 @@ import com.vaadin.data.Item;
 import com.vaadin.data.Property;
 import com.vaadin.data.util.BeanItemContainer;
 import com.vaadin.data.util.ObjectProperty;
+import com.vaadin.shared.ui.MarginInfo;
 import com.vaadin.ui.CheckBox;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.OptionGroup;
@@ -26,7 +27,7 @@ import java.util.Map;
  *
  * @author masix
  */
-public class StatusFilterComponent extends Panel {
+public class StatusFilterComponent extends VerticalLayout {
 
     public StatusFilterComponent(Map<? extends Enum, Filter> filterMap, Container.Filterable containerToFilter) {
         VerticalLayout mainLayout = new VerticalLayout();
@@ -41,10 +42,10 @@ public class StatusFilterComponent extends Panel {
                     containerToFilter.addContainerFilter(entry.getValue());
                 }
             });
-            mainLayout.addComponent(statusFiterBox);
+            super.addComponent(statusFiterBox);
+            super.setMargin(new MarginInfo(false, true));
         }
 
-        super.setContent(mainLayout);
     }
 
     public static Map<Service.Servicestatus, Filter> createServiceStatusFilterMap() {
@@ -123,7 +124,7 @@ public class StatusFilterComponent extends Panel {
         statusFilterMap.put(Host.Hoststatus.DOWN, new Filter() {
             @Override
             public boolean passesFilter(Object itemId, Item item) throws UnsupportedOperationException {
-                return !Host.Hoststatus.DOWN.equals(item.getItemProperty("status").getValue());
+                return !Host.Hoststatus.DOWN.equals(item.getItemProperty("status").getValue());  
             }
 
             @Override

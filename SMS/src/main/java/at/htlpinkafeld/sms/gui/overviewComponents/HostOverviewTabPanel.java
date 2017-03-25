@@ -66,6 +66,8 @@ public class HostOverviewTabPanel extends Panel implements OverviewTabPanel, Det
         StatusFilterComponent statusFilterComponent = new StatusFilterComponent(StatusFilterComponent.createHostStatusFilterMap(), container);
 
         HorizontalLayout filterL=new HorizontalLayout(statusFilterComponent, searchComponent);
+        filterL.setComponentAlignment(searchComponent, Alignment.MIDDLE_RIGHT);
+        filterL.setComponentAlignment(statusFilterComponent, Alignment.MIDDLE_LEFT);
         filterL.setSizeFull();
         parentVerticalLayout.addComponent(filterL);
 
