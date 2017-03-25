@@ -67,6 +67,9 @@ public class HostGroupOverviewTabPanel extends Panel implements OverviewTabPanel
         this.hostgroupContainer.addItemSetChangeListener((Container.ItemSetChangeEvent event) -> {
             refreshLayout();
         });
+        this.hostReferenceContainer.addItemSetChangeListener((Container.ItemSetChangeEvent event) -> {
+            refreshLayout();
+        });
 
         VerticalLayout parentVerticalLayout = new VerticalLayout();
 
@@ -78,10 +81,13 @@ public class HostGroupOverviewTabPanel extends Panel implements OverviewTabPanel
         hostgroupContainer.addItemSetChangeListener((event) -> {
             refreshLayout();
         });
-        StatusFilterComponent statusFilterComponent = new StatusFilterComponent(StatusFilterComponent.createHostStatusFilterMap(), hostgroupContainer);
+        StatusFilterComponent statusFilterComponent = new StatusFilterComponent(StatusFilterComponent.createHostStatusFilterMap(), hostReferenceContainer);
 
         HorizontalLayout filterL = new HorizontalLayout(statusFilterComponent, searchComponent);
         filterL.setSizeFull();
+        filterL.setComponentAlignment(searchComponent, Alignment.MIDDLE_RIGHT);
+        filterL.setComponentAlignment(statusFilterComponent, Alignment.MIDDLE_LEFT);
+
         parentVerticalLayout.addComponent(filterL);
 
         hostGroupVerticalLayout = new VerticalLayout();

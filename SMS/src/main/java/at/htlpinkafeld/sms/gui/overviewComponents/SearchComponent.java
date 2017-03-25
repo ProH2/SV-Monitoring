@@ -7,6 +7,7 @@ package at.htlpinkafeld.sms.gui.overviewComponents;
 
 import at.htlpinkafeld.sms.gui.OverviewView;
 import com.vaadin.data.Container;
+import com.vaadin.data.Container.Filter;
 import com.vaadin.data.Property;
 import com.vaadin.data.util.filter.SimpleStringFilter;
 import com.vaadin.ui.Button;
@@ -28,6 +29,8 @@ public class SearchComponent extends CustomComponent {
     private NativeSelect filterSelect;
 
     private final Container.Filterable container;
+
+    private Filter curFilter;
 
     /**
      * Constructor for SearchComponent
@@ -59,17 +62,16 @@ public class SearchComponent extends CustomComponent {
 //        searchTermField.setImmediate(true);
 
         Button searchButton = new Button("Search", (Button.ClickEvent event) -> {
-            container.removeAllContainerFilters();
+            container.removeContainerFilter(curFilter);
 
             String searchTerm = searchTermField.getValue();
             if (!searchTerm.isEmpty()) {
                 String filterType = filterSelect.getValue().toString();
 
                 if (searchFilterMapping.containsKey(filterType)) {
-                    Container.Filter f = null;
-                    f = new SimpleStringFilter(searchFilterMapping.get(filterSelect.getValue().toString()), searchTerm, true, false);
+                    curFilter = new SimpleStringFilter(searchFilterMapping.get(filterSelect.getValue().toString()), searchTerm, true, false);
 
-                    container.addContainerFilter(f);
+                    container.addContainerFilter(curFilter);
                 } else {
                     Notification.show("Some Error occured during searching", Notification.Type.ERROR_MESSAGE);
                 }
