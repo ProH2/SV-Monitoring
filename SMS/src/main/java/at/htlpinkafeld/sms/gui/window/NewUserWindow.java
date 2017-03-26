@@ -92,11 +92,10 @@ public class NewUserWindow extends Window {
         final TextField emailTextF = new TextField("Email");
         emailTextF.setImmediate(true);
         emailTextF.addValidator(new EmailValidator("The Email is invalid"));
+        emailTextF.setRequired(true);
+        emailTextF.setRequiredError("Email is required!");
 
-        final TextField phoneNrTextF = new TextField("Phone Number");
-        phoneNrTextF.setImmediate(true);
-
-        formLayout.addComponents(usernameTextF, passwordTextF, nameTextF, emailTextF, phoneNrTextF);
+        formLayout.addComponents(usernameTextF, passwordTextF, nameTextF, emailTextF);
 
         Button createButton = new Button("Create User", (Button.ClickEvent event) -> {
             try {
@@ -104,9 +103,8 @@ public class NewUserWindow extends Window {
                 passwordTextF.validate();
                 nameTextF.validate();
                 emailTextF.validate();
-                phoneNrTextF.validate();
 
-                containerDataSource.addBean(new User(usernameTextF.getValue(), PermissionService.hashPassword(passwordTextF.getValue()), nameTextF.getValue(), emailTextF.getValue(), phoneNrTextF.getValue()));
+                containerDataSource.addBean(new User(usernameTextF.getValue(), PermissionService.hashPassword(passwordTextF.getValue()), nameTextF.getValue(), emailTextF.getValue(), null));
 
                 close();
             } catch (Validator.InvalidValueException e) {
