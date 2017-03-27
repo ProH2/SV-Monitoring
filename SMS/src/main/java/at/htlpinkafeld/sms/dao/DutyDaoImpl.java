@@ -10,6 +10,7 @@ import at.htlpinkafeld.sms.pojo.Duty;
 import java.sql.Date;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.HashMap;
@@ -89,8 +90,8 @@ public class DutyDaoImpl implements DutyDao {
 
         params.put("dutyid", duty.getId());
         params.put("userid", duty.getUser().getId());
-        params.put("starttime", duty.getStartTime());
-        params.put("endtime", duty.getEndTime());
+        params.put("starttime", new Timestamp(duty.getStartTime().getTime()));
+        params.put("endtime", new Timestamp(duty.getEndTime().getTime()));
 
         KeyHolder keyHolder = new GeneratedKeyHolder();
 
