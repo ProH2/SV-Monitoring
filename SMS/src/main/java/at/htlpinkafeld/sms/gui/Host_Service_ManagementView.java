@@ -48,7 +48,7 @@ public class Host_Service_ManagementView extends VerticalLayout implements View 
         tabsheet.addTab(createHostgroupManagementPanel(), "Hostgroups");
         
 // Tab currently disabled because there are Experimental Functions
-//        tabsheet.addTab(createHostServiceManagementPanel(), "Host/Service");
+        tabsheet.addTab(createHostServiceManagementPanel(), "Host/Service");
 
         super.addComponent(tabsheet);
     }

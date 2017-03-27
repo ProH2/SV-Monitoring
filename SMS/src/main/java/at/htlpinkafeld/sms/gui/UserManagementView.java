@@ -150,9 +150,9 @@ public class UserManagementView extends VerticalLayout implements View {
 //        head.setSizeUndefined(); 
 //        delSelectedButton.setSizeFull();
 
-//        grid.appendFooterRow(); 
-//        grid.getFooterRow(0).join(USERNAME_PROPERTY, NAME_PROPERTY, EMAIL_PROPERTY).setComponent(newUserButton);
-//        grid.getFooterRow(0).join(RESETPASSW_COLUMN, EDITUSER_COLUMN, DISABLEUSER_COLUMN);
+        grid.appendFooterRow(); 
+        grid.getFooterRow(0).join(USERNAME_PROPERTY, NAME_PROPERTY, EMAIL_PROPERTY).setComponent(newUserButton);
+        grid.getFooterRow(0).join(RESETPASSW_COLUMN, EDITUSER_COLUMN, DISABLEUSER_COLUMN);
 
 //        grid.getFooterRow(0).join(PHONENR_PROPERTY, EDITUSER_COLUMN, DELETEUSER_COLUMN).setComponent(delSelectedButton);
         grid.setSizeFull();
@@ -161,7 +161,7 @@ public class UserManagementView extends VerticalLayout implements View {
         innerLayout.addComponent(grid);
 
         innerLayout.setSizeFull();
-        innerLayout.setHeight(UI.getCurrent().getPage().getBrowserWindowHeight() - 38 *2, Unit.PIXELS);
+        innerLayout.setHeight(UI.getCurrent().getPage().getBrowserWindowHeight() - 38 * 2, Unit.PIXELS);
 
         TabSheet mainTab = new TabSheet();
         mainTab.addTab(innerLayout, "Users");

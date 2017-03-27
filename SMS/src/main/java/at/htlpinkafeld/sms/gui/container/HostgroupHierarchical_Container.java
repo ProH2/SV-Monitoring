@@ -19,6 +19,7 @@ import java.util.Comparator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Objects;
+import java.util.stream.Collectors;
 
 /**
  * Container which implements {@link Container.Hierarchical} and represents a
@@ -34,7 +35,7 @@ import java.util.Objects;
  *
  * @author Martin Six
  */
-public class HostgroupHierarchical_Container extends AbstractContainer implements Container.Hierarchical, Container.Ordered {
+public class HostgroupHierarchical_Container extends AbstractContainer implements Container.Hierarchical {
 
     private final List<Hostgroup> hostgroups;
     private final HostgroupDao hostgroupDao;
@@ -52,7 +53,9 @@ public class HostgroupHierarchical_Container extends AbstractContainer implement
      */
     public HostgroupHierarchical_Container(HostgroupDao hostgroupDao) {
         this.hostgroupDao = hostgroupDao;
-        this.hostgroups = hostgroupDao.findAll();
+        this.hostgroups = hostgroupDao.findAll().stream().sorted((o1, o2) -> {
+            return o1.getName().compareToIgnoreCase(o2.getName());
+        }).collect(Collectors.toList());
     }
 
     @Override
@@ -292,69 +295,6 @@ public class HostgroupHierarchical_Container extends AbstractContainer implement
     @Override
     public void fireItemSetChange() {
         super.fireItemSetChange();
-    }
-
-    @Override
-    public Object nextItemId(Object itemId) {
-        return hostgroups.stream().map((t) -> {
-            return t.getName();
-        }).filter((s) -> {
-            return s.compareToIgnoreCase((String) itemId) > 0;
-        }).sorted((s1, s2) -> {
-            return s1.compareToIgnoreCase(s2);
-        }).findFirst().orElse(null);
-    }
-
-    @Override
-    public Object prevItemId(Object itemId) {
-        return hostgroups.stream().map((t) -> {
-            return t.getName();
-        }).filter((s) -> {
-            return s.compareToIgnoreCase((String) itemId) < 0;
-        }).sorted((s1, s2) -> {
-            return s1.compareToIgnoreCase(s2);
-        }).findFirst().orElse(null);
-    }
-
-    @Override
-    public Object firstItemId() {
-        return hostgroups.stream().map((t) -> {
-            return t.getName();
-        }).sorted((s1, s2) -> {
-            return s1.compareToIgnoreCase(s2);
-        }).findFirst().orElse(null);
-    }
-
-    @Override
-    public Object lastItemId() {
-        return hostgroups.stream().map((t) -> {
-            return t.getName();
-        }).sorted(new Comparator<String>() {
-            @Override
-            public int compare(String s1, String s2) {
-                return s1.compareToIgnoreCase(s2);
-            }
-        }.reversed()).findFirst().orElse(null);
-    }
-
-    @Override
-    public boolean isFirstId(Object itemId) {
-        return Objects.equals(itemId, firstItemId());
-    }
-
-    @Override
-    public boolean isLastId(Object itemId) {
-        return Objects.equals(itemId, lastItemId());
-    }
-
-    @Override
-    public Object addItemAfter(Object previousItemId) throws UnsupportedOperationException {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
-    @Override
-    public Item addItemAfter(Object previousItemId, Object newItemId) throws UnsupportedOperationException {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
 }

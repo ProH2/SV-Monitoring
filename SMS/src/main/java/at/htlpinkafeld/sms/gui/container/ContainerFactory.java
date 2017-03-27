@@ -125,21 +125,6 @@ public class ContainerFactory {
         }
     }
 
-    private static void initHostgroupList() {
-        hostgroups = new LinkedList<>();
-
-        hostgroups.add(new Hostgroup(1, "Oberwart", new LinkedList(Arrays.asList("Host 1", "Host 2", "Host 3", "Host 4", "Host 5", "Host 6", "Host 7"))));
-        hostgroups.add(new Hostgroup(2, "Pinkafeld", new LinkedList(Arrays.asList())));
-        hostgroups.add(new Hostgroup(3, "Wien", new LinkedList(Arrays.asList("Host 1", "Host 3", "Host 4", "Host 8", "Host 7", "Host 9"))));
-
-        hostgroups = hostgroups.stream().sorted((hg1, hg2) -> {
-            return hg1.getName().compareToIgnoreCase(hg2.getName());
-        }).peek((hg) -> {
-            hg.setHostlist(hg.getHostlist().stream().sorted().collect(Collectors.toList()));
-        }).collect(Collectors.toList());
-
-    }
-
     /**
      * Initializes DutyEventProvider
      */

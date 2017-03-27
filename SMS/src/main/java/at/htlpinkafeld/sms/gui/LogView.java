@@ -27,7 +27,7 @@ import java.util.Map;
  */
 public class LogView extends VerticalLayout implements View {
 
-    public static final String VIEW_NAME = "log view";
+    public static final String VIEW_NAME = "logview";
 
     DaoDelegatingContainer<Log> logContainer;
     private final Grid logGrid;
