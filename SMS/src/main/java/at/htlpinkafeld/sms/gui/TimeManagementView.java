@@ -60,7 +60,7 @@ public class TimeManagementView extends VerticalLayout implements View {
     private final Container.Indexed userContainer;
 
     private final DutyEventProvider dutyProvider;
-    
+
     private final Calendar calendar;
 
     /**
@@ -84,7 +84,7 @@ public class TimeManagementView extends VerticalLayout implements View {
         if (isAdmin) {
             table = new Table("Available Users");
             table.setWidth(100, Unit.PERCENTAGE);
-            table.setHeight(layoutSize + 38, Unit.PIXELS);
+            table.setHeight(layoutSize, Unit.PIXELS);
 
             table.setContainerDataSource(userContainer, Collections.singletonList(NAME_PROPERTY));
             table.setColumnHeader(NAME_PROPERTY, "Available Users");
@@ -297,13 +297,16 @@ public class TimeManagementView extends VerticalLayout implements View {
                 gregorianCalendar.set(java.util.Calendar.DAY_OF_MONTH, 1);
                 calendar.setStartDate(gregorianCalendar.getTime());
                 gregorianCalendar.set(java.util.Calendar.DAY_OF_MONTH, gregorianCalendar.getActualMaximum(java.util.Calendar.DAY_OF_MONTH));
+
                 calendar.setEndDate(gregorianCalendar.getTime());
 
             } else {
                 //change date range to the week
-                gregorianCalendar.set(java.util.Calendar.DAY_OF_MONTH, 1);
+                gregorianCalendar.set(java.util.Calendar.DAY_OF_WEEK, 2);
                 calendar.setStartDate(gregorianCalendar.getTime());
-                gregorianCalendar.add(java.util.Calendar.DAY_OF_MONTH, 6);
+                gregorianCalendar.add(java.util.Calendar.DAY_OF_MONTH, 7);
+                gregorianCalendar.add(java.util.Calendar.SECOND, -1);
+
                 calendar.setEndDate(gregorianCalendar.getTime());
             }
 

@@ -62,7 +62,7 @@ public class UserManagementView extends VerticalLayout implements View {
         grid.removeColumn(PASSWORD_PROPERTY);
         grid.removeColumn(DISABLED_PROPERTY);
         grid.removeColumn(PHONENR_PROPERTY);
-        grid.setColumnOrder(USERNAME_PROPERTY, NAME_PROPERTY, RESETPASSW_COLUMN, EMAIL_PROPERTY, EDITUSER_COLUMN, DISABLEUSER_COLUMN);
+        grid.setColumnOrder(USERNAME_PROPERTY, NAME_PROPERTY, EMAIL_PROPERTY, RESETPASSW_COLUMN, EDITUSER_COLUMN, DISABLEUSER_COLUMN);
 
 //        grid.setSelectionMode(SelectionMode.MULTI);
         grid.setEditorEnabled(true);
@@ -149,6 +149,7 @@ public class UserManagementView extends VerticalLayout implements View {
 //        });
 //        head.setSizeUndefined(); 
 //        delSelectedButton.setSizeFull();
+
         grid.appendFooterRow();
         grid.getFooterRow(0).join(USERNAME_PROPERTY, NAME_PROPERTY, RESETPASSW_COLUMN).setComponent(newUserButton);
         grid.getFooterRow(0).join(EMAIL_PROPERTY, EDITUSER_COLUMN, DISABLEUSER_COLUMN);
@@ -160,7 +161,7 @@ public class UserManagementView extends VerticalLayout implements View {
         innerLayout.addComponent(grid);
 
         innerLayout.setSizeFull();
-        innerLayout.setHeight(UI.getCurrent().getPage().getBrowserWindowHeight() - 38 *2, Unit.PIXELS);
+        innerLayout.setHeight(UI.getCurrent().getPage().getBrowserWindowHeight() - 38 * 2, Unit.PIXELS);
 
         TabSheet mainTab = new TabSheet();
         mainTab.addTab(innerLayout, "Users");

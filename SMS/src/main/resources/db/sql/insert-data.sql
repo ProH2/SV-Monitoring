@@ -28,10 +28,10 @@ INSERT INTO hostgroup (name, hostlist) VALUES ('HostGroup03', 'PC09;PC10;PC11;PC
 INSERT INTO hostgroup (name, hostlist) VALUES ('HostGroup04', 'PC13;PC14;PC15;PC16');
 INSERT INTO hostgroup (name, hostlist) VALUES ('HostGroup05', 'PC17;PC18;PC19;PC20');
 INSERT INTO hostgroup (name, hostlist) VALUES ('HostGroup06', 'PC21;PC22;PC23;PC24');
-
+*/
 INSERT INTO log (timestamp, logcause, logentry) VALUES ('2017-03-04 20:00:00', 'Temperature high!', 'Temperature reached 70!');
 INSERT INTO log (timestamp, logcause, logentry) VALUES ('2017-03-05 20:00:00', 'Temperature high!', 'Temperature reached 90!');
 INSERT INTO log (timestamp, logcause, logentry) VALUES ('2017-03-05 20:00:00', 'Temperature high!', 'Temperature reached 80!');
 INSERT INTO log (timestamp, logcause, logentry) VALUES ('2017-03-06 20:00:00', 'Temperature high!', 'Temperature reached 20!');
 INSERT INTO log (timestamp, logcause, logentry) VALUES ('2017-03-11 20:00:00', 'Temperature high!', 'Temperature reached 40!');
-INSERT INTO log (timestamp, logcause, logentry) VALUES ('2017-03-11 20:00:00', 'Temperature high!', 'Temperature reached 60!');*/
+INSERT INTO log (timestamp, logcause, logentry) VALUES ('2017-03-11 20:00:00', 'Temperature high!', 'Temperature reached 60!');
