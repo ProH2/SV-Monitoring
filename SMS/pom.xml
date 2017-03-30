@@ -175,10 +175,10 @@
             <version>1.5.6</version>
         </dependency>
         <dependency>
-		<groupId>mysql</groupId>
-		<artifactId>mysql-connector-java</artifactId>
-		<version>5.1.41</version>
-	</dependency>
+            <groupId>mysql</groupId>
+            <artifactId>mysql-connector-java</artifactId>
+            <version>5.1.41</version>
+        </dependency>
         <dependency>
             <groupId>com.vaadin.external.gwt</groupId>
             <artifactId>gwt-dev</artifactId>

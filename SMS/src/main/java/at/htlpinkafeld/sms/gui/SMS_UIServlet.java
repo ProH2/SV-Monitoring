@@ -25,4 +25,12 @@ public class SMS_UIServlet extends VaadinServlet {
         JSONService.refresh();
     }
 
+    @Override
+    public void destroy() {
+        JSONService.kill();
+        super.destroy();
+    }
+    
+    
+
 }

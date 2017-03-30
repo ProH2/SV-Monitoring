@@ -43,8 +43,8 @@ public class LogView extends VerticalLayout implements View {
         logGrid.setHeight(UI.getCurrent().getPage().getBrowserWindowHeight() - 38 * 2 - 120, Unit.PIXELS);
 
         Map<String, String> filterMap = new HashMap<>();
-        filterMap.put("Log Cause", "logcause");
-        filterMap.put("Log Entry", "logentry");
+        filterMap.put("Log Cause", "logCause");
+        filterMap.put("Log Entry", "logEntry");
         filterMap.put("Timestamp", "timestamp");
 
         SearchComponent searchComponent = new SearchComponent(filterMap, logContainer);

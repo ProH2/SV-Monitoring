@@ -150,7 +150,12 @@ public class Service {
             service.setName((String) map.get("description"));
             service.setInformation((String) map.get("plugin_output"));
 //        System.out.println(map.get("last_check"));
-            service.setLastChecked(LocalDateTime.ofEpochSecond((long) map.get("last_check"), 0, ZoneOffset.UTC));
+            Object value = map.get("last_check");
+            if (value instanceof Long) {
+                service.setLastChecked(new Timestamp((long) value).toLocalDateTime());
+            } else if (value instanceof Integer) {
+                service.setLastChecked(new Timestamp((Integer) value).toLocalDateTime());
+            }
 
             Timestamp stamp = new Timestamp((long) map.get("last_state_change"));
             LocalDateTime last_state_change = stamp.toLocalDateTime();
@@ -185,10 +190,9 @@ public class Service {
     public String toString() {
         return hostname + " " + information + " " + this.lastChecked + " " + duration + " " + status;
     }
-    
+
     public boolean hasChanged(Service s) {
         return !this.status.equals(s.status);
     }
-
 
 }
