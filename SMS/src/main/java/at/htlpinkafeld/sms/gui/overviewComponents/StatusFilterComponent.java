@@ -10,16 +10,9 @@ import at.htlpinkafeld.sms.pojo.Service;
 import com.vaadin.data.Container;
 import com.vaadin.data.Container.Filter;
 import com.vaadin.data.Item;
-import com.vaadin.data.Property;
-import com.vaadin.data.util.BeanItemContainer;
-import com.vaadin.data.util.ObjectProperty;
 import com.vaadin.shared.ui.MarginInfo;
 import com.vaadin.ui.CheckBox;
-import com.vaadin.ui.HorizontalLayout;
-import com.vaadin.ui.OptionGroup;
-import com.vaadin.ui.Panel;
 import com.vaadin.ui.VerticalLayout;
-import java.util.Arrays;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
@@ -107,13 +100,16 @@ public class StatusFilterComponent extends VerticalLayout {
         });
         return statusFilterMap;
     }
-    
+
     public static Map<Host.Hoststatus, Filter> createHostStatusFilterMap() {
         Map<Host.Hoststatus, Filter> statusFilterMap = new LinkedHashMap<>();
         statusFilterMap.put(Host.Hoststatus.UP, new Filter() {
             @Override
             public boolean passesFilter(Object itemId, Item item) throws UnsupportedOperationException {
-                return !Host.Hoststatus.UP.equals(item.getItemProperty("status").getValue());
+                if (item != null && item.getItemPropertyIds().contains("status")) {
+                    return !Host.Hoststatus.UP.equals(item.getItemProperty("status").getValue());
+                }
+                return false;
             }
 
             @Override
@@ -124,7 +120,10 @@ public class StatusFilterComponent extends VerticalLayout {
         statusFilterMap.put(Host.Hoststatus.DOWN, new Filter() {
             @Override
             public boolean passesFilter(Object itemId, Item item) throws UnsupportedOperationException {
-                return !Host.Hoststatus.DOWN.equals(item.getItemProperty("status").getValue());  
+                if (item != null && item.getItemPropertyIds().contains("status")) {
+                    return !Host.Hoststatus.DOWN.equals(item.getItemProperty("status").getValue());
+                }
+                return false;
             }
 
             @Override
@@ -135,7 +134,10 @@ public class StatusFilterComponent extends VerticalLayout {
         statusFilterMap.put(Host.Hoststatus.UNREACHABLE, new Filter() {
             @Override
             public boolean passesFilter(Object itemId, Item item) throws UnsupportedOperationException {
-                return !Host.Hoststatus.UNREACHABLE.equals(item.getItemProperty("status").getValue());
+                if (item != null && item.getItemPropertyIds().contains("status")) {
+                    return !Host.Hoststatus.UNREACHABLE.equals(item.getItemProperty("status").getValue());
+                }
+                return false;
             }
 
             @Override
@@ -146,7 +148,10 @@ public class StatusFilterComponent extends VerticalLayout {
         statusFilterMap.put(Host.Hoststatus.PENDING, new Filter() {
             @Override
             public boolean passesFilter(Object itemId, Item item) throws UnsupportedOperationException {
-                return !Host.Hoststatus.PENDING.equals(item.getItemProperty("status").getValue());
+                if (item != null && item.getItemPropertyIds().contains("status")) {
+                    return !Host.Hoststatus.PENDING.equals(item.getItemProperty("status").getValue());
+                }
+                return false;
             }
 
             @Override

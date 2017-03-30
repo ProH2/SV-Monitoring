@@ -6,7 +6,7 @@
     <groupId>at.htlpinkafeld</groupId>
     <artifactId>SMS</artifactId>
     <packaging>war</packaging>
-    <version>1.0-SNAPSHOT</version>
+    <version>1.0</version>
     <name>SMS</name>
 
     <prerequisites>
