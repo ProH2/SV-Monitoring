@@ -148,19 +148,11 @@ public class JSONService {
                 result = (HashMap<String, Object>) result.get("servicelist");
                 result = (HashMap<String, Object>) result.get(temp);
 
-                entries = result.entrySet().iterator();
-                while (entries.hasNext()) {
-                    Map.Entry entry = (Map.Entry) entries.next();
-                    String key = (String) entry.getKey();
-                    //Integer value = (Integer) entry.getValue();
-//                System.out.println("Key = " + key + ", Value = " + value);
-//                System.out.println("key: " + key);
-                    //JSONService.getServiceDetails(s, key);
+                if (result != null) {
+                    List<String> list = new ArrayList<>();
+                    list.addAll(result.keySet());
+                    map.put(s, list);
                 }
-                List<String> list = new ArrayList<>();
-                list.addAll(result.keySet());
-                map.put(s, list);
-//
             }
 
 //        System.out.println("map: " + map);
@@ -184,7 +176,7 @@ public class JSONService {
             }
 
             SERVICES.fireMapChanged();
-
+            HOSTS.fireMapChanged();
 //        System.out.println("SERVICES OUTPUT: size=" + SERVICES.keySet().size());
 //        for (String s : SERVICES.keySet()) {
 //            System.out.println(s + "\t" + SERVICES.get(s));

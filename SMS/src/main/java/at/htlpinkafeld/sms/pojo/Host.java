@@ -122,8 +122,13 @@ public class Host {
         }
          */
 
-        Timestamp stamp = new Timestamp((long) map.get("last_state_change"));
-        LocalDateTime last_state_change = stamp.toLocalDateTime();
+        value = map.get("last_state_change");
+        LocalDateTime last_state_change = LocalDateTime.now();
+        if (value instanceof Long) {
+            last_state_change = new Timestamp((long) value).toLocalDateTime();
+        } else if (value instanceof Integer) {
+            last_state_change = new Timestamp((Integer) value).toLocalDateTime();
+        }
         //System.out.println(map.get("last_state_change"));
 
         LocalDateTime now = LocalDateTime.now();
