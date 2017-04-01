@@ -7,6 +7,7 @@ package at.htlpinkafeld.sms.dao;
 
 import at.htlpinkafeld.sms.config.db.DataSourceManager;
 import at.htlpinkafeld.sms.config.db.HsqlDataSource;
+import at.htlpinkafeld.sms.pojo.AccountType;
 import at.htlpinkafeld.sms.pojo.User;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -27,7 +28,6 @@ public class UserDaoImpl implements UserDao {
 
     /*HsqlDataSource db = HsqlDataSource.getInstance();
     NamedParameterJdbcTemplate template = new NamedParameterJdbcTemplate(db.dataSource());*/
-    
     DataSourceManager db = DataSourceManager.getInstance();
     NamedParameterJdbcTemplate template = new NamedParameterJdbcTemplate(db.dataSource());
 
@@ -67,13 +67,13 @@ public class UserDaoImpl implements UserDao {
     @Override
     public void insert(User user) {
         Map<String, Object> params = new HashMap<String, Object>();
-        String sql = "INSERT INTO User(usernr, persname, username, password, email, disabled) VALUES (:userid, :name, :username, :password, :email, :disabled)";
+        String sql = "INSERT INTO User(usernr, persname, username, password, email, accounttype, disabled) VALUES (:userid, :name, :username, :password, :email, :accounttype, :disabled)";
 
         params.put("userid", user.getId());
         params.put("name", user.getName());
         params.put("username", user.getUsername());
         params.put("password", user.getPassword());
-        params.put("phonenr", user.getPhoneNr());
+        params.put("accounttype", user.getAccountType().name());
         params.put("email", user.getEmail());
         params.put("disabled", user.isDisabled());
 
@@ -107,13 +107,13 @@ public class UserDaoImpl implements UserDao {
     @Override
     public void update(User o) {
         Map<String, Object> params = new HashMap<String, Object>();
-        String sql = "UPDATE User SET persname=:name, username=:username, password=:password, email=:email, disabled=:disabled WHERE usernr=:userid";
+        String sql = "UPDATE User SET persname=:name, username=:username, password=:password, email=:email, disabled=:disabled, accounttype=:accounttype WHERE usernr=:userid";
 
         params.put("userid", o.getId());
         params.put("name", o.getName());
         params.put("username", o.getUsername());
         params.put("password", o.getPassword());
-        params.put("phonenr", o.getPhoneNr());
+        params.put("accounttype", o.getAccountType().name());
         params.put("email", o.getEmail());
         params.put("disabled", o.isDisabled());
 
@@ -129,7 +129,7 @@ public class UserDaoImpl implements UserDao {
             user.setUsername(rs.getString("username"));
             user.setEmail(rs.getString("email"));
             user.setPassword(rs.getString("password"));
-//            user.setPhoneNr(rs.getString("phonenr"));
+            user.setAccountType(AccountType.valueOf(rs.getString("accounttype")));
             user.setDisabled(rs.getBoolean("disabled"));
 
             return user;

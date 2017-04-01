@@ -19,31 +19,31 @@ public class User implements Serializable, IPojo {
     private String password;
     private String name;
     private String email;
-    private String phoneNr;
+    private AccountType accountType;
     private boolean disabled;
 
     public User() {
-        disabled=false;
+        disabled = false;
     }
 
     @Deprecated
-    public User(Integer userNr, String username, String password, String name, String email, String phoneNr, boolean disabled) {
+    public User(Integer userNr, String username, String password, String name, String email, AccountType accountType, boolean disabled) {
         this.userNr = userNr;
         this.username = username;
         this.password = password;
         this.name = name;
         this.email = email;
-        this.phoneNr = phoneNr;
+        this.accountType = accountType;
         this.disabled = disabled;
     }
 
-    public User(String username, String password, String name, String email, String phoneNr) {
+    public User(String username, String password, String name, String email, AccountType accountType) {
         this.username = username;
         this.password = password;
         this.name = name;
         this.email = email;
-        this.phoneNr = phoneNr;
-        disabled=false;
+        this.accountType = accountType;
+        disabled = false;
     }
 
     @Override
@@ -88,12 +88,12 @@ public class User implements Serializable, IPojo {
         this.email = email;
     }
 
-    public String getPhoneNr() {
-        return phoneNr;
+    public AccountType getAccountType() {
+        return accountType;
     }
 
-    public void setPhoneNr(String phoneNr) {
-        this.phoneNr = phoneNr;
+    public void setAccountType(AccountType accountType) {
+        this.accountType = accountType;
     }
 
     public boolean isDisabled() {
@@ -133,9 +133,5 @@ public class User implements Serializable, IPojo {
     public String toString() {
         return "User{" + "userNr=" + userNr + ", username=" + username + ", password=" + password + ", name=" + name + ", email=" + email + ", disabled=" + disabled + '}';
     }
-
- 
-
-
 
 }

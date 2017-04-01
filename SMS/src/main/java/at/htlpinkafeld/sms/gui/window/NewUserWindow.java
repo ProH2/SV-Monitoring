@@ -6,6 +6,7 @@
 package at.htlpinkafeld.sms.gui.window;
 
 import at.htlpinkafeld.sms.gui.UserManagementView;
+import at.htlpinkafeld.sms.pojo.AccountType;
 import at.htlpinkafeld.sms.pojo.User;
 import at.htlpinkafeld.sms.service.PermissionService;
 import com.vaadin.data.Container;
@@ -18,9 +19,11 @@ import com.vaadin.event.FieldEvents;
 import com.vaadin.ui.AbstractTextField;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.FormLayout;
+import com.vaadin.ui.NativeSelect;
 import com.vaadin.ui.Notification;
 import com.vaadin.ui.TextField;
 import com.vaadin.ui.Window;
+import java.util.Arrays;
 import java.util.Collection;
 
 /**
@@ -95,7 +98,14 @@ public class NewUserWindow extends Window {
         emailTextF.setRequired(true);
         emailTextF.setRequiredError("Email is required!");
 
-        formLayout.addComponents(usernameTextF, passwordTextF, nameTextF, emailTextF);
+        final NativeSelect accountTypeSelect = new NativeSelect("AccountType");
+        accountTypeSelect.setContainerDataSource(new BeanItemContainer(AccountType.class, Arrays.asList(AccountType.values())));
+        accountTypeSelect.setNullSelectionAllowed(false);
+        accountTypeSelect.setRequired(true);
+        accountTypeSelect.setRequiredError("AccountType is required!");
+        accountTypeSelect.select(accountTypeSelect.getContainerDataSource().getItemIds().iterator().next());
+
+        formLayout.addComponents(usernameTextF, passwordTextF, nameTextF, emailTextF, accountTypeSelect);
 
         Button createButton = new Button("Create User", (Button.ClickEvent event) -> {
             try {
@@ -103,8 +113,9 @@ public class NewUserWindow extends Window {
                 passwordTextF.validate();
                 nameTextF.validate();
                 emailTextF.validate();
+                accountTypeSelect.validate();
 
-                containerDataSource.addBean(new User(usernameTextF.getValue(), PermissionService.hashPassword(passwordTextF.getValue()), nameTextF.getValue(), emailTextF.getValue(), null));
+                containerDataSource.addBean(new User(usernameTextF.getValue(), PermissionService.hashPassword(passwordTextF.getValue()), nameTextF.getValue(), emailTextF.getValue(), (AccountType) accountTypeSelect.getValue()));
 
                 close();
             } catch (Validator.InvalidValueException e) {

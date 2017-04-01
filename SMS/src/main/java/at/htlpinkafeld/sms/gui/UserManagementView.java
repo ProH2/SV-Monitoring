@@ -9,6 +9,7 @@ import at.htlpinkafeld.sms.gui.window.NewUserWindow;
 import at.htlpinkafeld.sms.gui.container.ContainerFactory;
 import at.htlpinkafeld.sms.gui.container.DaoDelegatingContainer;
 import at.htlpinkafeld.sms.gui.window.ResetPasswordWindow;
+import at.htlpinkafeld.sms.pojo.AccountType;
 import at.htlpinkafeld.sms.pojo.User;
 import at.htlpinkafeld.sms.service.NoUserLoggedInException;
 import at.htlpinkafeld.sms.service.PermissionService;
@@ -17,6 +18,7 @@ import com.vaadin.data.Item;
 import com.vaadin.data.Validator;
 import com.vaadin.data.fieldgroup.FieldGroup;
 import com.vaadin.data.sort.SortOrder;
+import com.vaadin.data.util.BeanItemContainer;
 import com.vaadin.data.util.GeneratedPropertyContainer;
 import com.vaadin.data.util.PropertyValueGenerator;
 import com.vaadin.data.validator.EmailValidator;
@@ -28,6 +30,7 @@ import com.vaadin.ui.Alignment;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Field;
 import com.vaadin.ui.Grid;
+import com.vaadin.ui.NativeSelect;
 import com.vaadin.ui.Notification;
 import com.vaadin.ui.TabSheet;
 import com.vaadin.ui.TextField;
@@ -35,6 +38,7 @@ import com.vaadin.ui.UI;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.renderers.ButtonRenderer;
 import com.vaadin.ui.renderers.ClickableRenderer;
+import java.util.Arrays;
 import java.util.Collection;
 import org.vaadin.dialogs.ConfirmDialog;
 
@@ -61,8 +65,25 @@ public class UserManagementView extends VerticalLayout implements View {
         grid.removeColumn(USERNR_PROPERTY);
         grid.removeColumn(PASSWORD_PROPERTY);
         grid.removeColumn(DISABLED_PROPERTY);
-        grid.removeColumn(PHONENR_PROPERTY);
-        grid.setColumnOrder(USERNAME_PROPERTY, NAME_PROPERTY, EMAIL_PROPERTY, RESETPASSW_COLUMN, EDITUSER_COLUMN, DISABLEUSER_COLUMN);
+
+        NativeSelect accountTypeSelect = new NativeSelect();
+        accountTypeSelect.setContainerDataSource(new BeanItemContainer(AccountType.class, Arrays.asList(AccountType.values())));
+        accountTypeSelect.setNullSelectionAllowed(false);
+        accountTypeSelect.select(accountTypeSelect.getContainerDataSource().getItemIds().iterator().next());
+        accountTypeSelect.addValidator((Object value) -> {
+            User u = VaadinSession.getCurrent().getAttribute(User.class);
+            if (grid.getEditedItemId() instanceof User) {
+                User selectedUser = (User) grid.getEditedItemId();
+                if (u.equals(selectedUser)) {
+                    accountTypeSelect.setEnabled(false);
+                } else {
+                    accountTypeSelect.setEnabled(true);
+                }
+            }
+        });
+        grid.getColumn(ACCOUNTTYPE_PROPERTY).setEditorField(accountTypeSelect);
+
+        grid.setColumnOrder(USERNAME_PROPERTY, NAME_PROPERTY, EMAIL_PROPERTY, ACCOUNTTYPE_PROPERTY, RESETPASSW_COLUMN, EDITUSER_COLUMN, DISABLEUSER_COLUMN);
 
 //        grid.setSelectionMode(SelectionMode.MULTI);
         grid.setEditorEnabled(true);
@@ -151,10 +172,10 @@ public class UserManagementView extends VerticalLayout implements View {
 //        delSelectedButton.setSizeFull();
 
         grid.appendFooterRow();
-    //        grid.getFooterRow(0).join(USERNAME_PROPERTY, NAME_PROPERTY, EMAIL_PROPERTY).setComponent(newUserButton);
-    //        grid.getFooterRow(0).join(RESETPASSW_COLUMN, EDITUSER_COLUMN, DISABLEUSER_COLUMN);
+        grid.getFooterRow(0).join(USERNAME_PROPERTY, NAME_PROPERTY, EMAIL_PROPERTY).setComponent(newUserButton);
+        grid.getFooterRow(0).join(RESETPASSW_COLUMN, EDITUSER_COLUMN, DISABLEUSER_COLUMN);
 
-//        grid.getFooterRow(0).join(PHONENR_PROPERTY, EDITUSER_COLUMN, DELETEUSER_COLUMN).setComponent(delSelectedButton);
+//        grid.getFooterRow(0).join(ACCOUNTTYPE_PROPERTY, EDITUSER_COLUMN, DELETEUSER_COLUMN).setComponent(delSelectedButton);
         grid.setSizeFull();
 
 //        innerLayout.addComponent(head);
@@ -298,7 +319,7 @@ public class UserManagementView extends VerticalLayout implements View {
     /**
      * PropertyId constant for {@link Container}
      */
-    public static final String PHONENR_PROPERTY = "phoneNr";
+    public static final String ACCOUNTTYPE_PROPERTY = "accountType";
     /**
      * PropertyId constant for {@link Container}
      */

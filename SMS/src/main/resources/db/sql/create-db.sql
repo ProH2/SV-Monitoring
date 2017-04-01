@@ -3,7 +3,7 @@ CREATE TABLE user (
   persname VARCHAR(30) NOT NULL,
   username varchar(30) NOT NULL,
   password varchar(128) NOT NULL,
-  phonenr varchar(25),
+  accounttype varchar(15) NOT NULL,
   email  VARCHAR(50),
   disabled BOOLEAN DEFAULT FALSE NOT NULL
 );

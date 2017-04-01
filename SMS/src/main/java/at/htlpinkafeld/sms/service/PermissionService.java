@@ -5,6 +5,7 @@
  */
 package at.htlpinkafeld.sms.service;
 
+import at.htlpinkafeld.sms.pojo.AccountType;
 import at.htlpinkafeld.sms.pojo.User;
 import com.vaadin.server.VaadinSession;
 import org.apache.commons.codec.digest.DigestUtils;
@@ -34,7 +35,7 @@ public class PermissionService {
         try {
             User currentUser = (User) VaadinSession.getCurrent().getAttribute(User.class);
             if (currentUser != null) {
-                if (ALL_USERS_ARE_ADMIN && !"Kant".equals(currentUser.getUsername())) {
+                if (ALL_USERS_ARE_ADMIN && AccountType.ADMIN.equals(currentUser.getAccountType())) {
                     return true;
                 } else {
                     //TODO do something
