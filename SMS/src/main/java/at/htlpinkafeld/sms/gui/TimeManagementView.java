@@ -345,6 +345,7 @@ public class TimeManagementView extends VerticalLayout implements View {
 
             super.addComponent(parentSplitPanel);
         } else {
+            calendarLayout.setHeight(layoutSize, Unit.PIXELS);
             super.addComponent(calendarLayout);
         }
     }

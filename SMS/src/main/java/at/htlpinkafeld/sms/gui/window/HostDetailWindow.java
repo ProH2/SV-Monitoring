@@ -21,6 +21,7 @@ import at.htlpinkafeld.sms.service.PermissionService;
 import com.vaadin.data.fieldgroup.FieldGroup;
 import com.vaadin.data.util.BeanItem;
 import com.vaadin.data.util.BeanItemContainer;
+import com.vaadin.server.VaadinSession;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.FormLayout;
 import com.vaadin.ui.Grid;
@@ -35,6 +36,8 @@ import com.vaadin.ui.Window;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Map;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * {@link Window} which displays the data of a single {@link Host} and its
@@ -99,52 +102,67 @@ public class HostDetailWindow extends Window implements HashMapWithListeners.Map
 
         Grid commentGrid = new Grid(ContainerFactory.createHostCommentContainer(host.getHostname()));
         commentGrid.setSizeFull();
+        commentGrid.removeAllColumns();
+        commentGrid.addColumn("comment");
+
         rightCommentLayout.addComponent(commentGrid);
 
-        try {
-            if (PermissionService.isAdmin()) {
-                commentGrid.setEditorEnabled(true);
-                commentGrid.removeAllColumns();
-                commentGrid.addColumn("comment");
+        commentGrid.setEditorEnabled(true);
 
-                Button addCommentButton = new Button("Add Comment", (Button.ClickEvent event) -> {
-                    Comment newComment = new Comment("", host.getHostname(), 1, LocalDateTime.now());
-                    ((BeanItemContainer<Comment>) commentGrid.getContainerDataSource()).addBean(newComment);
-                    commentGrid.editItem(newComment);
-                    commentGrid.focus();
-                });
+        Button addCommentButton = new Button("Add Comment", (Button.ClickEvent event) -> {
+            Comment newComment = new Comment("", host.getHostname(), VaadinSession.getCurrent().getAttribute(User.class).getId(), LocalDateTime.now());
+            ((BeanItemContainer<Comment>) commentGrid.getContainerDataSource()).addBean(newComment);
+            commentGrid.editItem(newComment);
+            commentGrid.setEnabled(true);
 
-                commentGrid.getEditorFieldGroup().addCommitHandler(new FieldGroup.CommitHandler() {
-                    @Override
-                    public void preCommit(FieldGroup.CommitEvent commitEvent) throws FieldGroup.CommitException {
-                    }
+            commentGrid.focus();
+        });
 
-                    @Override
-                    public void postCommit(FieldGroup.CommitEvent commitEvent) throws FieldGroup.CommitException {
-                        Object item = commentGrid.getEditedItemId();
-                        if (item instanceof Comment) {
-                            ((DaoDelegatingContainer<Comment>) commentGrid.getContainerDataSource()).updateItem((Comment) item);
+        commentGrid.getEditorFieldGroup().addCommitHandler(new FieldGroup.CommitHandler() {
+            @Override
+            public void preCommit(FieldGroup.CommitEvent commitEvent) throws FieldGroup.CommitException {
+            }
+
+            @Override
+            public void postCommit(FieldGroup.CommitEvent commitEvent) throws FieldGroup.CommitException {
+                Object item = commentGrid.getEditedItemId();
+                if (item instanceof Comment) {
+                    ((DaoDelegatingContainer<Comment>) commentGrid.getContainerDataSource()).updateItem((Comment) item);
+                    try {
+                        if (!PermissionService.isAdmin()) {
+                            commentGrid.setEnabled(false);
                         }
+                    } catch (NoUserLoggedInException ex) {
+                        ((SMS_Main) UI.getCurrent()).navigateTo(LoginView.VIEW_NAME);
                     }
-                });
+                }
+            }
+        });
 
-                Button removeCommentButton = new Button("Delete Comment", (Button.ClickEvent event) -> {
-                    commentGrid.getContainerDataSource().removeItem(commentGrid.getSelectedRow());
-                });
-                Label spaceHolder = new Label("");
+        Button removeCommentButton = new Button("Delete Comment", (Button.ClickEvent event) -> {
+            commentGrid.getContainerDataSource().removeItem(commentGrid.getSelectedRow());
+        });
+        Label spaceHolder = new Label("");
 
-                HorizontalLayout buttonLayout = new HorizontalLayout();
-                buttonLayout.addComponents(addCommentButton, spaceHolder, removeCommentButton);
-                buttonLayout.setWidth(94, Unit.PERCENTAGE);
-
-                rightCommentLayout.addComponent(buttonLayout);
+        try {
+            if (!PermissionService.isAdmin()) {
+                commentGrid.setEnabled(false);
+                removeCommentButton.setVisible(false);
             }
         } catch (NoUserLoggedInException ex) {
             ((SMS_Main) UI.getCurrent()).navigateTo(LoginView.VIEW_NAME);
         }
 
+        HorizontalLayout buttonLayout = new HorizontalLayout();
+        buttonLayout.addComponents(addCommentButton, spaceHolder, removeCommentButton);
+        buttonLayout.setWidth(94, Unit.PERCENTAGE);
+
+        rightCommentLayout.addComponent(buttonLayout);
+
         HorizontalSplitPanel parentSplitPanel = new HorizontalSplitPanel(leftDataLayout, rightCommentLayout);
+
         parentSplitPanel.setSizeUndefined();
+
         parentSplitPanel.setWidth(860, Unit.PIXELS);
 
         super.setContent(parentSplitPanel);
