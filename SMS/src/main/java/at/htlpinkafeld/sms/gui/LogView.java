@@ -62,11 +62,7 @@ public class LogView extends VerticalLayout implements View {
     @Override
     public void enter(ViewChangeListener.ViewChangeEvent event) {
         try {
-            if (PermissionService.isAdmin()) {
-
-            } else {
-                ((SMS_Main) UI.getCurrent()).navigateTo(OverviewView.VIEW_NAME);
-            }
+            PermissionService.isAdmin();
         } catch (NoUserLoggedInException ex) {
             //redirect not logged in Users to the Login-Page
             ((SMS_Main) UI.getCurrent()).navigateTo(LoginView.VIEW_NAME);
