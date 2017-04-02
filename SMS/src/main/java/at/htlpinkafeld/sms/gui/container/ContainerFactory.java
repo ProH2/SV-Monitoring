@@ -24,12 +24,12 @@ import at.htlpinkafeld.sms.gui.overviewComponents.HostOverviewTabPanel;
 import at.htlpinkafeld.sms.gui.overviewComponents.HostPanel;
 import at.htlpinkafeld.sms.gui.overviewComponents.ServiceOverviewTabPanel;
 import at.htlpinkafeld.sms.gui.overviewComponents.ServicePanel;
-import at.htlpinkafeld.sms.pojo.User;
 import at.htlpinkafeld.sms.pojo.Comment;
 import at.htlpinkafeld.sms.pojo.Host;
 import at.htlpinkafeld.sms.pojo.Hostgroup;
 import at.htlpinkafeld.sms.pojo.Log;
 import at.htlpinkafeld.sms.pojo.Service;
+import at.htlpinkafeld.sms.pojo.User;
 import at.htlpinkafeld.sms.service.JSONService;
 import com.vaadin.data.Container;
 import com.vaadin.data.util.BeanItemContainer;
@@ -41,13 +41,10 @@ import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.AbstractMap;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Comparator;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
-import java.util.stream.Collectors;
 
 /**
  * Class with multiple static Factory or Singelton methods to create various

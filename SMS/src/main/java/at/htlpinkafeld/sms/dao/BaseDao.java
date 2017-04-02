@@ -10,14 +10,15 @@ import java.util.List;
 /**
  *
  * @author DarkHell2
+ * @param <T> Generic DAO-Type
  */
-public interface BaseDao<T>{
-    
+public interface BaseDao<T> {
+
     public List<T> findAll();
-    
+
     public void insert(T o);
-    
+
     public void delete(Integer id);
-    
+
     public void update(T o);
 }

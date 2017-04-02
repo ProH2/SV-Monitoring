@@ -1,20 +1,10 @@
 package at.htlpinkafeld.sms.gui;
 
-import at.htlpinkafeld.sms.dao.LogDao;
-import at.htlpinkafeld.sms.dao.LogDaoImpl;
-import at.htlpinkafeld.sms.pojo.Log;
-import at.htlpinkafeld.sms.service.JSONService;
-import javax.servlet.annotation.WebServlet;
-
 import com.vaadin.annotations.Theme;
 import com.vaadin.annotations.Title;
-import com.vaadin.annotations.VaadinServletConfiguration;
 import com.vaadin.navigator.Navigator;
 import com.vaadin.server.VaadinRequest;
-import com.vaadin.server.VaadinServlet;
 import com.vaadin.ui.UI;
-import java.time.LocalDateTime;
-import javax.servlet.ServletException;
 
 /**
  * This UI is the application entry point. A UI may either represent a browser

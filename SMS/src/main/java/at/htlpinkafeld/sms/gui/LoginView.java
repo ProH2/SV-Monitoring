@@ -7,7 +7,6 @@ package at.htlpinkafeld.sms.gui;
 
 import at.htlpinkafeld.sms.gui.container.ContainerFactory;
 import at.htlpinkafeld.sms.pojo.User;
-import at.htlpinkafeld.sms.service.JSONService;
 import at.htlpinkafeld.sms.service.PermissionService;
 import com.vaadin.data.util.BeanItemContainer;
 import com.vaadin.data.util.filter.SimpleStringFilter;

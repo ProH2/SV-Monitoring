@@ -7,15 +7,19 @@ package at.htlpinkafeld.sms.service;
 
 import at.htlpinkafeld.sms.dao.LogDao;
 import at.htlpinkafeld.sms.dao.LogDaoImpl;
+import at.htlpinkafeld.sms.gui.container.HashMapWithListeners;
 import at.htlpinkafeld.sms.pojo.Host;
+import at.htlpinkafeld.sms.pojo.Log;
+import at.htlpinkafeld.sms.pojo.Service;
 import at.htlpinkafeld.sms.service.threads.HostAndServiceTimerTask;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.Authenticator;
-import java.net.MalformedURLException;
 import java.net.PasswordAuthentication;
 import java.net.URL;
+import java.net.URLEncoder;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -23,13 +27,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Timer;
 import org.apache.commons.io.IOUtils;
-
-import at.htlpinkafeld.sms.gui.container.HashMapWithListeners;
-import at.htlpinkafeld.sms.pojo.Log;
-import at.htlpinkafeld.sms.pojo.Service;
-import java.net.URLEncoder;
-import java.sql.Timestamp;
-import java.time.LocalDateTime;
 
 //import org.apache.commons.io.IOUtils;
 /**

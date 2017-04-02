@@ -5,13 +5,11 @@
  */
 package at.htlpinkafeld.sms.gui.overviewComponents;
 
-import at.htlpinkafeld.sms.gui.window.ServiceDetailWindow;
 import at.htlpinkafeld.sms.gui.OverviewView;
 import at.htlpinkafeld.sms.gui.container.MapReferenceContainer;
+import at.htlpinkafeld.sms.gui.window.ServiceDetailWindow;
 import at.htlpinkafeld.sms.pojo.Service;
 import com.vaadin.data.Container;
-import com.vaadin.data.Container.Filter;
-import com.vaadin.data.Item;
 import com.vaadin.data.util.BeanItem;
 import com.vaadin.event.LayoutEvents;
 import com.vaadin.event.MouseEvents;
@@ -30,7 +28,6 @@ import com.vaadin.ui.VerticalLayout;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Set;
 import org.vaadin.addons.stackpanel.StackPanel;

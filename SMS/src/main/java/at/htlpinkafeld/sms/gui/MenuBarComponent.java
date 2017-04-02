@@ -14,9 +14,6 @@ import com.vaadin.ui.CustomComponent;
 import com.vaadin.ui.MenuBar;
 import com.vaadin.ui.UI;
 import java.io.File;
-import java.security.Permission;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
  * A CustomComponent for the Dashboard-type-Menubar on the top of the screen

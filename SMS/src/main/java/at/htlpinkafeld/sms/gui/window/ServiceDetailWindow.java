@@ -33,8 +33,6 @@ import com.vaadin.ui.Window;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Map;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
  * {@link Window} which displays the data of a single {@link Service} and its

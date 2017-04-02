@@ -6,8 +6,6 @@
 package at.htlpinkafeld.sms.dao;
 
 import at.htlpinkafeld.sms.pojo.Log;
-import java.sql.Timestamp;
-import java.util.List;
 
 /**
  *

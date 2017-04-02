@@ -6,7 +6,6 @@
 package at.htlpinkafeld.sms.dao;
 
 import at.htlpinkafeld.sms.config.db.DataSourceManager;
-import at.htlpinkafeld.sms.config.db.HsqlDataSource;
 import at.htlpinkafeld.sms.pojo.Comment;
 import java.sql.Date;
 import java.sql.ResultSet;
@@ -16,12 +15,9 @@ import java.time.ZoneId;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.AbstractSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
-import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 

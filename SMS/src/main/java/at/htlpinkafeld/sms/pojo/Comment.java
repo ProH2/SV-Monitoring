@@ -5,7 +5,6 @@
  */
 package at.htlpinkafeld.sms.pojo;
 
-import at.htlpinkafeld.sms.pojo.IPojo;
 import java.sql.Date;
 import java.time.LocalDateTime;
 import java.time.ZoneId;

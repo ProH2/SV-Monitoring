@@ -5,10 +5,9 @@
  */
 package at.htlpinkafeld.sms.gui.overviewComponents;
 
-import at.htlpinkafeld.sms.gui.window.HostDetailWindow;
 import at.htlpinkafeld.sms.gui.OverviewView;
-import at.htlpinkafeld.sms.gui.container.ContainerFactory;
 import at.htlpinkafeld.sms.gui.container.MapReferenceContainer;
+import at.htlpinkafeld.sms.gui.window.HostDetailWindow;
 import at.htlpinkafeld.sms.pojo.Host;
 import at.htlpinkafeld.sms.pojo.Hostgroup;
 import com.vaadin.data.Container;

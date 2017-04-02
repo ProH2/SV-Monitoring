@@ -5,7 +5,6 @@
  */
 package at.htlpinkafeld.sms.pojo;
 
-import java.sql.Timestamp;
 import java.time.LocalDateTime;
 
 /**

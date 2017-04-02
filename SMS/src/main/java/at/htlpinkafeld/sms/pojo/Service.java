@@ -8,7 +8,6 @@ package at.htlpinkafeld.sms.pojo;
 import java.sql.Timestamp;
 import java.time.Duration;
 import java.time.LocalDateTime;
-import java.time.ZoneOffset;
 import java.util.HashMap;
 import java.util.List;
 

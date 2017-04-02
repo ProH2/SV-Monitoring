@@ -22,6 +22,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
+ * View which is used to display {@link Log Logs}
  *
  * @author masix
  */
@@ -32,6 +33,9 @@ public class LogView extends VerticalLayout implements View {
     DaoDelegatingContainer<Log> logContainer;
     private final Grid logGrid;
 
+    /**
+     * Constructor for the LogView
+     */
     public LogView() {
         super.addComponent(((SMS_Main) UI.getCurrent()).getMenuBarComponent());
 

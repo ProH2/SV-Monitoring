@@ -12,6 +12,7 @@ import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 
 /**
+ * The Servlet-Container for the WebApp
  *
  * @author masix
  */
@@ -25,12 +26,15 @@ public class SMS_UIServlet extends VaadinServlet {
         JSONService.refresh();
     }
 
+    /**
+     * Called when the Servlet is destroyed
+     *
+     * also cleans up the Threads
+     */
     @Override
     public void destroy() {
         JSONService.kill();
         super.destroy();
     }
-    
-    
 
 }

@@ -17,11 +17,18 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 
 /**
+ * Component which is used to filter a container based on checkboxes and an enum
  *
  * @author masix
  */
 public class StatusFilterComponent extends VerticalLayout {
 
+    /**
+     * The constructor for StatusFilterComponent
+     *
+     * @param filterMap a map with the enum-values and the according filters
+     * @param containerToFilter the container which will be filtered
+     */
     public StatusFilterComponent(Map<? extends Enum, Filter> filterMap, Container.Filterable containerToFilter) {
         VerticalLayout mainLayout = new VerticalLayout();
 
@@ -41,6 +48,12 @@ public class StatusFilterComponent extends VerticalLayout {
 
     }
 
+    /**
+     * Factory Method to create a {@link StatusFilterComponent} with
+     * {@link Service.Servicestatus}
+     *
+     * @return the according component
+     */
     public static Map<Service.Servicestatus, Filter> createServiceStatusFilterMap() {
         Map<Service.Servicestatus, Filter> statusFilterMap = new LinkedHashMap<>();
         statusFilterMap.put(Service.Servicestatus.OK, new Filter() {
@@ -101,6 +114,12 @@ public class StatusFilterComponent extends VerticalLayout {
         return statusFilterMap;
     }
 
+    /**
+     * Factory Method to create a {@link StatusFilterComponent} with
+     * {@link Host.Hoststatus}
+     *
+     * @return the according component
+     */
     public static Map<Host.Hoststatus, Filter> createHostStatusFilterMap() {
         Map<Host.Hoststatus, Filter> statusFilterMap = new LinkedHashMap<>();
         statusFilterMap.put(Host.Hoststatus.UP, new Filter() {

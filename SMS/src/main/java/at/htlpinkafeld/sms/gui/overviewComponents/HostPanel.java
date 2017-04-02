@@ -122,6 +122,13 @@ public class HostPanel extends Panel implements HashMapWithListeners.MapChangeLi
         super.markAsDirty();
     }
 
+    /**
+     * Parses the {@link Duration} to days and hours, hours and minutes or
+     * minutes and seconds, depending on the duration
+     *
+     * @param duration Duration which is parsed
+     * @return the duration in a certain format
+     */
     public static String getDurationString(Duration duration) {
         if (duration.toDays() == 0) {
             if (duration.toHours() == 0) {

@@ -13,9 +13,9 @@ import at.htlpinkafeld.sms.gui.container.HashMapWithListeners;
 import at.htlpinkafeld.sms.gui.container.MapReferenceContainer;
 import at.htlpinkafeld.sms.gui.overviewComponents.HostPanel;
 import static at.htlpinkafeld.sms.gui.overviewComponents.HostPanel.getDurationString;
-import at.htlpinkafeld.sms.pojo.User;
 import at.htlpinkafeld.sms.pojo.Comment;
 import at.htlpinkafeld.sms.pojo.Host;
+import at.htlpinkafeld.sms.pojo.User;
 import at.htlpinkafeld.sms.service.NoUserLoggedInException;
 import at.htlpinkafeld.sms.service.PermissionService;
 import com.vaadin.data.fieldgroup.FieldGroup;
@@ -36,8 +36,6 @@ import com.vaadin.ui.Window;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Map;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
  * {@link Window} which displays the data of a single {@link Host} and its

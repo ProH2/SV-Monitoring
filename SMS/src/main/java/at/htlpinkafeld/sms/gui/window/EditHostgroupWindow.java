@@ -9,7 +9,6 @@ import at.htlpinkafeld.sms.gui.container.ContainerFactory;
 import at.htlpinkafeld.sms.gui.container.HostgroupHierarchical_Container;
 import at.htlpinkafeld.sms.pojo.Hostgroup;
 import com.vaadin.data.Container;
-import com.vaadin.data.util.BeanContainer;
 import com.vaadin.data.util.BeanItem;
 import com.vaadin.data.util.IndexedContainer;
 import com.vaadin.data.util.filter.SimpleStringFilter;
@@ -23,9 +22,9 @@ import com.vaadin.ui.TwinColSelect;
 import com.vaadin.ui.Window;
 import java.util.Collection;
 import java.util.LinkedList;
-import javax.xml.bind.ValidationException;
 
 /**
+ * Window which is used to edit or create {@link Hostgroup Hostgroups}
  *
  * @author masix
  */
@@ -35,6 +34,14 @@ public class EditHostgroupWindow extends Window {
     private final String hostgroupName;
     private IndexedContainer hostContainer;
 
+    /**
+     * Constructor for EditHostgroupWindow
+     *
+     * @param hostGroupContainer the container where the {@link Hostgroup} will
+     * be inserted/updated
+     * @param hostgroupName the name of the hostgroup which will be edited or
+     * null
+     */
     public EditHostgroupWindow(HostgroupHierarchical_Container hostGroupContainer, String hostgroupName) {
         super(hostgroupName == null ? "Add Hostgroup" : "Edit Hostgroup");
 

@@ -6,7 +6,6 @@
 package at.htlpinkafeld.sms.dao;
 
 import at.htlpinkafeld.sms.pojo.Hostgroup;
-import java.util.List;
 
 /**
  *

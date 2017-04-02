@@ -6,7 +6,6 @@
 package at.htlpinkafeld.sms.dao;
 
 import at.htlpinkafeld.sms.config.db.DataSourceManager;
-import at.htlpinkafeld.sms.config.db.HsqlDataSource;
 import at.htlpinkafeld.sms.pojo.AccountType;
 import at.htlpinkafeld.sms.pojo.User;
 import java.sql.ResultSet;

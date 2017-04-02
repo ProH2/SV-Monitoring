@@ -5,7 +5,6 @@
  */
 package at.htlpinkafeld.sms.pojo;
 
-import at.htlpinkafeld.sms.pojo.IPojo;
 import java.util.List;
 
 /**

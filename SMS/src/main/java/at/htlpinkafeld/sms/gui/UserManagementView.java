@@ -5,9 +5,9 @@
  */
 package at.htlpinkafeld.sms.gui;
 
-import at.htlpinkafeld.sms.gui.window.NewUserWindow;
 import at.htlpinkafeld.sms.gui.container.ContainerFactory;
 import at.htlpinkafeld.sms.gui.container.DaoDelegatingContainer;
+import at.htlpinkafeld.sms.gui.window.NewUserWindow;
 import at.htlpinkafeld.sms.gui.window.ResetPasswordWindow;
 import at.htlpinkafeld.sms.pojo.AccountType;
 import at.htlpinkafeld.sms.pojo.User;

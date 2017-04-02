@@ -84,6 +84,12 @@ public class DaoDelegatingContainer<T extends IPojo> extends BeanItemContainer<T
         return false;
     }
 
+    /**
+     * Updates the Item accordingly in the {@link BaseDao} and notifies the
+     * Listeners
+     *
+     * @param item item to be updated
+     */
     public void updateItem(T item) {
         baseDao.update(item);
         fireItemSetChange();

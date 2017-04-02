@@ -6,7 +6,6 @@
 package at.htlpinkafeld.sms.gui.container;
 
 import at.htlpinkafeld.sms.dao.DutyDao;
-import at.htlpinkafeld.sms.dao.DutyDaoImpl;
 import at.htlpinkafeld.sms.gui.TimeManagementView;
 import at.htlpinkafeld.sms.gui.util.TimeManagementCalendarEvent;
 import at.htlpinkafeld.sms.pojo.Duty;
@@ -25,14 +24,14 @@ import java.util.stream.Collectors;
  */
 public class DutyEventProvider implements CalendarEditableEventProvider {
 
-    private final DutyDaoImpl dutyDao;
+    private final DutyDao dutyDao;
 
     /**
      * Constructor for the Eventprovider
      *
      * @param dutyDao DAO to which the calls are delegated to
      */
-    public DutyEventProvider(DutyDaoImpl dutyDao) {
+    public DutyEventProvider(DutyDao dutyDao) {
         this.dutyDao = dutyDao;
 
     }
@@ -53,6 +52,11 @@ public class DutyEventProvider implements CalendarEditableEventProvider {
 
     }
 
+    /**
+     * Updates the event accordingly in the {@link DutyDao}
+     *
+     * @param event event to be updated
+     */
     public void updateEvent(TimeManagementCalendarEvent event) {
         dutyDao.update(new Duty(event.getDutyId(), event.getUser(), event.getStart(), event.getEnd()));
     }
