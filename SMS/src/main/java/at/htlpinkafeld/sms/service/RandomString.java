@@ -8,6 +8,7 @@ package at.htlpinkafeld.sms.service;
 import java.util.Random;
 
 /**
+ * Utility used to create random alphanumeric-Strings
  *
  * @author masix
  */
@@ -33,6 +34,11 @@ public class RandomString {
 
     private final char[] buf;
 
+    /**
+     * Constructor for RandomString
+     *
+     * @param length length of the random String
+     */
     public RandomString(int length) {
         if (length < 1) {
             throw new IllegalArgumentException("length < 1: " + length);
@@ -40,6 +46,12 @@ public class RandomString {
         buf = new char[length];
     }
 
+    /**
+     * Creates a random alphanumeric-String based on the length from the
+     * constructor
+     *
+     * @return random String with the length from the constructor
+     */
     public String nextString() {
         for (int idx = 0; idx < buf.length; ++idx) {
             buf[idx] = symbols[random.nextInt(symbols.length)];
