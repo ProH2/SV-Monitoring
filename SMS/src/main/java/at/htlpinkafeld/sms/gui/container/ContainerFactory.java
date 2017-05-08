@@ -39,15 +39,13 @@ import com.vaadin.ui.Table;
 import com.vaadin.ui.components.calendar.event.CalendarEditableEventProvider;
 import java.time.Duration;
 import java.time.LocalDateTime;
+import java.time.Month;
 import java.util.AbstractMap;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Comparator;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
-import java.util.stream.Collectors;
 
 /**
  * Class with multiple static Factory or Singelton methods to create various
@@ -87,10 +85,15 @@ public class ContainerFactory {
 
             List<Map.Entry<String, Host>> entries = new ArrayList<>();
 
-            for (int i = 1; i <= 10; i++) {
-                Host h = new Host(0, "Host " + i, (Host.Hoststatus) OverviewView.getRandomEnum(Host.Hoststatus.values()), LocalDateTime.now(), Duration.ZERO, "Test informationTest informationTest tionTest informationTest informationonTest informationTest information");
-                entries.add(new AbstractMap.SimpleEntry<>(h.getHostname(), h));
-            }
+//            for (int i = 1; i <= 10; i++) {
+//                Host h = new Host(0, "Host " + i, (Host.Hoststatus) OverviewView.getRandomEnum(Host.Hoststatus.values()), LocalDateTime.now(), Duration.ZERO, "Test informationTest informationTest tionTest informationTest informationonTest informationTest information");
+//                entries.add(new AbstractMap.SimpleEntry<>(h.getHostname(), h));
+//            }
+            LocalDateTime currentLocalDateTime = LocalDateTime.of(2017, Month.APRIL, 26, 16, 30);
+            entries.add(new AbstractMap.SimpleEntry<>("nas", new Host(0, "nas", Host.Hoststatus.UP, currentLocalDateTime, Duration.ofDays(20).plusHours(3), "Das NAS im Standort Oberwart")));
+            entries.add(new AbstractMap.SimpleEntry<>("yaestar", new Host(0, "yaestar", Host.Hoststatus.DOWN, currentLocalDateTime, Duration.ofDays(19).plusHours(6), "Das Yaestar VoIP-Gerät im Standort Oberwart")));
+            entries.add(new AbstractMap.SimpleEntry<>("localhost", new Host(0, "localhost", Host.Hoststatus.UP, currentLocalDateTime, Duration.ofDays(23).plusHours(4), "Der Webserver für die Software")));
+            entries.add(new AbstractMap.SimpleEntry<>("unify", new Host(0, "unify", Host.Hoststatus.UP, currentLocalDateTime, Duration.ofDays(20).plusHours(3), "Das UNIFY-System im Standort Oberwart")));
 
             hostMap = new HashMapWithListeners<>();
             entries.stream().sorted(Map.Entry.comparingByValue(new Comparator<Host>() {
@@ -109,9 +112,22 @@ public class ContainerFactory {
         serviceMap = JSONService.getSERVICES();
         if (serviceMap == null || serviceMap.isEmpty()) {
             List<Map.Entry<String, Service>> entries = new ArrayList<>();
-            for (int i = 1; i <= 100; i++) {
+            for (int i = 1; i <= 20; i++) {
                 Service s = new Service(i % 10, 0, "Service " + i, (Service.Servicestatus) OverviewView.getRandomEnum(Service.Servicestatus.values()), LocalDateTime.now(), Duration.ofMinutes(10), 0, "Test informationTest informationTest tionTest informationTest informationonTest informationTest information");
-                s.setHostname("Host " + i % 10);
+                switch (i % 4) {
+                    case 0:
+                        s.setHostname("nas");
+                        break;
+                    case 1:
+                        s.setHostname("yaestar");
+                        break;
+                    case 2:
+                        s.setHostname("localhost");
+                        break;
+                    case 3:
+                        s.setHostname("unify");
+                }
+//                s.setHostname("Host " + i % 10);
                 entries.add(new AbstractMap.SimpleEntry<>(s.getHostname() + "/" + s.getName(), s));
             }
 
